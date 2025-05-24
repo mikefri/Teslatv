@@ -32,6 +32,7 @@ h1 {
     font-size: 2.5em;
 }
 
+/* Conteneur principal pour la vidéo et la liste des chaînes */
 .main-container {
     display: flex;
     width: 95%;
@@ -61,32 +62,15 @@ h1 {
     height: 100%;
 }
 
-.channel-logo {
-    position: absolute;
-    bottom: 15px;
-    left: 15px;
-    width: 90px;
-    height: auto;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 8px;
-    border-radius: 8px;
-    z-index: 10;
-    opacity: 0.8;
-    transition: opacity 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
-}
-.channel-logo:hover {
-    opacity: 1;
-    box-shadow: 0 0 15px var(--neon-blue), 0 0 25px rgba(0, 255, 255, 0.3);
-}
+/* Le style pour .channel-logo est supprimé d'ici */
 
 /* Nouveau conteneur pour l'heure et la liste des chaînes */
 #channelListContainer {
     width: 220px;
     background-color: var(--bg-medium);
-    display: flex; /* Utilise flexbox pour empiler l'heure et la liste */
+    display: flex;
     flex-direction: column;
-    padding-bottom: 15px; /* Pour un peu d'espace en bas */
+    padding-bottom: 15px;
 }
 
 /* Style de l'heure */
@@ -98,16 +82,15 @@ h1 {
     font-size: 1.2em;
     font-weight: bold;
     border-bottom: 1px solid var(--neon-blue-dark);
-    box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3); /* Légère ombre pour la distinguer */
-    flex-shrink: 0; /* Empêche l'élément de rétrécir */
+    box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+    flex-shrink: 0;
 }
 
 /* Liste des chaînes */
 #channelList {
-    flex-grow: 1; /* Permet à la liste de prendre l'espace restant */
-    padding: 15px 10px 0; /* Padding vertical ajusté, pas de padding bas ici */
+    flex-grow: 1;
+    padding: 15px 10px 0;
     overflow-y: auto; /* Permet le défilement vertical */
-    /* max-height: 600px;  Laisser flex-grow gérer la hauteur si possible */
 }
 
 /* Scrollbar personnalisée pour la liste des chaînes */
@@ -152,8 +135,8 @@ h1 {
 }
 
 .channel-item img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     margin-right: 10px;
     border-radius: 50%;
     object-fit: contain;
@@ -178,7 +161,7 @@ h1 {
     text-shadow: 0 0 5px var(--neon-blue-light);
 }
 
-.message { /* Ce style est toujours là mais l'élément n'est plus dans le HTML */
+.message {
     margin-top: 30px;
     padding: 12px 25px;
     background-color: var(--bg-medium);

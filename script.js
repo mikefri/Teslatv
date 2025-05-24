@@ -1,7 +1,7 @@
 const video = document.getElementById('video');
-const channelLogo = document.getElementById('channelLogo');
+// const channelLogo = document.getElementById('channelLogo'); // Supprimé
 const channelListDiv = document.getElementById('channelList');
-const currentTimeDiv = document.getElementById('currentTime'); // Nouveau: référence à l'élément de l'heure
+const currentTimeDiv = document.getElementById('currentTime');
 
 let hls;
 let channels = [];
@@ -20,18 +20,15 @@ setInterval(updateTime, 1000);
 // Initialiser l'heure au chargement de la page
 updateTime();
 
-// -- DÉBUT de la fonction populateChannels() --
-// C'est cette fonction qui était manquante ou mal placée !
 function populateChannels() {
-    channelListDiv.innerHTML = ''; // Vide la liste actuelle avant de la remplir
+    channelListDiv.innerHTML = '';
     channels.forEach((channel, index) => {
         const channelItem = document.createElement('div');
         channelItem.classList.add('channel-item');
-        // Utilisez un identifiant unique, par exemple le nom de la chaîne pour data-channel-id
-        channelItem.setAttribute('data-channel-id', channel.name.replace(/\s/g, '-')); // Remplace les espaces pour un ID valide
+        channelItem.setAttribute('data-channel-id', channel.name.replace(/\s/g, '-'));
 
         const img = document.createElement('img');
-        img.src = channel.logo;
+        img.src = channel.logo; // Le logo est toujours utilisé pour la liste de droite
         img.alt = channel.name;
 
         const span = document.createElement('span');
@@ -41,21 +38,30 @@ function populateChannels() {
         channelItem.appendChild(span);
 
         channelItem.addEventListener('click', () => {
-            loadChannel(channel.url, channel.logo, channel.name, channel.name.replace(/\s/g, '-'));
-            // Si vous avez l'EPG, vous appelleriez displayEPGForChannel(channel['tvg-id']); ici
+            // Le paramètre logoUrl n'est plus nécessaire dans loadChannel
+            loadChannel(channel.url, channel.name, channel.name.replace(/\s/g, '-')); 
         });
 
         channelListDiv.appendChild(channelItem);
     });
 }
-// -- FIN de la fonction populateChannels() --
-
 
 // Fonction pour charger et lire une chaîne
-function loadChannel(url, logoUrl, channelName, channelId) {
-    // ... (votre code existant pour loadChannel ici) ...
-    // Le code que vous avez fourni pour loadChannel est correct et est inséré ici
-    
+// Le paramètre logoUrl a été supprimé car il n'est plus utilisé ici
+function loadChannel(url, channelName, channelId) { 
+    // Les lignes qui manipulaient channelLogo sont supprimées d'ici
+    // if (logoUrl) { ... } else { ... }
+
+    // Gère la classe 'active' pour la chaîne sélectionnée dans la liste
+    document.querySelectorAll('.channel-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    const activeItem = document.querySelector(`.channel-item[data-channel-id="${channelId}"]`);
+    if (activeItem) {
+        activeItem.classList.add('active');
+        activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
     if (hls) {
         hls.destroy();
         hls = null;
@@ -98,7 +104,7 @@ function loadChannel(url, logoUrl, channelName, channelId) {
     } else {
         const playerDiv = document.getElementById('videoPlayer');
         console.error("Votre navigateur ne supporte pas la lecture de flux HLS.");
-        channelLogo.style.display = 'none';
+        // channelLogo.style.display = 'none'; // Supprimé
     }
 }
 
@@ -113,16 +119,17 @@ fetch('channels.json')
     })
     .then(data => {
         channels = data;
-        populateChannels(); // Appel de la fonction maintenant définie
+        populateChannels();
         if (channels.length > 0) {
-            loadChannel(channels[0].url, channels[0].logo, channels[0].name, channels[0].name.replace(/\s/g, '-')); // Charge la première chaîne
+            // Le paramètre logoUrl n'est plus nécessaire ici
+            loadChannel(channels[0].url, channels[0].name, channels[0].name.replace(/\s/g, '-')); 
         } else {
             console.warn("Aucune chaîne trouvée dans channels.json.");
-            channelLogo.style.display = 'none';
+            // channelLogo.style.display = 'none'; // Supprimé
         }
     })
     .catch(error => {
         console.error("Erreur lors du chargement des chaînes:", error);
         console.error(`Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`);
-        channelLogo.style.display = 'none';
+        // channelLogo.style.display = 'none'; // Supprimé
     });
