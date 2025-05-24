@@ -4,6 +4,28 @@
         "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
         "logo": "https://i.imgur.com/QxHt9NC.png"
     },
+    {  
+        "name": "France 2",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/France_2_2018.svg/512px-France_2_2018.svg.png"
+    },
+    {  
+        "name": "France 3",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/France_3_2018.svg/512px-France_3_2018.svg.png"
+    },
+    {  
+        "name": "France 4",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france4.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/France_4_2018.svg/512px-France_4_2018.svg.png"
+    },
+    {  
+        "name": "France 5",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france5.m3u8",
+        "logo": "https://logowik.com/content/uploads/images/france-5-20182646.logowik.com.webp"
+    },
+    
+
     {
         "name": "RMC Decouverte",
         "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8",
@@ -24,26 +46,7 @@
         "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
         "logo": "https://i.imgur.com/1IXQoWq.png"
     },
-    {  
-        "name": "France 2",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/France_2_2018.svg/512px-France_2_2018.svg.png"
-    },
-    {  
-        "name": "France 3",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/France_3_2018.svg/512px-France_3_2018.svg.png"
-    },
-    {  
-        "name": "France 5",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france5.m3u8",
-        "logo": "https://logowik.com/content/uploads/images/france-5-20182646.logowik.com.webp"
-    },
-    {  
-        "name": "France 4",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france4.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/France_4_2018.svg/512px-France_4_2018.svg.png"
-    },
+    
     {  
         "name": "LCI",
         "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8",
