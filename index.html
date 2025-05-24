@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecteur HLS Simple</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a1a; /* Fond sombre */
+            color: #e0e0e0; /* Texte clair */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #4CAF50; /* Couleur d'accentuation */
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        #videoPlayer {
+            max-width: 90%;
+            width: 800px; /* Largeur maximale pour la vidéo */
+            background-color: #000;
+            border: 1px solid #333;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); /* Ombre verte subtile */
+            border-radius: 8px;
+            overflow: hidden; /* Assure que le rayon de bordure s'applique à la vidéo */
+        }
+        video {
+            width: 100%;
+            height: auto;
+            display: block; /* Supprime l'espace sous la vidéo */
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            border-radius: 5px;
+            color: #ffa726; /* Texte d'avertissement */
+            text-align: center;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lecteur HLS pour TF1</h1>
+
+    <div id="videoPlayer">
+        <video id="video" controls autoplay></video>
+    </div>
+
+    <p class="message">
+        Si la vidéo ne démarre pas, assurez-vous que votre navigateur supporte la lecture HLS ou qu'il n'y a pas de problème avec le flux.
+    </p>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        const video = document.getElementById('video');
+        const videoSrc = 'https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1sf.m3u8';
+
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+            hls.on(Hls.Events.ERROR, function (event, data) {
+                console.error('Erreur HLS:', data);
+                if (data.fatal) {
+                    switch(data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.error("Erreur réseau - impossible de charger le flux.");
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.error("Erreur média - problème de décodage.");
+                            break;
+                        default:
+                            // Tente de récupérer après une erreur fatale
+                            hls.destroy();
+                            // Optionnellement, essayez de recréer l'instance Hls après un court délai
+                            // setTimeout(() => location.reload(), 3000);
+                            break;
+                    }
+                }
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Pour les navigateurs qui supportent HLS nativement (Safari sur iOS/macOS)
+            video.src = videoSrc;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        } else {
+            console.error('HLS n\'est pas supporté par ce navigateur.');
+            const playerDiv = document.getElementById('videoPlayer');
+            playerDiv.innerHTML = '<p class="message" style="color: #ff4d4d;">Votre navigateur ne supporte pas la lecture de flux HLS.</p>';
+        }
+    </script>
+</body>
+</html>
