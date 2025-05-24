@@ -43,16 +43,24 @@ function loadChannel(url, logoUrl, channelName, channelId) {
         hls = new Hls();
         hls.loadSource(url);
         hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, function() {
-            video.play();
-            statusMessage.textContent = `Lecture de ${channelName || 'la chaîne sélectionnée'}.`;
+ hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            // Désactiver tous les sous-titres via la propriété HLS.js
+            // Mettre ceci AVANT video.play() pour s'assurer qu'ils sont désactivés dès le début
+            hls.subtitleTrack = -1; // -1 est la valeur pour "aucun sous-titre"
+            console.log("Subtitles disabled via hls.subtitleTrack = -1"); // Pour le débogage
 
-            // Désactiver tous les sous-titres par défaut
+            // Une vérification additionnelle sur les pistes natives du lecteur HTML5 (au cas où)
             if (video.textTracks) {
                 for (let i = 0; i < video.textTracks.length; i++) {
-                    video.textTracks[i].mode = 'disabled';
+                    if (video.textTracks[i].mode !== 'disabled') { // Évite de faire des changements inutiles
+                        video.textTracks[i].mode = 'disabled';
+                        console.log(`Piste de sous-titre ${video.textTracks[i].label || i} désactivée.`); // Pour le débogage
+                    }
                 }
             }
+            
+            video.play();
+            statusMessage.textContent = `Lecture de ${channelName || 'la chaîne sélectionnée'}.`;
         });
         hls.on(Hls.Events.ERROR, function (event, data) {
             console.error('Erreur HLS:', data);
