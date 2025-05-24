@@ -42,6 +42,10 @@
     {  
         "name": "BFM",
         "url": "https://live-cdn-stream-euw1.bfmtv.bct.nextradiotv.com/master.m3u8"
+    },
+    {  
+        "name": "TMC",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8"
     }
 ]
 
