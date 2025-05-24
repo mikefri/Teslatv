@@ -61,5 +61,25 @@
         "name": "TMC",
         "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
         "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/5/54/TMC_logo.svg/512px-TMC_logo.svg.png"
+    },
+
+
+
+{  
+        "name": "Doctor Who",
+        "url": "https://jmp2.uk/sam-FR2700001WW.m3u8",
+        "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR2700001WW_20241015T040255SQUARE.png"
+    },
+    {  
+        "name": "Wonderland Kids TV",
+        "url": "https://jmp2.uk/sam-FR1800002C4.m3u8",
+        "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR1800002C4_20241210T052800SQUARE.png"
+    },
+
+
+    {  
+        "name": "Top Films - Rakuten TV",
+        "url": "https://jmp2.uk/sam-FR2600007CB.m3u8",
+        "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR2600007CB_20250415T020909SQUARE.png"
     }
-]
+    ]
