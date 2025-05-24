@@ -43,6 +43,11 @@ h1 {
     overflow: hidden;
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--neon-blue-dark);
+    /* Définir une hauteur maximale pour que le scroll puisse apparaître */
+    /* La hauteur ici doit être ajustée en fonction de la taille de votre écran */
+    /* Par exemple, 80vh signifie 80% de la hauteur de la fenêtre */
+    /* Vous pouvez expérimenter avec cette valeur */
+    max-height: calc(100vh - 80px); /* Exemple: 100% de la hauteur de la fenêtre moins 80px pour le titre et les marges */
 }
 
 #videoPlayer {
@@ -62,15 +67,19 @@ h1 {
     height: 100%;
 }
 
-/* Le style pour .channel-logo est supprimé d'ici */
-
 /* Nouveau conteneur pour l'heure et la liste des chaînes */
 #channelListContainer {
     width: 220px;
     background-color: var(--bg-medium);
     display: flex;
     flex-direction: column;
-    padding-bottom: 15px;
+    /* Ajoutez la propriété overflow-y ici */
+    overflow-y: auto; /* Active le défilement vertical pour ce conteneur */
+    padding-bottom: 15px; /* Pour un peu d'espace en bas de la liste défilante */
+    /* Important: Définir une hauteur explicite ou une hauteur maximale */
+    /* Si main-container a une max-height, cela peut fonctionner */
+    /* Sinon, vous pouvez mettre une max-height ici aussi, par exemple: */
+    /* max-height: 100%; */
 }
 
 /* Style de l'heure */
@@ -83,29 +92,34 @@ h1 {
     font-weight: bold;
     border-bottom: 1px solid var(--neon-blue-dark);
     box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
-    flex-shrink: 0;
+    flex-shrink: 0; /* Empêche l'élément de rétrécir */
+    /* Rendre l'heure "collante" en haut du scroll */
+    position: sticky;
+    top: 0;
+    z-index: 1; /* S'assure qu'elle reste au-dessus des autres éléments lors du scroll */
 }
 
 /* Liste des chaînes */
 #channelList {
-    flex-grow: 1;
-    padding: 15px 10px 0;
-    overflow-y: auto; /* Permet le défilement vertical */
+    flex-grow: 1; /* Permet à la liste de prendre l'espace restant */
+    padding: 15px 10px 0; /* Padding vertical ajusté */
+    /* Supprimez overflow-y de ici */
+    /* overflow-y: auto; */
 }
 
-/* Scrollbar personnalisée pour la liste des chaînes */
-#channelList::-webkit-scrollbar {
+/* Scrollbar personnalisée pour la liste des chaînes (reste sur #channelListContainer maintenant) */
+#channelListContainer::-webkit-scrollbar {
     width: 8px;
 }
-#channelList::-webkit-scrollbar-track {
+#channelListContainer::-webkit-scrollbar-track {
     background: var(--bg-light);
     border-radius: 10px;
 }
-#channelList::-webkit-scrollbar-thumb {
+#channelListContainer::-webkit-scrollbar-thumb {
     background: var(--neon-blue-dark);
     border-radius: 10px;
 }
-#channelList::-webkit-scrollbar-thumb:hover {
+#channelListContainer::-webkit-scrollbar-thumb:hover {
     background: var(--neon-blue);
 }
 
