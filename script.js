@@ -46,6 +46,13 @@ function loadChannel(url, logoUrl, channelName, channelId) {
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
             video.play();
             statusMessage.textContent = `Lecture de ${channelName || 'la chaîne sélectionnée'}.`;
+
+            // Désactiver tous les sous-titres par défaut
+            if (video.textTracks) {
+                for (let i = 0; i < video.textTracks.length; i++) {
+                    video.textTracks[i].mode = 'disabled';
+                }
+            }
         });
         hls.on(Hls.Events.ERROR, function (event, data) {
             console.error('Erreur HLS:', data);
