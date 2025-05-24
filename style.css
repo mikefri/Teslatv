@@ -1,44 +1,58 @@
+/* Variables pour les couleurs néon */
+:root {
+    --neon-blue: #00FFFF; /* Bleu cyan vif */
+    --neon-blue-light: #88FFFF; /* Bleu plus clair pour le texte */
+    --neon-blue-dark: #008080; /* Bleu foncé pour les accents */
+    --bg-dark: #0a0a0a; /* Fond très sombre */
+    --bg-medium: #1a1a1a; /* Fond légèrement moins sombre */
+    --bg-light: #2c2c2c; /* Fond pour les éléments interactifs */
+    --text-color: #e0e0e0; /* Couleur de texte par défaut */
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Aligne le contenu vers le haut */
+    justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
-    background-color: #1a1a1a;
-    color: #e0e0e0;
+    background-color: var(--bg-dark); /* Fond très sombre */
+    color: var(--text-color);
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
+    overflow-x: hidden; /* Empêche le défilement horizontal */
 }
+
 h1 {
-    color: #4CAF50;
+    color: var(--neon-blue);
     margin-bottom: 20px;
     text-align: center;
+    text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue); /* Effet de lueur néon */
+    font-size: 2.5em;
 }
 
 /* Conteneur principal pour la vidéo et la liste des chaînes */
 .main-container {
-    display: flex; /* Utilise flexbox pour aligner les éléments côte à côte */
-    width: 95%; /* Largeur du conteneur principal */
-    max-width: 1200px; /* Largeur maximale pour éviter un étirement excessif */
+    display: flex;
+    width: 95%;
+    max-width: 1200px;
     margin-top: 20px;
-    background-color: #222;
-    border-radius: 8px;
-    overflow: hidden; /* Pour les bords arrondis */
-    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); /* Ombre plus prononcée */
+    background-color: var(--bg-medium);
+    border-radius: 12px; /* Bords légèrement plus arrondis */
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2); /* Ombre néon plus prononcée */
+    border: 1px solid var(--neon-blue-dark);
 }
 
 #videoPlayer {
-    flex-grow: 1; /* Permet au lecteur vidéo de prendre tout l'espace disponible */
+    flex-grow: 1;
     background-color: #000;
-    border: 1px solid #333;
-    /* Retiré le border-radius ici pour laisser le main-container gérer les coins */
     overflow: hidden;
     position: relative;
-    /* Calcul de la hauteur pour maintenir un ratio 16:9 */
-    padding-bottom: 56.25%; /* 9/16 = 0.5625 */
+    padding-bottom: 56.25%; /* Ratio 16:9 */
     height: 0;
+    border-right: 1px solid var(--neon-blue-dark); /* Bordure entre vidéo et liste */
 }
 #videoPlayer video {
     position: absolute;
@@ -51,76 +65,110 @@ h1 {
 /* Style pour le logo sur le lecteur vidéo */
 .channel-logo {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
-    width: 80px; /* Taille du logo */
+    bottom: 15px; /* Légèrement plus haut */
+    left: 15px;
+    width: 90px; /* Logo un peu plus grand */
     height: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 5px;
-    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.6); /* Fond plus sombre */
+    padding: 8px; /* Plus de padding */
+    border-radius: 8px; /* Bords plus carrés arrondis */
     z-index: 10;
     opacity: 0.8;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); /* Petite lueur par défaut */
 }
 .channel-logo:hover {
     opacity: 1;
+    box-shadow: 0 0 15px var(--neon-blue), 0 0 25px rgba(0, 255, 255, 0.3); /* Lueur plus intense au survol */
 }
 
 /* Liste des chaînes à droite */
 #channelList {
-    width: 200px; /* Largeur fixe pour la liste */
-    background-color: #2b2b2b;
-    padding: 10px;
-    overflow-y: auto; /* Permet le défilement vertical si beaucoup de chaînes */
-    border-left: 1px solid #444;
-    /* La hauteur de la liste doit correspondre à la hauteur du lecteur vidéo */
-    height: auto; /* Sera ajusté par flexbox */
-    max-height: 600px; /* Une hauteur max pour éviter qu'elle ne soit trop longue si la vidéo est très grande */
+    width: 220px; /* Largeur fixe légèrement augmentée */
+    background-color: var(--bg-medium);
+    padding: 15px 10px; /* Plus de padding vertical */
+    overflow-y: auto;
+    max-height: 600px; /* Peut être ajusté si la vidéo change de taille */
+    height: auto; /* Permet à la liste de s'adapter à la hauteur du lecteur */
 }
+
+/* Scrollbar personnalisée pour la liste des chaînes */
+#channelList::-webkit-scrollbar {
+    width: 8px;
+}
+#channelList::-webkit-scrollbar-track {
+    background: var(--bg-light);
+    border-radius: 10px;
+}
+#channelList::-webkit-scrollbar-thumb {
+    background: var(--neon-blue-dark);
+    border-radius: 10px;
+}
+#channelList::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-blue);
+}
+
 
 .channel-item {
     display: flex;
     align-items: center;
-    padding: 8px;
-    margin-bottom: 5px;
-    background-color: #3a3a3a;
-    border-radius: 5px;
+    padding: 10px; /* Plus de padding */
+    margin-bottom: 8px; /* Plus d'espace entre les éléments */
+    background-color: var(--bg-light); /* Fond des éléments */
+    border-radius: 8px; /* Bords arrondis */
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    border: 1px solid transparent; /* Bordure par défaut */
 }
 .channel-item:hover {
-    background-color: #4a4a4a;
-    transform: translateY(-2px);
+    background-color: var(--bg-dark); /* Devient plus sombre au survol */
+    transform: translateY(-3px); /* Effet de survol plus prononcé */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 5px rgba(0, 255, 255, 0.4); /* Lueur au survol */
+    border-color: var(--neon-blue);
 }
-.channel-item.active { /* Style pour la chaîne actuellement sélectionnée */
-    background-color: #4CAF50; /* Vert accent */
-    color: #fff;
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+.channel-item.active {
+    background-color: var(--neon-blue-dark); /* Utilise un bleu plus foncé pour l'actif */
+    color: var(--neon-blue-light);
+    box-shadow: 0 0 15px var(--neon-blue), 0 0 8px rgba(0, 255, 255, 0.6); /* Lueur intense pour l'actif */
+    border-color: var(--neon-blue);
 }
 
 .channel-item img {
-    width: 40px; /* Taille des logos dans la liste */
-    height: 40px;
-    margin-right: 10px;
-    border-radius: 50%; /* Rend les logos ronds */
-    object-fit: contain; /* Assure que le logo s'adapte sans être déformé */
-    background-color: #555;
-    padding: 3px;
+    width: 50px; /* Logos plus grands */
+    height: 50px;
+    margin-right: 12px; /* Plus d'espace */
+    border-radius: 50%;
+    object-fit: contain;
+    background-color: rgba(0, 0, 0, 0.4); /* Fond de logo subtil */
+    padding: 5px;
+    border: 2px solid var(--neon-blue-dark); /* Bordure de logo subtile */
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
 }
-.channel-item span {
-    font-size: 0.9em;
-    font-weight: bold;
-    white-space: nowrap; /* Empêche le texte de passer à la ligne */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Ajoute des points de suspension si le texte est trop long */
+.channel-item.active img {
+    border-color: var(--neon-blue-light); /* Bordure du logo plus vive quand actif */
+    box-shadow: 0 0 10px var(--neon-blue);
 }
 
+.channel-item span {
+    font-size: 1em; /* Texte légèrement plus grand */
+    font-weight: bold;
+    color: var(--text-color);
+    text-shadow: 0 0 3px rgba(0, 255, 255, 0.3); /* Légère lueur sur le texte */
+}
+.channel-item.active span {
+    color: var(--neon-blue-light); /* Texte plus clair quand actif */
+    text-shadow: 0 0 5px var(--neon-blue-light);
+}
+
+
 .message {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #333;
-    border-radius: 5px;
-    color: #ffa726;
+    margin-top: 30px; /* Plus d'espace */
+    padding: 12px 25px; /* Plus de padding */
+    background-color: var(--bg-medium);
+    border-radius: 8px;
+    color: var(--neon-blue-light); /* Message en néon bleu */
     text-align: center;
-    font-size: 0.9em;
+    font-size: 1em;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); /* Lueur pour le message */
+    border: 1px solid var(--neon-blue-dark);
 }
