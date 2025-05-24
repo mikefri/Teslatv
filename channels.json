@@ -18,5 +18,25 @@
     {  
         "name": "Sport en France",
         "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8"
+    },
+    {  
+        "name": "France 2",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8"
+    },
+    {  
+        "name": "France 3",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8"
+    },
+    {  
+        "name": "France 5",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france5.m3u8"
+    },
+    {  
+        "name": "France 4",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france4.m3u8"
+    },
+    {  
+        "name": "LCI",
+        "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8"
     }
 ]
