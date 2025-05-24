@@ -2,7 +2,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Alignement en haut */
+    justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
     background-color: #1a1a1a;
@@ -55,12 +55,31 @@ h1 {
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
     border-radius: 8px;
     overflow: hidden;
+    position: relative; /* Important pour positionner le logo */
 }
 video {
     width: 100%;
     height: auto;
     display: block;
 }
+/* Style pour le logo */
+.channel-logo {
+    position: absolute; /* Positionne le logo par-dessus la vidéo ou à côté */
+    bottom: 10px; /* Distance du bas */
+    left: 10px; /* Distance de la gauche */
+    width: 80px; /* Taille du logo */
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour meilleure visibilité */
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 10; /* Assure que le logo est au-dessus de la vidéo */
+    opacity: 0.8; /* Légèrement transparent */
+    transition: opacity 0.3s ease-in-out; /* Effet de transition */
+}
+.channel-logo:hover {
+    opacity: 1; /* Pleine opacité au survol */
+}
+
 .message {
     margin-top: 20px;
     padding: 10px 20px;

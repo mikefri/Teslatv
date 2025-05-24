@@ -1,52 +1,62 @@
 [
     {
         "name": "TF1",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8"
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
+        "logo": "https://i.imgur.com/QxHt9NC.png"
     },
     {
         "name": "RMC Decouverte",
-        "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8"
+        "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/b3/RMC_D%C3%A9couverte_logo_2017.svg/langfr-350px-RMC_D%C3%A9couverte_logo_2017.svg.png"
     },
     {
         "name": "TFX",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tfx.m3u8"
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tfx.m3u8",
+        "logo": "https://i.imgur.com/d91GcVf.png"
     },
     {  
         "name": "RMC Story",
-        "url": "https://d36bxc1bknkxrk.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-3ewcp19zjaxpt/index.m3u8"
+        "url": "https://d36bxc1bknkxrk.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-3ewcp19zjaxpt/index.m3u8",
+        "logo": "https://i.imgur.com/h53nsyJ.png"
     },
     {  
         "name": "Sport en France",
-        "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8"
+        "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Sport_en_France_logo.png"
     },
     {  
         "name": "France 2",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8"
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/France_2_logo_2018.svg/1200px-France_2_logo_2018.svg.png"
     },
     {  
         "name": "France 3",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8"
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/f/fa/France_3_logo_2018.svg/langfr-350px-France_3_logo_2018.svg.png"
     },
     {  
         "name": "France 5",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france5.m3u8"
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france5.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/France_5_logo_2018.svg/1200px-France_5_logo_2018.svg.png"
     },
     {  
         "name": "France 4",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france4.m3u8"
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france4.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/France_4_logo_2018.svg/1200px-France_4_logo_2018.svg.png"
     },
     {  
         "name": "LCI",
-        "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8"
+        "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_LCI.svg/1200px-Logo_LCI.svg.png"
     },
     {  
         "name": "BFM",
-        "url": "https://live-cdn-stream-euw1.bfmtv.bct.nextradiotv.com/master.m3u8"
+        "url": "https://live-cdn-stream-euw1.bfmtv.bct.nextradiotv.com/master.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Logo_BFM_TV.svg/1200px-Logo_BFM_TV.svg.png"
     },
     {  
         "name": "TMC",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8"
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/TMC_logo_2016.svg/1200px-TMC_logo_2016.svg.png"
     }
 ]
-
-
