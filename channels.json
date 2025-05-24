@@ -81,5 +81,10 @@
         "name": "Top Films - Rakuten TV",
         "url": "https://jmp2.uk/sam-FR2600007CB.m3u8",
         "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR2600007CB_20250415T020909SQUARE.png"
+    },
+    {  
+        "name": "Films d'action - Rakuten TV",
+        "url": "https://jmp2.uk/sam-FR2600002X9.m3u8",
+        "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR2600002X9_20240827T040439SQUARE.png"
     }
     ]
