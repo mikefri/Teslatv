@@ -9,9 +9,8 @@ let channels = [];
 // Fonction pour mettre à jour l'heure affichée
 function updateTime() {
     const now = new Date();
-    // Options pour le format de l'heure (heure, minute)
     const options = { hour: '2-digit', minute: '2-digit' };
-    const timeString = now.toLocaleTimeString('fr-FR', options); // 'fr-FR' pour le format français
+    const timeString = now.toLocaleTimeString('fr-FR', options);
     currentTimeDiv.textContent = timeString;
 }
 
@@ -21,12 +20,42 @@ setInterval(updateTime, 1000);
 // Initialiser l'heure au chargement de la page
 updateTime();
 
-// ... (le reste de votre script.js) ...
+// -- DÉBUT de la fonction populateChannels() --
+// C'est cette fonction qui était manquante ou mal placée !
+function populateChannels() {
+    channelListDiv.innerHTML = ''; // Vide la liste actuelle avant de la remplir
+    channels.forEach((channel, index) => {
+        const channelItem = document.createElement('div');
+        channelItem.classList.add('channel-item');
+        // Utilisez un identifiant unique, par exemple le nom de la chaîne pour data-channel-id
+        channelItem.setAttribute('data-channel-id', channel.name.replace(/\s/g, '-')); // Remplace les espaces pour un ID valide
+
+        const img = document.createElement('img');
+        img.src = channel.logo;
+        img.alt = channel.name;
+
+        const span = document.createElement('span');
+        span.textContent = channel.name;
+
+        channelItem.appendChild(img);
+        channelItem.appendChild(span);
+
+        channelItem.addEventListener('click', () => {
+            loadChannel(channel.url, channel.logo, channel.name, channel.name.replace(/\s/g, '-'));
+            // Si vous avez l'EPG, vous appelleriez displayEPGForChannel(channel['tvg-id']); ici
+        });
+
+        channelListDiv.appendChild(channelItem);
+    });
+}
+// -- FIN de la fonction populateChannels() --
+
 
 // Fonction pour charger et lire une chaîne
 function loadChannel(url, logoUrl, channelName, channelId) {
-    // ... (votre code existant pour loadChannel) ...
-
+    // ... (votre code existant pour loadChannel ici) ...
+    // Le code que vous avez fourni pour loadChannel est correct et est inséré ici
+    
     if (hls) {
         hls.destroy();
         hls = null;
@@ -73,7 +102,6 @@ function loadChannel(url, logoUrl, channelName, channelId) {
     }
 }
 
-// ... (le reste du script.js) ...
 
 // --- Chargement des chaînes depuis le fichier JSON ---
 fetch('channels.json')
@@ -85,9 +113,9 @@ fetch('channels.json')
     })
     .then(data => {
         channels = data;
-        populateChannels();
+        populateChannels(); // Appel de la fonction maintenant définie
         if (channels.length > 0) {
-            loadChannel(channels[0].url, channels[0].logo, channels[0].name, channels[0].name);
+            loadChannel(channels[0].url, channels[0].logo, channels[0].name, channels[0].name.replace(/\s/g, '-')); // Charge la première chaîne
         } else {
             console.warn("Aucune chaîne trouvée dans channels.json.");
             channelLogo.style.display = 'none';
