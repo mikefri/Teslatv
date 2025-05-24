@@ -1,24 +1,38 @@
 const video = document.getElementById('video');
-const channelSelect = document.getElementById('channelSelect');
+// const channelSelect = document.getElementById('channelSelect'); // Plus besoin de ce sélecteur
 const statusMessage = document.getElementById('statusMessage');
-const channelLogo = document.getElementById('channelLogo'); // Récupérer l'élément img du logo
+const channelLogo = document.getElementById('channelLogo');
+const channelListDiv = document.getElementById('channelList'); // Nouveau : référence à la liste des chaînes
 let hls;
 let channels = [];
 
 // Fonction pour charger et lire une chaîne
-function loadChannel(url, logoUrl, channelName) { // Ajout des paramètres logoUrl et channelName
+// Ajout de channelId pour identifier la chaîne active
+function loadChannel(url, logoUrl, channelName, channelId) {
     statusMessage.textContent = `Chargement de ${channelName || 'la chaîne'}...`;
 
-    // Mettre à jour l'image du logo
+    // Met à jour l'image du logo et la visibilité
     if (logoUrl) {
         channelLogo.src = logoUrl;
         channelLogo.alt = `Logo de ${channelName || 'la chaîne'}`;
-        channelLogo.style.display = 'block'; // Afficher le logo
+        channelLogo.style.display = 'block';
     } else {
-        channelLogo.src = ''; // Vider la source si pas de logo
+        channelLogo.src = '';
         channelLogo.alt = '';
-        channelLogo.style.display = 'none'; // Cacher le logo si non disponible
+        channelLogo.style.display = 'none';
     }
+
+    // Gère la classe 'active' pour la chaîne sélectionnée dans la liste
+    document.querySelectorAll('.channel-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    const activeItem = document.querySelector(`.channel-item[data-channel-id="${channelId}"]`);
+    if (activeItem) {
+        activeItem.classList.add('active');
+        // Optionnel: Faire défiler la liste pour rendre l'élément actif visible
+        activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
 
     if (hls) {
         hls.destroy();
@@ -67,31 +81,36 @@ function loadChannel(url, logoUrl, channelName) { // Ajout des paramètres logoU
         statusMessage.textContent = "Votre navigateur ne supporte pas la lecture de flux HLS.";
         const playerDiv = document.getElementById('videoPlayer');
         playerDiv.innerHTML = '<p class="message" style="color: #ff4d4d;">Votre navigateur ne supporte pas la lecture de flux HLS.</p>';
-        channelLogo.style.display = 'none'; // Cacher le logo si pas de support
+        channelLogo.style.display = 'none';
     }
 }
 
-// Remplir le menu déroulant avec les chaînes
+// Remplir la liste des chaînes avec des logos cliquables
 function populateChannels() {
-    channelSelect.innerHTML = '';
+    channelListDiv.innerHTML = ''; // Vide la liste existante
     channels.forEach((channel, index) => {
-        const option = document.createElement('option');
-        option.value = channel.url;
-        option.textContent = channel.name;
-        // On stocke l'URL du logo dans un attribut de données pour un accès facile
-        option.dataset.logo = channel.logo || ''; // Utilisez || '' pour gérer les logos manquants
-        channelSelect.appendChild(option);
+        const channelItem = document.createElement('div');
+        channelItem.classList.add('channel-item');
+        // Utilisez un attribut de données pour stocker un identifiant unique (ici, le nom est utilisé comme ID pour simplifier)
+        channelItem.dataset.channelId = channel.name;
+
+        const logoImg = document.createElement('img');
+        logoImg.src = channel.logo || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23666"/><text x="50" y="50" font-family="Arial" font-size="30" fill="%23eee" text-anchor="middle" dominant-baseline="central">?</text></svg>'; // Fallback SVG pour les logos manquants
+        logoImg.alt = `Logo ${channel.name}`;
+        channelItem.appendChild(logoImg);
+
+        const channelNameSpan = document.createElement('span');
+        channelNameSpan.textContent = channel.name;
+        channelItem.appendChild(channelNameSpan);
+
+        // Attachez l'écouteur d'événement au clic sur l'élément de la chaîne
+        channelItem.addEventListener('click', () => {
+            loadChannel(channel.url, channel.logo, channel.name, channel.name);
+        });
+
+        channelListDiv.appendChild(channelItem);
     });
 }
-
-// Charger la chaîne sélectionnée quand l'utilisateur change de sélection
-channelSelect.addEventListener('change', (event) => {
-    const selectedOption = event.target.options[event.target.selectedIndex];
-    const selectedUrl = selectedOption.value;
-    const selectedLogo = selectedOption.dataset.logo;
-    const selectedName = selectedOption.textContent;
-    loadChannel(selectedUrl, selectedLogo, selectedName);
-});
 
 // --- Chargement des chaînes depuis le fichier JSON ---
 fetch('channels.json')
@@ -103,17 +122,17 @@ fetch('channels.json')
     })
     .then(data => {
         channels = data;
-        populateChannels();
+        populateChannels(); // Remplir la nouvelle liste de chaînes
         if (channels.length > 0) {
-            // Charger la première chaîne au démarrage, y compris son logo et nom
-            loadChannel(channels[0].url, channels[0].logo, channels[0].name);
+            // Charger la première chaîne au démarrage, y compris son logo et son nom, et son ID
+            loadChannel(channels[0].url, channels[0].logo, channels[0].name, channels[0].name);
         } else {
             statusMessage.textContent = "Aucune chaîne trouvée dans channels.json.";
-            channelLogo.style.display = 'none'; // Cacher le logo si pas de chaînes
+            channelLogo.style.display = 'none';
         }
     })
     .catch(error => {
         console.error("Erreur lors du chargement des chaînes:", error);
         statusMessage.textContent = `Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`;
-        channelLogo.style.display = 'none'; // Cacher le logo en cas d'erreur de chargement
+        channelLogo.style.display = 'none';
     });

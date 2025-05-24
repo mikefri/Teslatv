@@ -9,15 +9,13 @@
 <body>
     <h1>Lecteur IPTV Simple</h1>
 
-    <div class="channel-selector">
-        <label for="channelSelect">Sélectionnez une chaîne :</label>
-        <select id="channelSelect">
-            </select>
-    </div>
-
-    <div id="videoPlayer">
-        <video id="video" controls autoplay></video>
-        <img id="channelLogo" src="" alt="Logo de la chaîne" class="channel-logo">
+    <div class="main-container">
+        <div id="videoPlayer">
+            <video id="video" controls autoplay></video>
+            <img id="channelLogo" src="" alt="Logo de la chaîne" class="channel-logo">
+        </div>
+        <div id="channelList">
+            </div>
     </div>
 
     <p class="message" id="statusMessage">
