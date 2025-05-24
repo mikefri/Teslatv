@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecteur HLS Simple</title>
+    <title>Lecteur TF1 - ParaTV</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -49,19 +49,20 @@
     </style>
 </head>
 <body>
-    <h1>Lecteur HLS pour TF1</h1>
+    <h1>Lecteur TF1</h1>
 
     <div id="videoPlayer">
         <video id="video" controls autoplay></video>
     </div>
 
     <p class="message">
-        Si la vidéo ne démarre pas, assurez-vous que votre navigateur supporte la lecture HLS ou qu'il n'y a pas de problème avec le flux.
+        Si la vidéo ne démarre pas, vérifiez votre connexion internet ou si le flux est toujours actif.
     </p>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         const video = document.getElementById('video');
+        // Le nouveau lien du flux M3U8
         const videoSrc = 'https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8';
 
         if (Hls.isSupported()) {
@@ -77,14 +78,18 @@
                     switch(data.type) {
                         case Hls.ErrorTypes.NETWORK_ERROR:
                             console.error("Erreur réseau - impossible de charger le flux.");
+                            // Tente de récupérer après une erreur réseau fatale
+                            hls.recoverMediaError();
                             break;
                         case Hls.ErrorTypes.MEDIA_ERROR:
                             console.error("Erreur média - problème de décodage.");
+                            // Tente de récupérer après une erreur média fatale
+                            hls.recoverMediaError();
                             break;
                         default:
-                            // Tente de récupérer après une erreur fatale
+                            // Pour les autres erreurs fatales, détruit et recrée hls
                             hls.destroy();
-                            // Optionnellement, essayez de recréer l'instance Hls après un court délai
+                            // Ou simplement recharger la page si nécessaire
                             // setTimeout(() => location.reload(), 3000);
                             break;
                     }
