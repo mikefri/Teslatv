@@ -16,32 +16,31 @@ body {
     justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
-    background-color: var(--bg-dark); /* Fond très sombre */
+    background-color: var(--bg-dark);
     color: var(--text-color);
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
-    overflow-x: hidden; /* Empêche le défilement horizontal */
+    overflow-x: hidden;
 }
 
 h1 {
     color: var(--neon-blue);
     margin-bottom: 20px;
     text-align: center;
-    text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue); /* Effet de lueur néon */
+    text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
     font-size: 2.5em;
 }
 
-/* Conteneur principal pour la vidéo et la liste des chaînes */
 .main-container {
     display: flex;
     width: 95%;
     max-width: 1200px;
     margin-top: 20px;
     background-color: var(--bg-medium);
-    border-radius: 12px; /* Bords légèrement plus arrondis */
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2); /* Ombre néon plus prononcée */
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--neon-blue-dark);
 }
 
@@ -52,7 +51,7 @@ h1 {
     position: relative;
     padding-bottom: 56.25%; /* Ratio 16:9 */
     height: 0;
-    border-right: 1px solid var(--neon-blue-dark); /* Bordure entre vidéo et liste */
+    border-right: 1px solid var(--neon-blue-dark);
 }
 #videoPlayer video {
     position: absolute;
@@ -62,34 +61,53 @@ h1 {
     height: 100%;
 }
 
-/* Style pour le logo sur le lecteur vidéo */
 .channel-logo {
     position: absolute;
-    bottom: 15px; /* Légèrement plus haut */
+    bottom: 15px;
     left: 15px;
-    width: 90px; /* Logo un peu plus grand */
+    width: 90px;
     height: auto;
-    background-color: rgba(0, 0, 0, 0.6); /* Fond plus sombre */
-    padding: 8px; /* Plus de padding */
-    border-radius: 8px; /* Bords plus carrés arrondis */
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 8px;
+    border-radius: 8px;
     z-index: 10;
     opacity: 0.8;
     transition: opacity 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); /* Petite lueur par défaut */
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
 }
 .channel-logo:hover {
     opacity: 1;
-    box-shadow: 0 0 15px var(--neon-blue), 0 0 25px rgba(0, 255, 255, 0.3); /* Lueur plus intense au survol */
+    box-shadow: 0 0 15px var(--neon-blue), 0 0 25px rgba(0, 255, 255, 0.3);
 }
 
-/* Liste des chaînes à droite */
-#channelList {
-    width: 220px; /* Largeur fixe légèrement augmentée */
+/* Nouveau conteneur pour l'heure et la liste des chaînes */
+#channelListContainer {
+    width: 220px;
     background-color: var(--bg-medium);
-    padding: 15px 10px; /* Plus de padding vertical */
-    overflow-y: auto;
-    max-height: 600px; /* Peut être ajusté si la vidéo change de taille */
-    height: auto; /* Permet à la liste de s'adapter à la hauteur du lecteur */
+    display: flex; /* Utilise flexbox pour empiler l'heure et la liste */
+    flex-direction: column;
+    padding-bottom: 15px; /* Pour un peu d'espace en bas */
+}
+
+/* Style de l'heure */
+#currentTime {
+    background-color: var(--bg-dark);
+    color: var(--neon-blue-light);
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 1px solid var(--neon-blue-dark);
+    box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3); /* Légère ombre pour la distinguer */
+    flex-shrink: 0; /* Empêche l'élément de rétrécir */
+}
+
+/* Liste des chaînes */
+#channelList {
+    flex-grow: 1; /* Permet à la liste de prendre l'espace restant */
+    padding: 15px 10px 0; /* Padding vertical ajusté, pas de padding bas ici */
+    overflow-y: auto; /* Permet le défilement vertical */
+    /* max-height: 600px;  Laisser flex-grow gérer la hauteur si possible */
 }
 
 /* Scrollbar personnalisée pour la liste des chaînes */
@@ -112,64 +130,62 @@ h1 {
 .channel-item {
     display: flex;
     align-items: center;
-    padding: 10px; /* Plus de padding */
-    margin-bottom: 8px; /* Plus d'espace entre les éléments */
-    background-color: var(--bg-light); /* Fond des éléments */
-    border-radius: 8px; /* Bords arrondis */
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: var(--bg-light);
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-    border: 1px solid transparent; /* Bordure par défaut */
+    border: 1px solid transparent;
 }
 .channel-item:hover {
-    background-color: var(--bg-dark); /* Devient plus sombre au survol */
-    transform: translateY(-3px); /* Effet de survol plus prononcé */
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 5px rgba(0, 255, 255, 0.4); /* Lueur au survol */
+    background-color: var(--bg-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 5px rgba(0, 255, 255, 0.4);
     border-color: var(--neon-blue);
 }
 .channel-item.active {
-    background-color: var(--neon-blue-dark); /* Utilise un bleu plus foncé pour l'actif */
+    background-color: var(--neon-blue-dark);
     color: var(--neon-blue-light);
-    box-shadow: 0 0 15px var(--neon-blue), 0 0 8px rgba(0, 255, 255, 0.6); /* Lueur intense pour l'actif */
+    box-shadow: 0 0 15px var(--neon-blue), 0 0 8px rgba(0, 255, 255, 0.6);
     border-color: var(--neon-blue);
 }
 
 .channel-item img {
-    width: 40px; /* Logos plus petits */
+    width: 40px;
     height: 40px;
-    margin-right: 10px; /* Ajusté */
+    margin-right: 10px;
     border-radius: 50%;
     object-fit: contain;
     background-color: rgba(0, 0, 0, 0.4);
-    padding: 4px; /* Ajusté */
+    padding: 4px;
     border: 2px solid var(--neon-blue-dark);
     box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
 }
-
 .channel-item.active img {
-    border-color: var(--neon-blue-light); /* Bordure du logo plus vive quand actif */
+    border-color: var(--neon-blue-light);
     box-shadow: 0 0 10px var(--neon-blue);
 }
 
 .channel-item span {
-    font-size: 1em; /* Texte légèrement plus grand */
+    font-size: 1em;
     font-weight: bold;
     color: var(--text-color);
-    text-shadow: 0 0 3px rgba(0, 255, 255, 0.3); /* Légère lueur sur le texte */
+    text-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
 }
 .channel-item.active span {
-    color: var(--neon-blue-light); /* Texte plus clair quand actif */
+    color: var(--neon-blue-light);
     text-shadow: 0 0 5px var(--neon-blue-light);
 }
 
-
-.message {
-    margin-top: 30px; /* Plus d'espace */
-    padding: 12px 25px; /* Plus de padding */
+.message { /* Ce style est toujours là mais l'élément n'est plus dans le HTML */
+    margin-top: 30px;
+    padding: 12px 25px;
     background-color: var(--bg-medium);
     border-radius: 8px;
-    color: var(--neon-blue-light); /* Message en néon bleu */
+    color: var(--neon-blue-light);
     text-align: center;
     font-size: 1em;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); /* Lueur pour le message */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
     border: 1px solid var(--neon-blue-dark);
 }
