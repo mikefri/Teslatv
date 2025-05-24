@@ -1,0 +1,15 @@
+[
+    {
+        "name": "TF1",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8"
+    },
+    {
+        "name": "RMC Decouverte",
+        "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8"
+    },
+    {
+        "name": "TFX",
+        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tfx.m3u8"
+    }
+    // Ajoutez d'autres objets chaîne ici en respectant le format JSON
+]

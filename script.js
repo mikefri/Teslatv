@@ -2,23 +2,7 @@ const video = document.getElementById('video');
 const channelSelect = document.getElementById('channelSelect');
 const statusMessage = document.getElementById('statusMessage');
 let hls;
-
-// Définir les chaînes avec leurs informations
-const channels = [
-    {
-        name: "TF1",
-        url: "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8"
-    },
-    {
-        name: "RMC Decouverte",
-        url: "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8"
-    },
-    {
-        name: "TFX",
-        url: "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tfx.m3u8"
-    }
-    // Ajoutez d'autres chaînes ici
-];
+let channels = []; // Déclarez channels vide pour le moment
 
 // Fonction pour charger et lire une chaîne
 function loadChannel(url) {
@@ -75,16 +59,14 @@ function loadChannel(url) {
 
 // Remplir le menu déroulant avec les chaînes
 function populateChannels() {
+    // S'assurer que le sélecteur est vide avant d'ajouter de nouvelles options
+    channelSelect.innerHTML = '';
     channels.forEach((channel, index) => {
         const option = document.createElement('option');
         option.value = channel.url;
         option.textContent = channel.name;
         channelSelect.appendChild(option);
     });
-    // Sélectionner la première chaîne par défaut
-    if (channels.length > 0) {
-        channelSelect.value = channels[0].url;
-    }
 }
 
 // Charger la chaîne sélectionnée quand l'utilisateur change de sélection
@@ -92,10 +74,26 @@ channelSelect.addEventListener('change', (event) => {
     loadChannel(event.target.value);
 });
 
-// Initialiser la page
-populateChannels();
-if (channels.length > 0) {
-    loadChannel(channels[0].url); // Charger la première chaîne au démarrage
-} else {
-    statusMessage.textContent = "Aucune chaîne configurée.";
-}
+// --- Chargement des chaînes depuis le fichier JSON ---
+fetch('channels.json')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        channels = data; // Assigne les données JSON chargées à la variable 'channels'
+        populateChannels(); // Remplir le menu déroulant
+        if (channels.length > 0) {
+            loadChannel(channels[0].url); // Charger la première chaîne au démarrage
+        } else {
+            statusMessage.textContent = "Aucune chaîne trouvée dans channels.json.";
+        }
+    })
+    .catch(error => {
+        console.error("Erreur lors du chargement des chaînes:", error);
+        statusMessage.textContent = `Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`;
+    });
+
+// Le `populateChannels()` initial et `loadChannel()` sont déplacés dans le `.then()` du `Workspace`
