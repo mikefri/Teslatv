@@ -3,108 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecteur TF1 - ParaTV</title>
+    <title>Lecteur IPTV Simple</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Alignement en haut */
             align-items: center;
             min-height: 100vh;
-            background-color: #1a1a1a; /* Fond sombre */
-            color: #e0e0e0; /* Texte clair */
+            background-color: #1a1a1a;
+            color: #e0e0e0;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
         h1 {
-            color: #4CAF50; /* Couleur d'accentuation */
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .channel-selector {
             margin-bottom: 30px;
             text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .channel-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #90CAF9; /* Bleu clair */
+        }
+        .channel-selector select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #333;
+            color: #e0e0e0;
+            font-size: 1em;
+            appearance: none; /* Cache la flèche par défaut du navigateur */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .channel-selector select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5);
         }
         #videoPlayer {
             max-width: 90%;
-            width: 800px; /* Largeur maximale pour la vidéo */
+            width: 800px;
             background-color: #000;
             border: 1px solid #333;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); /* Ombre verte subtile */
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
             border-radius: 8px;
-            overflow: hidden; /* Assure que le rayon de bordure s'applique à la vidéo */
+            overflow: hidden;
         }
         video {
             width: 100%;
             height: auto;
-            display: block; /* Supprime l'espace sous la vidéo */
+            display: block;
         }
         .message {
             margin-top: 20px;
             padding: 10px 20px;
             background-color: #333;
             border-radius: 5px;
-            color: #ffa726; /* Texte d'avertissement */
+            color: #ffa726;
             text-align: center;
             font-size: 0.9em;
+        }
+        /* Pour les navigateurs qui ne supportent pas le pseudo-élément */
+        select::-ms-expand {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>Lecteur TF1</h1>
+    <h1>Lecteur IPTV Simple</h1>
+
+    <div class="channel-selector">
+        <label for="channelSelect">Sélectionnez une chaîne :</label>
+        <select id="channelSelect">
+            </select>
+    </div>
 
     <div id="videoPlayer">
         <video id="video" controls autoplay></video>
     </div>
 
-    <p class="message">
-        Si la vidéo ne démarre pas, vérifiez votre connexion internet ou si le flux est toujours actif.
+    <p class="message" id="statusMessage">
+        Chargement de la chaîne...
     </p>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         const video = document.getElementById('video');
-        // Le nouveau lien du flux M3U8
-        const videoSrc = 'https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8';
+        const channelSelect = document.getElementById('channelSelect');
+        const statusMessage = document.getElementById('statusMessage');
+        let hls; // Déclarer hls ici pour qu'il soit accessible globalement
 
-        if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play();
-            });
-            hls.on(Hls.Events.ERROR, function (event, data) {
-                console.error('Erreur HLS:', data);
-                if (data.fatal) {
-                    switch(data.type) {
-                        case Hls.ErrorTypes.NETWORK_ERROR:
-                            console.error("Erreur réseau - impossible de charger le flux.");
-                            // Tente de récupérer après une erreur réseau fatale
-                            hls.recoverMediaError();
-                            break;
-                        case Hls.ErrorTypes.MEDIA_ERROR:
-                            console.error("Erreur média - problème de décodage.");
-                            // Tente de récupérer après une erreur média fatale
-                            hls.recoverMediaError();
-                            break;
-                        default:
-                            // Pour les autres erreurs fatales, détruit et recrée hls
-                            hls.destroy();
-                            // Ou simplement recharger la page si nécessaire
-                            // setTimeout(() => location.reload(), 3000);
-                            break;
+        // Définir les chaînes avec leurs informations
+        const channels = [
+            {
+                name: "TF1",
+                url: "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8"
+            },
+            {
+                name: "RMC Decouverte",
+                url: "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8"
+            }
+            // Vous pouvez ajouter d'autres chaînes ici
+            /*
+            ,
+            {
+                name: "Nom de la Chaîne",
+                url: "URL_DU_FLUX_M3U8_DE_LA_CHAINE"
+            }
+            */
+        ];
+
+        // Fonction pour charger et lire une chaîne
+        function loadChannel(url) {
+            statusMessage.textContent = "Chargement en cours...";
+            if (hls) {
+                hls.destroy(); // Détruit l'instance hls précédente pour une nouvelle lecture propre
+                hls = null; // Réinitialise la variable hls
+            }
+
+            if (Hls.isSupported()) {
+                hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                    statusMessage.textContent = `Lecture de ${channels.find(c => c.url === url)?.name || 'la chaîne sélectionnée'}.`;
+                });
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    console.error('Erreur HLS:', data);
+                    let errorMessage = `Erreur de lecture : ${data.details}.`;
+                    if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+                        errorMessage = "Erreur réseau : Impossible de charger le flux. Vérifiez le lien ou votre connexion.";
+                        if (data.response && data.response.code === 404) {
+                            errorMessage += " (404 Not Found - Le flux n'existe plus ou l'URL est incorrecte).";
+                        } else if (data.response && data.response.code >= 400 && data.response.code < 500) {
+                            errorMessage += " (Accès refusé ou flux expiré).";
+                        }
+                    } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+                        errorMessage = "Erreur média : Problème de décodage ou de format du flux.";
                     }
-                }
+                    statusMessage.textContent = errorMessage;
+
+                    if (data.fatal) {
+                        console.error("Erreur fatale détectée, tentative de récupération...");
+                        // hls.recoverMediaError(); // Peut être appelé pour certaines erreurs media/network
+                        // Ou détruire et recréer si la récupération échoue souvent
+                        if (hls) hls.destroy();
+                        hls = null; // Assure que hls est réinitialisé pour la prochaine tentative
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Pour les navigateurs qui supportent HLS nativement (Safari)
+                video.src = url;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                    statusMessage.textContent = `Lecture de ${channels.find(c => c.url === url)?.name || 'la chaîne sélectionnée'}.`;
+                });
+                video.addEventListener('error', function() {
+                    statusMessage.textContent = "Erreur de lecture native. Le flux n'est peut-être pas supporté.";
+                });
+            } else {
+                statusMessage.textContent = "Votre navigateur ne supporte pas la lecture de flux HLS.";
+                const playerDiv = document.getElementById('videoPlayer');
+                playerDiv.innerHTML = '<p class="message" style="color: #ff4d4d;">Votre navigateur ne supporte pas la lecture de flux HLS.</p>';
+            }
+        }
+
+        // Remplir le menu déroulant avec les chaînes
+        function populateChannels() {
+            channels.forEach((channel, index) => {
+                const option = document.createElement('option');
+                option.value = channel.url;
+                option.textContent = channel.name;
+                channelSelect.appendChild(option);
             });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            // Pour les navigateurs qui supportent HLS nativement (Safari sur iOS/macOS)
-            video.src = videoSrc;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
+            // Sélectionner la première chaîne par défaut
+            if (channels.length > 0) {
+                channelSelect.value = channels[0].url;
+            }
+        }
+
+        // Charger la chaîne sélectionnée quand l'utilisateur change de sélection
+        channelSelect.addEventListener('change', (event) => {
+            loadChannel(event.target.value);
+        });
+
+        // Initialiser la page
+        populateChannels();
+        if (channels.length > 0) {
+            loadChannel(channels[0].url); // Charger la première chaîne au démarrage
         } else {
-            console.error('HLS n\'est pas supporté par ce navigateur.');
-            const playerDiv = document.getElementById('videoPlayer');
-            playerDiv.innerHTML = '<p class="message" style="color: #ff4d4d;">Votre navigateur ne supporte pas la lecture de flux HLS.</p>';
+            statusMessage.textContent = "Aucune chaîne configurée.";
         }
     </script>
 </body>
