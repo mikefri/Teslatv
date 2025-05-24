@@ -22,7 +22,7 @@
     {  
         "name": "Sport en France",
         "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Sport_en_France_logo.png"
+        "logo": "https://i.imgur.com/1IXQoWq.png"
     },
     {  
         "name": "France 2",
@@ -47,7 +47,7 @@
     {  
         "name": "LCI",
         "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_LCI.svg/1200px-Logo_LCI.svg.png"
+        "logo": "https://i.imgur.com/DED8EXs.png"
     },
     {  
         "name": "BFM",
@@ -57,6 +57,6 @@
     {  
         "name": "TMC",
         "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/TMC_logo_2016.svg/1200px-TMC_logo_2016.svg.png"
+        "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/5/54/TMC_logo.svg/512px-TMC_logo.svg.png"
     }
 ]
