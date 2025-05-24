@@ -134,15 +134,16 @@ h1 {
 }
 
 .channel-item img {
-    width: 50px; /* Logos plus grands */
-    height: 50px;
-    margin-right: 12px; /* Plus d'espace */
+    width: 40px; /* Logos plus petits */
+    height: 40px;
+    margin-right: 10px; /* Ajusté */
     border-radius: 50%;
     object-fit: contain;
-    background-color: rgba(0, 0, 0, 0.4); /* Fond de logo subtil */
-    padding: 5px;
-    border: 2px solid var(--neon-blue-dark); /* Bordure de logo subtile */
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 4px; /* Ajusté */
+    border: 2px solid var(--neon-blue-dark);
     box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
 }
 .channel-item.active img {
     border-color: var(--neon-blue-light); /* Bordure du logo plus vive quand actif */
