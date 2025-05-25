@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // IMPORTANT : REMPLACEZ 'https://proxy-teslatv-xxxx.vercel.app/proxy-stream?url='
     // par l'URL exacte de votre proxy Vercel que vous avez obtenue après le déploiement.
     // L'URL devrait commencer par 'https://proxy-teslatv-' et se terminer par '/proxy-stream?url='
-    const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/proxy-stream?url=';
+    const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url=';
 
 
     // Fonction pour afficher une boîte de message personnalisée
