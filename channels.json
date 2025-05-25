@@ -29,12 +29,7 @@
     "logo": "https://logowik.com/content/uploads/images/france-5-20182646.logowik.com.webp",
     "needsVPN": false
   },
-  {
-    "name": "6ter",
-    "url": "https://shouurvki7jtfax.ngolpdkyoctjcddxshli469r.org/sunshine/_mob-2g4kwYDGsRKf9GEK949GNVLlU8uDUSR_xBIcXILenR_TV5-aybNsLqhyE7dKcYJrMOj5Z4CLz9BXyhvWCtbmlQvD8H0YwCB0mglwEhOQ5Td8E1wPuRSGMeyiUorvYyIAd_IyMGT4EywZ2U8ngOyTR1q7j33KOo5ugmMzzk/hls/index.m3u8",
-    "logo": "https://i.imgur.com/2nd5Cox.png",
-    "needsVPN": true
-  },
+
   {
     "name": "TMC",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
@@ -47,12 +42,7 @@
     "logo": "https://i.imgur.com/d91GcVf.png",
     "needsVPN": false
   },
-  {
-    "name": "RTL9",
-    "url": "https://mjkskdvpfpb1fbv.ngolpdkyoctjcddxshli469r.org/sunshine/P-JdqyqsIBIirjOWBOeHZJk-hfz0Gy4t2E_TLkXi3mAguXV738iz-CjEmUZg2AS6Ix_g8iI3RN2TgilhB6LG_uMJTWRJ3O2RVWTfcSTK8cRypZBIpzSIEktfoueIhWVtslKU_fLxo60KJQ88P4cHhpzyIywZ731K6S3QiBgk3CQ/hls/index.m3u8",
-    "logo": "https://i.imgur.com/nFqjVNW.png",
-    "needsVPN": true
-  },
+
   {
     "name": "LCI",
     "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8",
@@ -65,24 +55,14 @@
     "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FRBD410000783_20231213T034713SQUARE.png_20231213034713.png",
     "needsVPN": false
   },
-  {
-    "name": "Canal + Sport",
-    "url": "https://shouurvki7jtfax.ngolpdkyoctjcddxshli469r.org/sunshine/pdFxn3tENsyyR8T093R-TbxkcigwNvSvzuIlhKhdgVduoQ6VaHvSSgU13SPI66bKuHQ58Ffdui60rMiVGOS-z5pTOlCNMbPdo6Y69J29x9mZfoseVEvY22P64dsd7mFYv_gmBItgbqOwidzYJXZNOHCbddUHIM_vEvBgOpz7oK4/hls/index.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2c/C%2B_Sport_%282023%29.png",
-    "needsVPN": true
-  },
+
   {
     "name": "Sport en France",
     "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
     "logo": "https://i.imgur.com/1IXQoWq.png",
-    "needsVPN": true
+    "needsVPN": false
   },
-  {
-    "name": "Canal +",
-    "url": "https://shouurvki7jtfax.ngolpdkyoctjcddxshli469r.org/sunshine/QToVKOySHFMoyetR1DARyuJRLTo7WpicyLdqMlh1ifuc_RiFUHAsb-LnJy7OlOcLrPDFb3dWCIWLrkJge2vV3AFjNZu_OfWLcDEAQMASB1TLMMLkZl0SgSha42Ii3-0XRKwya0dXB5ZYl6Yii_s4pn1rJYF1pJGRsLL7VLs_8pE/hls/index.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Logo_Canal%2B_1995.svg/720px-Logo_Canal%2B_1995.svg.png",
-    "needsVPN": true
-  },
+
   {
     "name": "RMC Decouverte",
     "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8",
@@ -95,12 +75,7 @@
     "logo": "https://i.imgur.com/h53nsyJ.png",
     "needsVPN": false
   },
-  {
-    "name": "SYFY",
-    "url": "https://qmaalhy7acgxwhm.ngolpdkyoctjcddxshli469r.org/sunshine/hJIcwfv_XSZZIM24hSfECHgOsBUZNCvbP8C3K6sQU2WR2HvuomVxaKERXLDdbpWZKOQl1_hCJ18NYPeH4pWOjLTd8K73hldPh80K3UXLT5NarJBDxIwDj_oKdyTjYe1fscuuCbSVt4BxtkxthwzYwmNvHpm1thiWKtrErlTvySg/hls/index.m3u8",
-    "logo": "https://i.imgur.com/4fMWhUE.png",
-    "needsVPN": true
-  },
+  
   {
     "name": "Doctor Who",
     "url": "https://jmp2.uk/sam-FR2700001WW.m3u8",
