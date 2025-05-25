@@ -195,3 +195,13 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
     border: 1px solid var(--neon-blue-dark);
 }
+html, body {
+    height: 100%; /* Assure que le html et le body prennent toute la hauteur de la fenêtre */
+}
+body {
+    /* ... votre CSS existant pour body ... */
+    min-height: 100vh; /* Gardez ceci pour les cas où le contenu est plus petit que la fenêtre */
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
