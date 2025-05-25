@@ -15,21 +15,30 @@ document.addEventListener('DOMContentLoaded', () => {
     let channels = []; // Liste des chaînes chargées depuis channels.json
     let hasVideoEverPlayed = false; // Indicateur pour la première lecture de vidéo
 
-    // IMPORTANT : REMPLACEZ 'https://proxy-teslatv-xxxx.vercel.app/proxy-stream?url='
-    // par l'URL exacte de votre proxy Vercel que vous avez obtenue après le déploiement.
-    // L'URL devrait commencer par 'https://proxy-teslatv-' et se terminer par '/proxy-stream?url='
-    const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url=';
+    // L'URL exacte de votre proxy Vercel qui utilise le chemin /api
+    const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url='; //
 
 
     // Fonction pour afficher une boîte de message personnalisée
     function showMessage(message) {
-        messageText.textContent = message;
-        messageBox.classList.remove('hidden');
+        // Vérifiez que messageText n'est pas null avant de tenter d'accéder à textContent
+        if (messageText) { 
+            messageText.textContent = message;
+        } else {
+            console.error("L'élément 'messageText' n'a pas été trouvé dans le DOM.");
+        }
+        if (messageBox) {
+            messageBox.classList.remove('hidden');
+        } else {
+            console.error("L'élément 'messageBox' n'a pas été trouvé dans le DOM.");
+        }
     }
 
     // Fonction pour masquer la boîte de message
     function hideMessage() {
-        messageBox.classList.add('hidden');
+        if (messageBox) {
+            messageBox.classList.add('hidden');
+        }
     }
 
     // Écouteur pour fermer la boîte de message
@@ -42,7 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
         const options = { hour: '2-digit', minute: '2-digit' };
         const timeString = now.toLocaleTimeString('fr-FR', options);
-        currentTimeDiv.textContent = timeString;
+        if (currentTimeDiv) {
+            currentTimeDiv.textContent = timeString;
+        }
     }
 
     // Appeler updateTime toutes les secondes pour maintenir l'heure à jour
@@ -53,7 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fonction pour peupler la liste des chaînes
     function populateChannels() {
-        channelListDiv.innerHTML = ''; // Nettoyer la liste existante
+        if (channelListDiv) {
+            channelListDiv.innerHTML = ''; // Nettoyer la liste existante
+        }
         channels.forEach((channel, index) => {
             const channelItem = document.createElement('div');
             channelItem.classList.add('channel-item');
@@ -85,7 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadChannel(url, name, id);
             });
 
-            channelListDiv.appendChild(channelItem);
+            if (channelListDiv) {
+                channelListDiv.appendChild(channelItem);
+            }
         });
     }
 
@@ -112,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hasVideoEverPlayed = true;
         }
 
-        // --- DÉBUT DE LA MODIFICATION CLÉ POUR LE PROXY ---
+        // --- Début du traitement par le proxy ---
         let finalUrl = url;
         // Si l'URL du flux est HTTP, nous la faisons passer par le proxy Vercel
         if (url.startsWith('http://')) {
@@ -123,8 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.log(`[Client] Chargement direct du flux (déjà HTTPS ou local) : ${url}`);
         }
-        // --- FIN DE LA MODIFICATION CLÉ POUR LE PROXY ---
-
+        // --- Fin du traitement par le proxy ---
 
         // Détruire l'instance HLS précédente si elle existe
         if (hls) {
@@ -167,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     hls = null;
                 }
             });
-        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+        } else if (videoElement && videoElement.canPlayType('application/vnd.apple.mpegurl')) {
             // Lecture native HLS pour les navigateurs compatibles (Safari)
             videoElement.src = finalUrl; // Utilisez finalUrl ici
             videoElement.addEventListener('loadedmetadata', function() {
@@ -177,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Erreur de lecture native HLS pour l'URL:", finalUrl);
                 showMessage(`Impossible de lire cette chaîne (erreur native du navigateur).`);
             });
-        } else {
+        } else if (videoElement) {
             // Lecture directe pour d'autres formats ou navigateurs non HLS
             videoElement.src = finalUrl; // Utilisez finalUrl ici
             videoElement.play();
