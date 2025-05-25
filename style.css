@@ -54,14 +54,13 @@ h1 {
     /* max-height: calc(100vh - 80px); */
 }
 
-/* Conteneur du lecteur vidéo */
 #videoPlayer {
-    flex-grow: 1; /* Permet au lecteur de prendre tout l'espace horizontal disponible restant */
+    flex-grow: 1;
     background-color: #000;
-    overflow: hidden; /* Cache tout débordement de la vidéo elle-même */
-    position: relative; /* Nécessaire pour positionner la vidéo à l'intérieur */
-    padding-bottom: 56.25%; /* ❤️ Définit la hauteur du lecteur avec un ratio 16:9 de sa largeur */
-    height: 0; /* Assure que la hauteur est entièrement gérée par padding-bottom */
+    /* overflow: hidden; <-- SUPPRIMEZ OU COMMENTEZ CETTE LIGNE */
+    position: relative;
+    padding-bottom: 56.25%; /* Définit la hauteur du lecteur (ratio 16:9 de sa largeur) */
+    height: 0; /* Assure que padding-bottom définit la hauteur */
     border-right: 1px solid var(--neon-blue-dark);
 }
 
