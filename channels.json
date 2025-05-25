@@ -1,7 +1,7 @@
 [
     {
         "name": "test",
-        "url": "https://vavoo.to/play/4239659507/index.m3u8",
+        "url": "https://proxy-tesla-tv.vercel.app/api/proxy?url=https://vavoo.to/play/4239659507/index.m3u8",
         "logo": "https://i.imgur.com/QxHt9NC.png"
     },
     {
