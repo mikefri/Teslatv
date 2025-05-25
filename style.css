@@ -37,7 +37,7 @@ h1 {
     width: 95%;
     max-width: 1200px;
     margin-top: 20px;
-    background-color: var(--bg-medium);
+    background-color: #000000;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
