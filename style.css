@@ -32,7 +32,6 @@ h1 {
     font-size: 2.5em;
 }
 
-/* Conteneur principal pour la vidéo et la liste des chaînes */
 .main-container {
     display: flex;
     width: 95%;
@@ -43,10 +42,11 @@ h1 {
     overflow: hidden;
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--neon-blue-dark);
-    /* Supprimez cette ligne ou mettez-la en commentaire */
-    /* max-height: calc(100vh - 80px); */
-    /* Ajoutez align-items: flex-start; pour que les éléments s'alignent en haut */
+    /* Assurez-vous que le conteneur s'étire pour s'adapter à son contenu */
     align-items: flex-start;
+    /* Supprimez ou commentez cette ligne */
+    /* max-height: calc(100vh - 80px); */
+    /* La hauteur sera déterminée par la hauteur intrinsèque du lecteur vidéo */
 }
 
 #videoPlayer {
@@ -54,8 +54,9 @@ h1 {
     background-color: #000;
     overflow: hidden;
     position: relative;
-    padding-bottom: 56.25%; /* Ratio 16:9 - La hauteur de la vidéo est déterminée par la largeur du main-container */
-    height: 0; /* Important pour que padding-bottom définisse la hauteur */
+    padding-bottom: 56.25%; /* Ratio 16:9 - C'est ce qui définit la hauteur */
+    /* Supprimez ou commentez height: 0; car padding-bottom définit maintenant la hauteur */
+    /* height: 0; */
     border-right: 1px solid var(--neon-blue-dark);
 }
 #videoPlayer video {
