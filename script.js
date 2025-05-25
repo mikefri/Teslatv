@@ -1,14 +1,35 @@
+// script.js
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Récupération des éléments du DOM
     const videoContainer = document.getElementById('videoPlayer');
     const videoElement = document.getElementById('video');
     const videoPlaceholder = document.getElementById('videoPlaceholder');
-
     const channelListDiv = document.getElementById('channelList');
     const currentTimeDiv = document.getElementById('currentTime');
+    const messageBox = document.getElementById('messageBox');
+    const messageText = document.getElementById('messageText');
+    const closeMessage = document.getElementById('closeMessage');
 
-    let hls;
-    let channels = [];
-    let hasVideoEverPlayed = false;
+    let hls; // Instance HLS.js
+    let channels = []; // Liste des chaînes chargées depuis channels.json
+    let hasVideoEverPlayed = false; // Indicateur pour la première lecture de vidéo
+
+    // Fonction pour afficher une boîte de message personnalisée
+    function showMessage(message) {
+        messageText.textContent = message;
+        messageBox.classList.remove('hidden');
+    }
+
+    // Fonction pour masquer la boîte de message
+    function hideMessage() {
+        messageBox.classList.add('hidden');
+    }
+
+    // Écouteur pour fermer la boîte de message
+    if (closeMessage) {
+        closeMessage.addEventListener('click', hideMessage);
+    }
 
     // Fonction pour mettre à jour l'heure affichée
     function updateTime() {
@@ -24,8 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialiser l'heure au chargement de la page
     updateTime();
 
+    // Fonction pour peupler la liste des chaînes
     function populateChannels() {
-        channelListDiv.innerHTML = '';
+        channelListDiv.innerHTML = ''; // Nettoyer la liste existante
         channels.forEach((channel, index) => {
             const channelItem = document.createElement('div');
             channelItem.classList.add('channel-item');
@@ -38,26 +60,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const nameSpan = document.createElement('span');
             nameSpan.textContent = channel.name;
+            nameSpan.classList.add('channel-name'); // Ajout de la classe pour la récupération du nom
 
-            // --- DÉBUT DE LA NOUVEAUTÉ : Indicateur VPN ---
+            // Indicateur VPN
             const vpnIndicator = document.createElement('span');
             vpnIndicator.classList.add('vpn-indicator');
-            // Définit l'attribut data-needs-vpn en fonction de la propriété needsVPN du JSON
-            // La valeur est convertie en chaîne de caractères "true" ou "false"
             vpnIndicator.setAttribute('data-needs-vpn', channel.needsVPN ? 'true' : 'false');
-
-            // Vous pouvez ajouter du texte à l'indicateur si vous ne voulez pas une icône CSS
-            // if (channel.needsVPN) {
-            //     vpnIndicator.textContent = 'VPN';
-            // } else {
-            //     vpnIndicator.textContent = 'OK';
-            // }
-            // --- FIN DE LA NOUVEAUTÉ ---
 
             channelItem.appendChild(img);
             channelItem.appendChild(nameSpan);
-            channelItem.appendChild(vpnIndicator); // Ajout de l'indicateur VPN
+            channelItem.appendChild(vpnIndicator);
 
+            // Ajout de l'écouteur de clic pour charger la chaîne
             channelItem.addEventListener('click', () => {
                 const url = channelItem.getAttribute('data-channel-url');
                 const name = channel.name;
@@ -69,9 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fonction pour charger et lire une chaîne
+    // Fonction principale pour charger et lire une chaîne
     function loadChannel(url, channelName, channelId) {
-        // Gère la classe 'active' pour la chaîne sélectionnée dans la liste
+        // Gère la classe 'active' pour la chaîne sélectionnée
         document.querySelectorAll('.channel-item').forEach(item => {
             item.classList.remove('active');
         });
@@ -81,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // Logique pour gérer le placeholder et le lecteur vidéo (uniquement au premier lancement)
+        // Logique pour gérer le placeholder et le lecteur vidéo
         if (!hasVideoEverPlayed) {
             if (videoPlaceholder) {
                 videoPlaceholder.classList.add('hidden');
@@ -92,12 +106,32 @@ document.addEventListener('DOMContentLoaded', () => {
             hasVideoEverPlayed = true;
         }
 
+        // Vérification du contenu mixte
+        const currentPageIsHttps = window.location.protocol === 'https:';
+        const streamIsHttp = url.startsWith('http://');
+
+        if (currentPageIsHttps && streamIsHttp) {
+            // Si la page est HTTPS et le flux est HTTP, bloquez et informez l'utilisateur
+            console.error(`Erreur de Contenu Mixte: La page est HTTPS, mais le flux "${url}" est HTTP. Le navigateur bloque cette requête pour des raisons de sécurité.`);
+            showMessage(`Impossible de lire cette chaîne. La page est sécurisée (HTTPS), mais le flux vidéo (${url}) ne l'est pas (HTTP). Les navigateurs bloquent ce type de contenu pour votre sécurité.`);
+            
+            // Détruire l'instance HLS précédente si elle existe
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            videoElement.src = ''; // Vider la source vidéo
+            videoElement.load(); // Recharger pour s'assurer que rien ne tourne
+            return; // Arrêter la fonction ici
+        }
+
         // Détruire l'instance HLS précédente si elle existe
         if (hls) {
             hls.destroy();
             hls = null;
         }
 
+        // Logique de lecture HLS ou native
         if (Hls.isSupported()) {
             hls = new Hls();
             hls.loadSource(url);
@@ -118,6 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             hls.on(Hls.Events.ERROR, function (event, data) {
                 console.error('Erreur HLS:', data);
+                // Afficher une erreur plus conviviale pour l'utilisateur
+                if (data.type === 'networkError' && data.details === 'manifestLoadError') {
+                    showMessage(`Erreur de lecture de la chaîne: Impossible de charger le flux vidéo. Vérifiez votre connexion ou essayez une autre chaîne.`);
+                } else {
+                    showMessage(`Une erreur est survenue lors de la lecture de la chaîne: ${data.details || 'Erreur inconnue'}.`);
+                }
+
                 if (data.fatal) {
                     console.error("Erreur fatale détectée, tentative de récupération...");
                     if (hls) hls.destroy();
@@ -125,25 +166,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            // Lecture native HLS pour les navigateurs compatibles (Safari)
             videoElement.src = url;
             videoElement.addEventListener('loadedmetadata', function() {
                 videoElement.play();
             }, { once: true });
             videoElement.addEventListener('error', function() {
                 console.error("Erreur de lecture native HLS pour l'URL:", url);
+                showMessage(`Impossible de lire cette chaîne (erreur native du navigateur).`);
             });
         } else {
+            // Lecture directe pour d'autres formats ou navigateurs non HLS
             videoElement.src = url;
             videoElement.play();
             console.log("Lecture directe démarrée pour :", url);
             videoElement.addEventListener('error', function() {
                 console.error("Erreur de lecture directe pour l'URL:", url);
+                showMessage(`Impossible de lire cette chaîne (erreur de lecture directe).`);
             });
         }
     }
 
-
-    // --- Chargement des chaînes depuis le fichier JSON ---
+    // Chargement des chaînes depuis le fichier JSON
     fetch('channels.json')
         .then(response => {
             if (!response.ok) {
@@ -173,23 +217,26 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error("Erreur lors du chargement des chaînes:", error);
             console.error(`Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`);
+            showMessage(`Erreur au chargement des chaînes: Vérifiez le fichier 'channels.json'.`);
             // En cas d'erreur de chargement JSON, assurez l'affichage du placeholder
             if (videoElement) videoElement.classList.remove('active');
             if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
         });
 
-    // Écouteur de clic sur le placeholder
+    // Écouteur de clic sur le placeholder pour lancer la première chaîne active
     if (videoPlaceholder) {
         videoPlaceholder.addEventListener('click', () => {
             if (!hasVideoEverPlayed) {
                 const activeChannelItem = channelListDiv.querySelector('.channel-item.active');
                 if (activeChannelItem) {
                     const channelUrl = activeChannelItem.getAttribute('data-channel-url');
-                    const channelName = activeChannelItem.querySelector('.channel-name').textContent; // Utilisez la classe du span pour récupérer le nom
+                    // Assurez-vous que le sélecteur est correct pour le nom
+                    const channelName = activeChannelItem.querySelector('.channel-name').textContent; 
                     const channelId = activeChannelItem.getAttribute('data-channel-id');
                     loadChannel(channelUrl, channelName, channelId);
                 } else {
                     console.warn("Aucune chaîne sélectionnée pour lancer depuis le placeholder.");
+                    showMessage("Veuillez sélectionner une chaîne dans la liste pour commencer la lecture.");
                 }
             }
         });
