@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const videoContainer = document.getElementById('videoPlayer'); // Le div conteneur principal du lecteur
-    const videoElement = document.getElementById('video'); // La balise <video> elle-même
-    const videoPlaceholder = document.getElementById('videoPlaceholder'); // Le div de l'image de remplacement
+    const videoContainer = document.getElementById('videoPlayer');
+    const videoElement = document.getElementById('video');
+    const videoPlaceholder = document.getElementById('videoPlaceholder');
 
     const channelListDiv = document.getElementById('channelList');
     const currentTimeDiv = document.getElementById('currentTime');
 
     let hls;
     let channels = [];
-    let hasVideoEverPlayed = false; // Indicateur si une vidéo a déjà été lancée
+    let hasVideoEverPlayed = false;
 
     // Fonction pour mettre à jour l'heure affichée
     function updateTime() {
@@ -30,17 +30,33 @@ document.addEventListener('DOMContentLoaded', () => {
             const channelItem = document.createElement('div');
             channelItem.classList.add('channel-item');
             channelItem.setAttribute('data-channel-id', channel.name.replace(/\s/g, '-'));
-            channelItem.setAttribute('data-channel-url', channel.url); // Ajoutez l'URL en tant que data attribute
+            channelItem.setAttribute('data-channel-url', channel.url);
 
             const img = document.createElement('img');
             img.src = channel.logo;
             img.alt = channel.name;
 
-            const span = document.createElement('span');
-            span.textContent = channel.name;
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = channel.name;
+
+            // --- DÉBUT DE LA NOUVEAUTÉ : Indicateur VPN ---
+            const vpnIndicator = document.createElement('span');
+            vpnIndicator.classList.add('vpn-indicator');
+            // Définit l'attribut data-needs-vpn en fonction de la propriété needsVPN du JSON
+            // La valeur est convertie en chaîne de caractères "true" ou "false"
+            vpnIndicator.setAttribute('data-needs-vpn', channel.needsVPN ? 'true' : 'false');
+
+            // Vous pouvez ajouter du texte à l'indicateur si vous ne voulez pas une icône CSS
+            // if (channel.needsVPN) {
+            //     vpnIndicator.textContent = 'VPN';
+            // } else {
+            //     vpnIndicator.textContent = 'OK';
+            // }
+            // --- FIN DE LA NOUVEAUTÉ ---
 
             channelItem.appendChild(img);
-            channelItem.appendChild(span);
+            channelItem.appendChild(nameSpan);
+            channelItem.appendChild(vpnIndicator); // Ajout de l'indicateur VPN
 
             channelItem.addEventListener('click', () => {
                 const url = channelItem.getAttribute('data-channel-url');
@@ -65,15 +81,15 @@ document.addEventListener('DOMContentLoaded', () => {
             activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // ❤️ Logique pour gérer le placeholder et le lecteur vidéo (uniquement au premier lancement)
+        // Logique pour gérer le placeholder et le lecteur vidéo (uniquement au premier lancement)
         if (!hasVideoEverPlayed) {
-            if (videoPlaceholder) { // Vérifie que le placeholder existe avant de le manipuler
-                videoPlaceholder.classList.add('hidden'); // Cache l'image de remplacement
+            if (videoPlaceholder) {
+                videoPlaceholder.classList.add('hidden');
             }
-            if (videoElement) { // Vérifie que la vidéo existe
-                videoElement.classList.add('active'); // Rend le lecteur vidéo visible (la balise <video>)
+            if (videoElement) {
+                videoElement.classList.add('active');
             }
-            hasVideoEverPlayed = true; // Met à jour l'état : une vidéo a été lancée
+            hasVideoEverPlayed = true;
         }
 
         // Détruire l'instance HLS précédente si elle existe
@@ -139,10 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
             channels = data;
             populateChannels();
 
-            // ❤️ S'assurer que le placeholder est visible au démarrage et la vidéo cachée
-            // Ceci est l'état initial par défaut attendu.
-            if (videoElement) videoElement.classList.remove('active'); // Assure que la vidéo est cachée
-            if (videoPlaceholder) videoPlaceholder.classList.remove('hidden'); // Assure que le placeholder est visible
+            // S'assurer que le placeholder est visible au démarrage et la vidéo cachée
+            if (videoElement) videoElement.classList.remove('active');
+            if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
 
             // Optionnel : Sélectionnez la première chaîne comme "active" par défaut visuellement,
             // mais ne la lancez pas encore.
@@ -163,20 +178,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
         });
 
-    // ❤️ NOUVEAU : Écouteur de clic sur le placeholder
-    // C'est le SEUL endroit qui déclenche le premier lancement de vidéo depuis le placeholder.
+    // Écouteur de clic sur le placeholder
     if (videoPlaceholder) {
         videoPlaceholder.addEventListener('click', () => {
-            if (!hasVideoEverPlayed) { // S'assure que cela ne se produit qu'une seule fois
+            if (!hasVideoEverPlayed) {
                 const activeChannelItem = channelListDiv.querySelector('.channel-item.active');
                 if (activeChannelItem) {
                     const channelUrl = activeChannelItem.getAttribute('data-channel-url');
-                    const channelName = activeChannelItem.querySelector('span').textContent;
+                    const channelName = activeChannelItem.querySelector('.channel-name').textContent; // Utilisez la classe du span pour récupérer le nom
                     const channelId = activeChannelItem.getAttribute('data-channel-id');
                     loadChannel(channelUrl, channelName, channelId);
                 } else {
                     console.warn("Aucune chaîne sélectionnée pour lancer depuis le placeholder.");
-                    // Vous pouvez afficher un message d'information ici
                 }
             }
         });
