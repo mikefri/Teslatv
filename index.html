@@ -12,9 +12,17 @@
     <div class="message">Bienvenue sur Tesla TV !</div>
 
     <div class="main-container">
-        <div id="videoPlayer"> <div id="videoPlaceholder">
+<div id="videoPlayer">
+        <div id="videoPlaceholder">
+            <img src="https://via.placeholder.com/1200x675/0a0a0a/00ffff?text=Tesla+TV+-+Selectionnez+une+chaine" alt="Image de remplacement Tesla TV">
+            <div class="play-overlay">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="80px" height="80px">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                <span>Charger une chaîne</span>
             </div>
-        <video id="video" controls autoplay></video>
+        </div>
+        <video id="video" controls autoplay muted></video>
     </div>
         <div id="channelListContainer">
             <div id="currentTime"></div>
