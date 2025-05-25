@@ -45,7 +45,7 @@ h1 {
     /* Assurez-vous que le conteneur s'étire pour s'adapter à son contenu */
     align-items: flex-start;
     /* Supprimez ou commentez cette ligne */
-   max-height: calc(100vh - 80px); */
+   max-height: calc(100vh - 80px); 
     /* La hauteur sera déterminée par la hauteur intrinsèque du lecteur vidéo */
 }
 
@@ -78,7 +78,7 @@ h1 {
     /* L'astuce ici est de faire en sorte qu'il remplisse la hauteur restante */
     height: 100%; /* Permet à ce conteneur de prendre la hauteur de son parent (.main-container) */
     /* Supprimez ou mettez en commentaire max-height si elle est présente */
-    max-height: 100%; */
+    max-height: 100%; 
 }
 
 /* Style de l'heure */
