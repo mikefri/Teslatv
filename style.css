@@ -212,16 +212,17 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
+    width: 100%; /* Important : le conteneur doit prendre 100% de son parent #videoPlayer */
+    height: 100%; /* Important : le conteneur doit prendre 100% de son parent #videoPlayer */
+    display: flex; /* Pour centrer le contenu (icône play et texte) */
     justify-content: center;
     align-items: center;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-dark); /* Fallback si l'image ne charge pas */
     cursor: pointer;
     z-index: 2;
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
+    /* Assurez-vous qu'aucun autre style n'interfère avec width/height ici */
 }
 
 #videoPlaceholder.hidden {
@@ -231,10 +232,11 @@ body {
 }
 
 #videoPlaceholder img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: 100%; /* L'image prend 100% de la largeur de son parent #videoPlaceholder */
+    height: 100%; /* L'image prend 100% de la hauteur de son parent #videoPlaceholder */
+    object-fit: cover; /* ❤️ C'est CE QUI FAIT L'ADAPTATION ! */
+    display: block; /* Important pour éviter les espaces sous l'image */
+    /* Assurez-vous qu'aucun autre style n'interfère avec width/height/object-fit ici */
 }
 
 .play-overlay {
