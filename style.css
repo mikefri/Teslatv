@@ -9,21 +9,23 @@
     --text-color: #e0e0e0; /* Couleur de texte par défaut */
 }
 
+/* Styles généraux du corps de la page */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
-    min-height: 100vh;
+    align-items: center; /* Centre le contenu horizontalement */
+    min-height: 100vh; /* Prend au moins toute la hauteur de la vue */
     background-color: var(--bg-dark);
     color: var(--text-color);
     margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-x: hidden;
+    padding: 20px; /* Ajoute du padding autour du contenu global */
+    box-sizing: border-box; /* Inclut padding et border dans la taille totale */
+    overflow-x: hidden; /* Empêche le défilement horizontal de la page */
 }
 
+/* Style du titre principal */
 h1 {
     color: var(--neon-blue);
     margin-bottom: 20px;
@@ -34,65 +36,59 @@ h1 {
 
 /* Conteneur principal pour la vidéo et la liste des chaînes */
 .main-container {
-    display: flex; /* ❤️ Essentiel pour que la vidéo et la liste soient côte à côte */
-    flex-direction: row; /* ❤️ Par défaut, mais assurez-vous qu'elle est bien 'row' */
+    display: flex; /* Active Flexbox pour aligner les enfants (vidéo et liste) */
+    flex-direction: row; /* Aligne les enfants horizontalement (par défaut, mais explicite) */
     flex-wrap: nowrap; /* ❤️ TRÈS IMPORTANT : Empêche les éléments de passer à la ligne */
-    width: 95%;
-    max-width: 1200px;
+    width: 95%; /* Prend 95% de la largeur du parent (body) */
+    max-width: 1200px; /* Ne dépasse pas 1200px de large */
     margin-top: 20px;
     background-color: var(--bg-medium);
     border-radius: 12px;
     overflow: hidden; /* Cache tout ce qui dépasse les bords du main-container */
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--neon-blue-dark);
-    /* La hauteur du .main-container sera dictée par la hauteur du #videoPlayer. */
-    /* align-items: flex-start; est correct pour l'alignement vertical initial des enfants. */
-    align-items: flex-start;
+    align-items: flex-start; /* Aligne les éléments enfants en haut du conteneur */
 
-    /* Supprimez les contraintes de hauteur fixes ou max-height si elles existent ici */
-    /* Elles pourraient empêcher le main-container de s'adapter à la vidéo */
-    /* max-height: calc(100vh - 80px); /* À commenter/supprimer si cela pose problème */
+    /* La hauteur du .main-container sera dictée par la hauteur du #videoPlayer (via padding-bottom). */
+    /* La ligne suivante est commentée car elle pourrait limiter la hauteur et causer des problèmes. */
+    /* max-height: calc(100vh - 80px); */
 }
 
+/* Conteneur du lecteur vidéo */
 #videoPlayer {
-    flex-grow: 1; /* Prend tout l'espace horizontal disponible restant après la liste des chaînes */
+    flex-grow: 1; /* Permet au lecteur de prendre tout l'espace horizontal disponible restant */
     background-color: #000;
-    overflow: hidden; /* Important pour cacher tout débordement de la vidéo elle-même */
-    position: relative;
-    padding-bottom: 56.25%; /* ❤️ Définit la hauteur du lecteur (ratio 16:9 de sa largeur) */
-    /* height: 0; */ /* Gardez ceci si vous avez des problèmes d'affichage/hauteur du lecteur.
-                       Il assure que la hauteur est entièrement gérée par padding-bottom. */
+    overflow: hidden; /* Cache tout débordement de la vidéo elle-même */
+    position: relative; /* Nécessaire pour positionner la vidéo à l'intérieur */
+    padding-bottom: 56.25%; /* ❤️ Définit la hauteur du lecteur avec un ratio 16:9 de sa largeur */
+    height: 0; /* Assure que la hauteur est entièrement gérée par padding-bottom */
     border-right: 1px solid var(--neon-blue-dark);
 }
 
 #videoPlayer video {
-    position: absolute;
+    position: absolute; /* Positionne la vidéo absolument par rapport à #videoPlayer */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Assure que la vidéo remplit bien l'espace */
+    object-fit: cover; /* Assure que la vidéo remplit bien l'espace sans déformation */
 }
 
+/* Conteneur de la liste des chaînes (y compris l'heure) */
 #channelListContainer {
     width: 220px; /* Largeur fixe pour la liste des chaînes */
     background-color: var(--bg-medium);
-    display: flex;
-    flex-direction: column; /* Les éléments à l'intérieur de la liste sont empilés verticalement */
-    overflow-y: auto; /* ❤️ Défilement vertical automatique si le contenu dépasse */
-    padding-bottom: 15px; /* Espace en bas de la liste */
+    display: flex; /* Active Flexbox pour empiler l'heure et la liste */
+    flex-direction: column; /* Empile les enfants (heure et liste) verticalement */
+    /* overflow-y: auto; est retiré d'ici, il est maintenant sur #channelList */
+    padding-bottom: 15px; /* Espace en bas du conteneur global des chaînes */
 
     /* ❤️ TRÈS IMPORTANT : Prend 100% de la hauteur disponible de son parent (.main-container) */
     height: 100%;
-    /* max-height: 100%; */ /* Souvent redondant avec height: 100% dans ce contexte, peut être enlevé */
+    /* max-height: 100%; est redondant avec height: 100% dans ce contexte */
 }
 
-/* Styles pour les éléments individuels des chaînes si vous en avez */
-/* .channel-item {
-    ...
-} */
-
-/* Style de l'heure */
+/* Style de l'heure actuelle */
 #currentTime {
     background-color: var(--bg-dark);
     color: var(--neon-blue-light);
@@ -102,51 +98,56 @@ h1 {
     font-weight: bold;
     border-bottom: 1px solid var(--neon-blue-dark);
     box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
-    flex-shrink: 0;
-    position: sticky;
-    top: 0;
-    z-index: 1;
+    flex-shrink: 0; /* Empêche l'heure de rétrécir si l'espace est limité */
+    position: sticky; /* L'heure restera "collante" en haut quand la liste défile */
+    top: 0; /* Reste collé au top de son conteneur défilant */
+    z-index: 1; /* Assure qu'il est au-dessus du contenu de la liste */
 }
 
-/* Liste des chaînes */
+/* Conteneur de la liste réelle des chaînes (qui défile) */
 #channelList {
-    flex-grow: 1; /* Permet à la liste de prendre l'espace restant */
-    padding: 15px 10px 0;
+    flex-grow: 1; /* ❤️ Permet à la liste de prendre TOUT l'espace vertical restant */
+    overflow-y: auto; /* ❤️ C'est ICI que le défilement vertical est activé */
+    padding-top: 15px; /* Padding en haut de la liste (sous l'heure) */
+    padding-left: 10px;
+    padding-right: 10px;
+    /* Le padding-bottom est géré par le #channelListContainer */
 }
 
 /* Scrollbar personnalisée pour la liste des chaînes */
-#channelListContainer::-webkit-scrollbar {
-    width: 8px;
+/* Appliquez ces styles à l'élément qui a overflow-y: auto, c'est-à-dire #channelList */
+#channelList::-webkit-scrollbar {
+    width: 8px; /* Largeur de la barre de défilement */
 }
-#channelListContainer::-webkit-scrollbar-track {
-    background: var(--bg-light);
+#channelList::-webkit-scrollbar-track {
+    background: var(--bg-light); /* Couleur de l'arrière-plan de la barre de défilement */
     border-radius: 10px;
 }
-#channelListContainer::-webkit-scrollbar-thumb {
-    background: var(--neon-blue-dark);
+#channelList::-webkit-scrollbar-thumb {
+    background: var(--neon-blue-dark); /* Couleur du "pouce" de la barre de défilement */
     border-radius: 10px;
 }
-#channelListContainer::-webkit-scrollbar-thumb:hover {
-    background: var(--neon-blue);
+#channelList::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-blue); /* Couleur du pouce au survol */
 }
 
-
+/* Styles pour les éléments individuels des chaînes */
 .channel-item {
     display: flex;
     align-items: center;
     padding: 10px;
-    margin-bottom: 8px;
+    margin-bottom: 8px; /* Espace entre les items de chaîne */
     background-color: var(--bg-light);
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-    border: 1px solid transparent;
+    border: 1px solid transparent; /* Bordure transparente par défaut */
 }
 .channel-item:hover {
     background-color: var(--bg-dark);
-    transform: translateY(-3px);
+    transform: translateY(-3px); /* Effet de légère élévation au survol */
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 5px rgba(0, 255, 255, 0.4);
-    border-color: var(--neon-blue);
+    border-color: var(--neon-blue); /* Bordure néon au survol */
 }
 .channel-item.active {
     background-color: var(--neon-blue-dark);
@@ -159,8 +160,8 @@ h1 {
     width: 40px;
     height: 40px;
     margin-right: 10px;
-    border-radius: 50%;
-    object-fit: contain;
+    border-radius: 50%; /* Image ronde */
+    object-fit: contain; /* Assure que l'image tient dans le cercle */
     background-color: rgba(0, 0, 0, 0.4);
     padding: 4px;
     border: 2px solid var(--neon-blue-dark);
@@ -182,6 +183,7 @@ h1 {
     text-shadow: 0 0 5px var(--neon-blue-light);
 }
 
+/* Style du message d'information */
 .message {
     margin-top: 30px;
     padding: 12px 25px;
