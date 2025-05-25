@@ -70,7 +70,8 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Assure que la vidéo remplit bien l'espace sans déformation */
+    
+    object-fit: contain; /* Utiliser 'contain' pour éviter le rognage et voir toute la vidéo */
 }
 
 /* Conteneur de la liste des chaînes (y compris l'heure) */
