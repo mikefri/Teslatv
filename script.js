@@ -15,6 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let channels = []; // Liste des chaînes chargées depuis channels.json
     let hasVideoEverPlayed = false; // Indicateur pour la première lecture de vidéo
 
+    // IMPORTANT : REMPLACEZ 'https://proxy-teslatv-xxxx.vercel.app/proxy-stream?url='
+    // par l'URL exacte de votre proxy Vercel que vous avez obtenue après le déploiement.
+    // L'URL devrait commencer par 'https://proxy-teslatv-' et se terminer par '/proxy-stream?url='
+    const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/proxy-stream?url=';
+
+
     // Fonction pour afficher une boîte de message personnalisée
     function showMessage(message) {
         messageText.textContent = message;
@@ -106,24 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
             hasVideoEverPlayed = true;
         }
 
-        // Vérification du contenu mixte
-        const currentPageIsHttps = window.location.protocol === 'https:';
-        const streamIsHttp = url.startsWith('http://');
-
-        if (currentPageIsHttps && streamIsHttp) {
-            // Si la page est HTTPS et le flux est HTTP, bloquez et informez l'utilisateur
-            console.error(`Erreur de Contenu Mixte: La page est HTTPS, mais le flux "${url}" est HTTP. Le navigateur bloque cette requête pour des raisons de sécurité.`);
-            showMessage(`Impossible de lire cette chaîne. La page est sécurisée (HTTPS), mais le flux vidéo (${url}) ne l'est pas (HTTP). Les navigateurs bloquent ce type de contenu pour votre sécurité.`);
-            
-            // Détruire l'instance HLS précédente si elle existe
-            if (hls) {
-                hls.destroy();
-                hls = null;
-            }
-            videoElement.src = ''; // Vider la source vidéo
-            videoElement.load(); // Recharger pour s'assurer que rien ne tourne
-            return; // Arrêter la fonction ici
+        // --- DÉBUT DE LA MODIFICATION CLÉ POUR LE PROXY ---
+        let finalUrl = url;
+        // Si l'URL du flux est HTTP, nous la faisons passer par le proxy Vercel
+        if (url.startsWith('http://')) {
+            // Encode l'URL du flux original pour qu'elle puisse être passée comme paramètre d'URL
+            const encodedUrl = encodeURIComponent(url);
+            finalUrl = PROXY_BASE_URL + encodedUrl;
+            console.log(`[Client] Redirection du flux HTTP via le proxy : ${finalUrl}`);
+        } else {
+            console.log(`[Client] Chargement direct du flux (déjà HTTPS ou local) : ${url}`);
         }
+        // --- FIN DE LA MODIFICATION CLÉ POUR LE PROXY ---
+
 
         // Détruire l'instance HLS précédente si elle existe
         if (hls) {
@@ -132,9 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Logique de lecture HLS ou native
+        // Utilisez toujours 'finalUrl' ici !
         if (Hls.isSupported()) {
             hls = new Hls();
-            hls.loadSource(url);
+            hls.loadSource(finalUrl); // Utilisez finalUrl ici
             hls.attachMedia(videoElement);
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
                 hls.subtitleTrack = -1; // Désactiver les sous-titres HLS par défaut
@@ -154,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Erreur HLS:', data);
                 // Afficher une erreur plus conviviale pour l'utilisateur
                 if (data.type === 'networkError' && data.details === 'manifestLoadError') {
-                    showMessage(`Erreur de lecture de la chaîne: Impossible de charger le flux vidéo. Vérifiez votre connexion ou essayez une autre chaîne.`);
+                    showMessage(`Erreur de lecture de la chaîne: Impossible de charger le flux vidéo. Vérifiez votre connexion, l'URL du proxy ou essayez une autre chaîne.`);
                 } else {
                     showMessage(`Une erreur est survenue lors de la lecture de la chaîne: ${data.details || 'Erreur inconnue'}.`);
                 }
@@ -167,21 +169,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
             // Lecture native HLS pour les navigateurs compatibles (Safari)
-            videoElement.src = url;
+            videoElement.src = finalUrl; // Utilisez finalUrl ici
             videoElement.addEventListener('loadedmetadata', function() {
                 videoElement.play();
             }, { once: true });
             videoElement.addEventListener('error', function() {
-                console.error("Erreur de lecture native HLS pour l'URL:", url);
+                console.error("Erreur de lecture native HLS pour l'URL:", finalUrl);
                 showMessage(`Impossible de lire cette chaîne (erreur native du navigateur).`);
             });
         } else {
             // Lecture directe pour d'autres formats ou navigateurs non HLS
-            videoElement.src = url;
+            videoElement.src = finalUrl; // Utilisez finalUrl ici
             videoElement.play();
-            console.log("Lecture directe démarrée pour :", url);
+            console.log("Lecture directe démarrée pour :", finalUrl);
             videoElement.addEventListener('error', function() {
-                console.error("Erreur de lecture directe pour l'URL:", url);
+                console.error("Erreur de lecture directe pour l'URL:", finalUrl);
                 showMessage(`Impossible de lire cette chaîne (erreur de lecture directe).`);
             });
         }
