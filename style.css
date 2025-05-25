@@ -37,28 +37,28 @@ h1 {
     width: 95%;
     max-width: 1200px;
     margin-top: 20px;
-    background-color: #000000;
+    background-color: var(--bg-medium);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--neon-blue-dark);
-    /* Assurez-vous que le conteneur s'étire pour s'adapter à son contenu */
+    /* La hauteur du main-container sera déterminée par le #videoPlayer */
+    /* C'est important : align-items: flex-start; permet aux enfants de s'aligner en haut */
     align-items: flex-start;
-    /* Supprimez ou commentez cette ligne */
-   max-height: calc(100vh - 80px); 
-    /* La hauteur sera déterminée par la hauteur intrinsèque du lecteur vidéo */
+    /* Assurez-vous que max-height n'est pas restrictif ici pour la hauteur de la vidéo */
+    /* max-height: calc(100vh - 80px); */ /* Supprimez ou commentez cette ligne si elle vous gêne */
 }
 
 #videoPlayer {
-    flex-grow: 1;
+    flex-grow: 1; /* Prend l'espace disponible */
     background-color: #000;
     overflow: hidden;
     position: relative;
-    padding-bottom: 56.25%; /* Ratio 16:9 - C'est ce qui définit la hauteur */
-    /* Supprimez ou commentez height: 0; car padding-bottom définit maintenant la hauteur */
-    /* height: 0; */
+    padding-bottom: 56.25%; /* Ratio 16:9, c'est ce qui donne la hauteur au conteneur */
+    /* height: 0; */ /* Pas toujours nécessaire ici si padding-bottom est utilisé, mais peut être utile dans certains contextes Flexbox pour s'assurer que padding-bottom dicte la hauteur */
     border-right: 1px solid var(--neon-blue-dark);
 }
+
 #videoPlayer video {
     position: absolute;
     top: 0;
@@ -73,12 +73,11 @@ h1 {
     background-color: var(--bg-medium);
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Active le défilement vertical pour ce conteneur */
-    padding-bottom: 15px; /* Pour un peu d'espace en bas de la liste défilante */
-    /* L'astuce ici est de faire en sorte qu'il remplisse la hauteur restante */
-    height: 100%; /* Permet à ce conteneur de prendre la hauteur de son parent (.main-container) */
-    /* Supprimez ou mettez en commentaire max-height si elle est présente */
-    max-height: 100%; 
+    overflow-y: auto; /* ❤️ C'est la propriété clé pour le défilement */
+    padding-bottom: 15px;
+    /* ❤️ Très important : height: 100%; pour qu'il prenne TOUTE la hauteur du parent (.main-container) */
+    height: 100%;
+    /* max-height: 100%; est souvent redondant si height: 100% est déjà là et que le parent est flex */
 }
 
 /* Style de l'heure */
