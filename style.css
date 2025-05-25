@@ -45,7 +45,7 @@ h1 {
     /* Assurez-vous que le conteneur s'étire pour s'adapter à son contenu */
     align-items: flex-start;
     /* Supprimez ou commentez cette ligne */
-    /* max-height: calc(100vh - 80px); */
+   max-height: calc(100vh - 80px); */
     /* La hauteur sera déterminée par la hauteur intrinsèque du lecteur vidéo */
 }
 
