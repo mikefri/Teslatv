@@ -1,5 +1,10 @@
 [
     {
+        "name": "test",
+        "url": "https://vavoo.to/play/4239659507/index.m3u8",
+        "logo": "https://i.imgur.com/QxHt9NC.png"
+    },
+    {
         "name": "TF1",
         "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
         "logo": "https://i.imgur.com/QxHt9NC.png"
