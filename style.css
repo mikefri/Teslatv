@@ -269,12 +269,7 @@ body {
     filter: drop-shadow(0 0 8px var(--neon-blue));
 }
 
-Pour ajouter un indicateur VPN à côté de chaque chaîne dans votre interface, vous devrez modifier votre code CSS et la partie JavaScript qui génère les éléments HTML des chaînes.
 
-1. Modifications CSS
-Ajoutez les styles suivants à votre fichier CSS. J'ai inclus des options pour utiliser des icônes (recommandé pour le visuel) ou du texte.
-
-CSS
 
 /* --- Styles pour l'indicateur VPN --- */
 .vpn-indicator {
@@ -298,7 +293,7 @@ CSS
 /* Style pour les chaînes qui NÉCESSITENT un VPN */
 .vpn-indicator[data-needs-vpn="true"] {
   /* Option 1: Utiliser une image d'icône VPN */
-  background-image: url('https://i.imgur.com/your-vpn-icon.png'); /* REMPLACEZ PAR L'URL D'UNE ICÔNE VPN ROUGE/AVERTISSEMENT */
+  background-image: url("https://i.imgur.com/your-vpn-icon.png"); /* REMPLACEZ PAR L'URL D'UNE ICÔNE VPN ROUGE/AVERTISSEMENT */
   background-color: rgba(255, 0, 0, 0.2); /* Un léger fond rouge transparent */
   border: 1px solid red;
   box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
@@ -314,7 +309,7 @@ CSS
 /* Style pour les chaînes qui NE NÉCESSITENT PAS de VPN */
 .vpn-indicator[data-needs-vpn="false"] {
   /* Option 1: Utiliser une image d'icône "pas de VPN" (ex: un cadenas ouvert, un crochet vert) */
-  background-image: url('https://i.imgur.com/your-no-vpn-icon.png'); /* REMPLACEZ PAR L'URL D'UNE ICÔNE VERTE/OK */
+  background-image: url("https://i.imgur.com/your-no-vpn-icon.png"); /* REMPLACEZ PAR L'URL D'UNE ICÔNE VERTE/OK */
   background-color: rgba(0, 255, 0, 0.1); /* Un léger fond vert transparent */
   border: 1px solid limegreen;
   box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
