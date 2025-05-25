@@ -205,3 +205,50 @@ body {
 *, *::before, *::after {
     box-sizing: border-box;
 }
+
+
+/* Style de l'image de remplacement */
+#videoPlaceholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-dark);
+    cursor: pointer;
+    z-index: 2; /* ❤️ Assurez-vous qu'il est au-dessus de la vidéo par défaut */
+    opacity: 1; /* ❤️ Assurez-vous qu'il est visible par défaut */
+    transition: opacity 0.3s ease-in-out;
+}
+
+#videoPlaceholder.hidden {
+    opacity: 0;
+    pointer-events: none; /* Empêche les clics une fois caché */
+    z-index: 0; /* Passe derrière la vidéo une fois caché */
+}
+
+#videoPlaceholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* L'image remplit tout l'espace, rognée si nécessaire */
+    display: block;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--neon-blue-light);
+    text-shadow: 0 0 5px var(--neon-blue);
+    font-size: 1.5em;
+    font-weight: bold;
+    pointer-events: none; /* Permet de cliquer à travers pour le parent #videoPlaceholder */
+    opacity: 0.8;
+}
