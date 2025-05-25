@@ -1,12 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const video = document.getElementById('video'); // La balise <video>
+    // ❤️ CORRECTION : Ciblez le conteneur #videoPlayer et la balise <video> séparément
+    const videoContainer = document.getElementById('videoPlayer'); // Le div conteneur principal du lecteur
+    const videoElement = document.getElementById('video'); // La balise <video> elle-même
     const videoPlaceholder = document.getElementById('videoPlaceholder'); // Le div de l'image de remplacement
-    const channelListDiv = document.getElementById('channelList'); // Le conteneur de la liste des chaînes
-    const currentTimeDiv = document.getElementById('currentTime'); // L'affichage de l'heure
+
+    const channelListDiv = document.getElementById('channelList');
+    const currentTimeDiv = document.getElementById('currentTime');
 
     let hls;
     let channels = [];
-    let hasVideoEverPlayed = false; // ❤️ NOUVEAU : Indicateur si une vidéo a déjà été lancée
+    let hasVideoEverPlayed = false; // Indicateur si une vidéo a déjà été lancée
 
     // Fonction pour mettre à jour l'heure affichée
     function updateTime() {
@@ -41,8 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
             channelItem.appendChild(span);
 
             channelItem.addEventListener('click', () => {
-                // Pas besoin de passer l'URL ici, on la récupérera via le data attribute dans loadChannel
-                // C'est juste pour s'assurer que loadChannel est appelé avec les bonnes infos
                 const url = channelItem.getAttribute('data-channel-url');
                 const name = channel.name;
                 const id = channel.name.replace(/\s/g, '-');
@@ -67,9 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ❤️ Logique pour gérer le placeholder et le lecteur vidéo
         if (!hasVideoEverPlayed) {
-            // C'est la première fois qu'une vidéo est lancée
             videoPlaceholder.classList.add('hidden'); // Cache l'image de remplacement
-            video.classList.add('active'); // Rend le lecteur vidéo visible
+            videoElement.classList.add('active'); // Rend le lecteur vidéo visible (la balise <video>)
             hasVideoEverPlayed = true; // Met à jour l'état : une vidéo a été lancée
         }
         // Pour les changements de chaîne ultérieurs, assurez-vous que le placeholder reste caché
@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!videoPlaceholder.classList.contains('hidden')) {
             videoPlaceholder.classList.add('hidden');
         }
-        if (!video.classList.contains('active')) {
-            video.classList.add('active');
+        if (!videoElement.classList.contains('active')) { // Utilise videoElement ici
+            videoElement.classList.add('active');
         }
 
 
@@ -91,21 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (Hls.isSupported()) {
             hls = new Hls();
             hls.loadSource(url);
-            hls.attachMedia(video);
+            hls.attachMedia(videoElement); // ❤️ Utilise videoElement ici
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
                 hls.subtitleTrack = -1; // Désactiver les sous-titres HLS par défaut
                 console.log("Subtitles disabled via hls.subtitleTrack = -1");
 
                 // Désactiver toutes les pistes de texte vidéo HTML5
-                if (video.textTracks) {
-                    for (let i = 0; i < video.textTracks.length; i++) {
-                        if (video.textTracks[i].mode !== 'disabled') {
-                            video.textTracks[i].mode = 'disabled';
-                            console.log(`Piste de sous-titre ${video.textTracks[i].label || i} désactivée.`);
+                if (videoElement.textTracks) { // ❤️ Utilise videoElement ici
+                    for (let i = 0; i < videoElement.textTracks.length; i++) {
+                        if (videoElement.textTracks[i].mode !== 'disabled') {
+                            videoElement.textTracks[i].mode = 'disabled';
+                            console.log(`Piste de sous-titre ${videoElement.textTracks[i].label || i} désactivée.`);
                         }
                     }
                 }
-                video.play();
+                videoElement.play(); // ❤️ Utilise videoElement ici
             });
             hls.on(Hls.Events.ERROR, function (event, data) {
                 console.error('Erreur HLS:', data);
@@ -116,22 +116,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Optionnel: Afficher un message d'erreur ou revenir au placeholder si fatal
                 }
             });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) { // ❤️ Utilise videoElement ici
             // Support natif HLS pour Safari/iOS
-            video.src = url;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            }, { once: true }); // Utilise { once: true } pour éviter des écouteurs multiples
-            video.addEventListener('error', function() {
+            videoElement.src = url; // ❤️ Utilise videoElement ici
+            videoElement.addEventListener('loadedmetadata', function() { // ❤️ Utilise videoElement ici
+                videoElement.play(); // ❤️ Utilise videoElement ici
+            }, { once: true });
+            videoElement.addEventListener('error', function() { // ❤️ Utilise videoElement ici
                 console.error("Erreur de lecture native HLS pour l'URL:", url);
                 // Optionnel: Gérer l'erreur
             });
         } else {
             // Fallback pour les MP4 directs (si l'URL n'est pas HLS)
-            video.src = url;
-            video.play();
+            videoElement.src = url; // ❤️ Utilise videoElement ici
+            videoElement.play(); // ❤️ Utilise videoElement ici
             console.log("Lecture directe démarrée pour :", url);
-            video.addEventListener('error', function() {
+            videoElement.addEventListener('error', function() { // ❤️ Utilise videoElement ici
                 console.error("Erreur de lecture directe pour l'URL:", url);
                 // Optionnel: Gérer l'erreur
             });
@@ -150,10 +150,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             channels = data;
             populateChannels();
-            
-            // ❤️ Au chargement initial, aucune chaîne n'est jouée automatiquement.
+
+            // Au chargement initial, aucune chaîne n'est jouée automatiquement.
             // La vidéo est masquée, le placeholder est visible.
-            video.classList.remove('active'); // S'assurer que la vidéo est cachée initialement
+            videoElement.classList.remove('active'); // S'assurer que la vidéo est cachée initialement
             videoPlaceholder.classList.remove('hidden'); // S'assurer que le placeholder est visible initialement
 
             // Optionnel : Sélectionnez la première chaîne comme "active" par défaut visuellement,
@@ -171,25 +171,30 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Erreur lors du chargement des chaînes:", error);
             console.error(`Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`);
             // Assurez-vous que le placeholder est visible en cas d'erreur de chargement des chaînes
-            video.classList.remove('active');
-            videoPlaceholder.classList.remove('hidden');
+            // Si videoElement ou videoPlaceholder est null ici, c'est qu'il y a un problème HTML
+            if (videoElement) videoElement.classList.remove('active');
+            if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
         });
 
-    // ❤️ NOUVEAU : Écouteur de clic sur le placeholder
+    // NOUVEAU : Écouteur de clic sur le placeholder
     // C'est le SEUL endroit qui déclenche le premier lancement de vidéo depuis le placeholder.
-    videoPlaceholder.addEventListener('click', () => {
-        if (!hasVideoEverPlayed) { // S'assure que cela ne se produit qu'une seule fois
-            const activeChannelItem = channelListDiv.querySelector('.channel-item.active');
-            if (activeChannelItem) {
-                const channelUrl = activeChannelItem.getAttribute('data-channel-url');
-                const channelName = activeChannelItem.querySelector('span').textContent;
-                const channelId = activeChannelItem.getAttribute('data-channel-id');
-                loadChannel(channelUrl, channelName, channelId);
-            } else {
-                console.warn("Aucune chaîne sélectionnée pour lancer depuis le placeholder.");
-                // Optionnel : Afficher un message à l'utilisateur pour qu'il sélectionne une chaîne
+    // ❤️ Vérifiez que videoPlaceholder existe avant d'ajouter l'écouteur
+    if (videoPlaceholder) {
+        videoPlaceholder.addEventListener('click', () => {
+            if (!hasVideoEverPlayed) { // S'assure que cela ne se produit qu'une seule fois
+                const activeChannelItem = channelListDiv.querySelector('.channel-item.active');
+                if (activeChannelItem) {
+                    const channelUrl = activeChannelItem.getAttribute('data-channel-url');
+                    const channelName = activeChannelItem.querySelector('span').textContent;
+                    const channelId = activeChannelItem.getAttribute('data-channel-id');
+                    loadChannel(channelUrl, channelName, channelId);
+                } else {
+                    console.warn("Aucune chaîne sélectionnée pour lancer depuis le placeholder.");
+                    // Optionnel : Afficher un message à l'utilisateur pour qu'il sélectionne une chaîne
+                }
             }
-        }
-    });
-
+        });
+    } else {
+        console.error("L'élément #videoPlaceholder n'a pas été trouvé dans le HTML.");
+    }
 });
