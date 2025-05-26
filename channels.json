@@ -9,8 +9,15 @@
     "name": "Canal+",
     "url": "https://radioswebmp3.synology.me/live/CANALPLUS.m3u8",
     "logo": "https://i.imgur.com/QxHt9NC.png",
-    "needsVPN": false
+    "needsVPN": true
   },
+   {
+    "name": "Canal+",
+    "url": "https://radioswebmp3.synology.me/live/CANALSPORT.m3u8",
+    "logo": "https://i.imgur.com/QxHt9NC.png",
+    "needsVPN": true
+  },
+
   {
     "name": "France 2",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8",
