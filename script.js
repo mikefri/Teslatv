@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 hlsInstance.on(Hls.Events.ERROR, function(event, data) {
                     console.error('Erreur HLS:', data);
-                    showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
+                    //showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
 
                     if (data.fatal) {
                         console.error("Erreur fatale détectée, tentative de récupération...");
