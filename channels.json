@@ -5,26 +5,8 @@
     "logo": "https://i.imgur.com/QxHt9NC.png",
     "needsVPN": false
   },
-   {
-    "name": "Canal+",
-    "url": "https://radioswebmp3.synology.me/live/CANALPLUS.m3u8",
-     "logo": "https://cdn.freebiesupply.com/logos/large/2x/canal-numerique-logo-png-transparent.png",
-    "needsVPN": true
-  },
-     {
-    "name": "M6",
-    "url": "https://radioswebmp3.synology.me/live/M6HD.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/fr/archive/4/42/20110724110736%21M6HD_2011.png",
-    "needsVPN": true
-  },
-   {
-    "name": "Canal+Sport",
-    "url": "https://radioswebmp3.synology.me/live/CANALSPORT.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2c/C%2B_Sport_%282023%29.png",
-    "needsVPN": true
-  },
 
-  {
+    {
     "name": "France 2",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8",
     "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/France_2_2018.svg/512px-France_2_2018.svg.png",
@@ -35,6 +17,12 @@
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8",
     "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/France_3_2018.svg/512px-France_3_2018.svg.png",
     "needsVPN": false
+  },
+     {
+    "name": "Canal+",
+    "url": "https://radioswebmp3.synology.me/live/CANALPLUS.m3u8",
+     "logo": "https://cdn.freebiesupply.com/logos/large/2x/canal-numerique-logo-png-transparent.png",
+    "needsVPN": true
   },
   {
     "name": "France 4",
@@ -48,7 +36,12 @@
     "logo": "https://logowik.com/content/uploads/images/france-5-20182646.logowik.com.webp",
     "needsVPN": false
   },
-
+     {
+    "name": "M6",
+    "url": "https://radioswebmp3.synology.me/live/M6HD.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/archive/4/42/20110724110736%21M6HD_2011.png",
+    "needsVPN": true
+  },
   {
     "name": "TMC",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
@@ -80,6 +73,12 @@
     "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
     "logo": "https://i.imgur.com/1IXQoWq.png",
     "needsVPN": false
+  },
+     {
+    "name": "Canal+Sport",
+    "url": "https://radioswebmp3.synology.me/live/CANALSPORT.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2c/C%2B_Sport_%282023%29.png",
+    "needsVPN": true
   },
 
   {
