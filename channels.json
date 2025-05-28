@@ -7,7 +7,7 @@
   },
   {
     "name": "test",
-    "url": "https://radioswebmp3.synology.me:10443/stream/channelid/17231190?profile=pass",
+    "url": "https://radioswebmp3.synology.me:10443/stream/channelid/17231190?profile=hls_web&mux=hls",
     "logo": "https://i.imgur.com/QxHt9NC.png",
     "needsVPN": false
   },
