@@ -6,7 +6,18 @@
     "needsVPN": false
   },
 
+{
+    "name": "test",
+    "url": "http://mains.services/live/pmf0423/1aku0jt%40/a3fbc1d6-5082-4aa0-be00-af37145e6fc1.m3u",
+    "logo": "https://i.imgur.com/QxHt9NC.png",
+    "needsVPN": false
+  },
 
+
+
+
+
+  
     {
     "name": "France 2",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france2.m3u8",
