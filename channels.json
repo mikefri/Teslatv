@@ -6,6 +6,12 @@
     "needsVPN": false
   },
 
+  {
+    "name": "test",
+    "url": "http://mains.services/live/pmf0423/1aku0jt%40/0c97eb65-e1c0-4167-b447-e7719baa218c.m3u8",
+    "logo": "https://i.imgur.com/QxHt9NC.png",
+    "needsVPN": false
+  },
   
     {
     "name": "France 2",
