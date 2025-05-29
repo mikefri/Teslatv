@@ -46,5 +46,9 @@
     "logo": "https://i.imgur.com/1IXQoWq.png",
     "needsVPN": false
   }
+      "name": "test",
+    "url": "https://ncdn-live-bfm.pfd.sfr.net/shls/LIVE$BFM_TV/index.m3u8?start=LIVE&end=END",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
   
 ]
