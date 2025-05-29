@@ -137,13 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let finalUrl = originalUrl;
         let useHlsJs = false; // Indicateur pour savoir si nous devons utiliser HLS.js
 
-        // Déterminer si l'URL est un HLS basé sur l'extension ou d'autres indicateurs
-        // Vous pouvez affiner cette logique de détection
-        if (originalUrl.includes('.m3u8')) {
-            useHlsJs = true;
-        }
-
-        // Appliquer le proxy si l'URL est HTTP
+        // Appliquer le proxy si l'URL est HTTP (et pour gérer CORS si nécessaire)
         if (originalUrl.startsWith('http://')) {
             const encodedUrl = encodeURIComponent(originalUrl);
             finalUrl = PROXY_BASE_URL + encodedUrl;
@@ -152,7 +146,18 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`[Client] Chargement direct du flux (déjà HTTPS) : ${originalUrl}`);
         }
 
-        // --- Logique de sélection du lecteur ---
+        // --- Logique de sélection du lecteur améliorée ---
+        // Utiliser hls.js si l'URL contient '.m3u8' OU si elle semble être un flux TS direct.
+        // Un flux TS direct est souvent une URL sans extension de fichier classique ou avec une extension .ts.
+        // Pour votre cas spécifique (iptvtuga.iptv.uno:80/...), on sait que c'est un TS.
+        if (originalUrl.includes('.m3u8') || originalUrl.includes('iptvtuga.iptv.uno')) {
+            useHlsJs = true;
+        } 
+        // Vous pouvez ajouter d'autres conditions ici pour d'autres types de flux TS si vous en avez.
+        // Exemple: || originalUrl.endsWith('.ts') || originalUrl.includes('/live/')
+
+        // --- Fin de la logique de sélection du lecteur améliorée ---
+
         if (useHlsJs) {
             console.log(`[Client] Tentative de lecture HLS avec hls.js pour : ${finalUrl}`);
             if (Hls.isSupported()) {
@@ -183,10 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             hlsInstance.destroy();
                             hlsInstance = null;
                         }
-                        // Tentative de lecture native en dernier recours si hls.js échoue FATALEMENT
-                        console.log(`[Client] hls.js a échoué fatalement. Tentative de lecture native pour : ${finalUrl}`);
+                        // En cas d'erreur fatale avec hls.js, on peut essayer le fallback natif en dernier recours,
+                        // mais pour les TS, hls.js est souvent le meilleur choix.
+                        // Pour ce type de flux, il est plus probable qu'il y ait un problème avec le flux lui-même.
+                        console.log(`[Client] hls.js a échoué fatalement. Tentative de lecture native en dernier recours pour : ${finalUrl}`);
                         videoElement.src = finalUrl;
-                        videoElement.type = 'video/mp2t'; // Suggère le type si c'est un flux direct
+                        videoElement.type = 'video/mp2t'; // Spécifier le type MIME pour aider le navigateur
                         videoElement.play().catch(e => console.error("Erreur de lecture native (fallback HLS):", e));
                     }
                 });
@@ -199,17 +206,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Le navigateur ne supporte pas HLS et hls.js ne peut pas être utilisé.');
                 showMessage(`Votre navigateur ne supporte pas la lecture HLS. Veuillez essayer avec un autre navigateur.`);
             }
-        } else { // Lecture native pour les flux non HLS (MPEG-TS direct par exemple)
-            console.log(`[Client] Tentative de lecture native (non-HLS) pour : ${finalUrl}`);
+        } else { // Lecture native pour les flux non gérés par hls.js (ex: MP4 directs, WebM directs, etc.)
+            console.log(`[Client] Tentative de lecture native (non-HLS, non-TS traité par hls.js) pour : ${finalUrl}`);
             videoElement.src = finalUrl;
-            // Essayer de définir le type MIME pour aider le navigateur, en particulier pour les flux TS
-            // Vous pouvez affiner cette détection si vous avez d'autres types de flux non HLS
-            if (originalUrl.includes('oknirvana.club')) { // Spécifique à votre flux direct
-                videoElement.type = 'video/mp2t';
-            } else {
-                // Laisser le navigateur deviner ou ne pas définir le type si incertain
-                videoElement.removeAttribute('type');
-            }
+            // Ne pas spécifier de type ici, laisser le navigateur deviner pour les MP4/WebM, etc.
+            // Si c'est un TS qui n'a pas été capturé par la logique 'useHlsJs', il est moins probable que la lecture native fonctionne bien.
+            videoElement.removeAttribute('type'); 
 
             videoElement.play().catch(e => {
                 console.error("Erreur de lecture native (non-HLS):", e);
