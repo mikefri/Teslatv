@@ -10,9 +10,9 @@
   
     {
     "name": "France 2",
-    "url": "http://ar38w.ayber20.xyz:80/kS7pGS6n/kZxaeRBr/1774",
+    "url": "https://radioswebmp3.synology.me/live/France2.m3u8",
     "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/France_2_2018.svg/512px-France_2_2018.svg.png",
-    "needsVPN": false
+    "needsVPN": true
   },
   {
     "name": "France 3",
