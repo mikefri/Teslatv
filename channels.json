@@ -6,12 +6,7 @@
     "needsVPN": false
   },
 
-  {
-    "name": "6TERs",
-    "url": "https://radioswebmp3.synology.me/live/6TER.m3u8",
-    "logo": "https://i.imgur.com/QxHt9NC.png",
-    "needsVPN": false
-  },
+  
   
     {
     "name": "France 2",
@@ -49,6 +44,13 @@
     "logo": "https://upload.wikimedia.org/wikipedia/fr/archive/4/42/20110724110736%21M6HD_2011.png",
     "needsVPN": true
   },
+{
+    "name": "6TERs",
+    "url": "https://radioswebmp3.synology.me/live/6TER.m3u8",
+    "logo": "https://i.imgur.com/QxHt9NC.png",
+    "needsVPN": true
+  },
+  
   {
     "name": "TMC",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
