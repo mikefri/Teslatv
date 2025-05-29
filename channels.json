@@ -41,8 +41,8 @@
   },
 
   {
-    "name": "testr",
-    "url": "https://lbcdn.6cloud.fr/resource/m6web/l/gulli_hls_sd_short_q2hyb21h.m3u8?groups[]=m6web-live-gulli_ext",
+    "name": "dd",
+    "url": "https://01ac9352fbfa4204998783d41f9b1a2e.mediatailor.eu-west-1.amazonaws.com/v1/master/0547f18649bd788bec7b67b746e47670f558b6b2/production-LiveChannel-6068/master.m3u8",
     "logo": "https://i.imgur.com/1IXQoWq.png",
     "needsVPN": false
   }
