@@ -51,5 +51,11 @@
     "url": "https://ncdn-live-bfm.pfd.sfr.net/shls/LIVE$BFM_TV/index.m3u8?start=LIVE&end=END",
     "logo": "https://i.imgur.com/1IXQoWq.png",
     "needsVPN": false
+  },
+  {
+         "name": "tests",
+    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
   }
 ]
