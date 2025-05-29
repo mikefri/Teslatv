@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Récupération des éléments du DOM
-    const videoContainer = document.getElementById('videoPlayer'); // C'est le conteneur du lecteur vidéo
-    const videoElement = document.getElementById('video'); // C'est l'élément <video> lui-même
+    const videoContainer = document.getElementById('videoPlayer');
+    const videoElement = document.getElementById('video');
     const videoPlaceholder = document.getElementById('videoPlaceholder');
     const channelListDiv = document.getElementById('channelList');
     const currentTimeDiv = document.getElementById('currentTime');
@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageText = document.getElementById('messageText');
     const closeMessage = document.getElementById('closeMessage');
 
-    let hlsInstance = null; // Renommé de 'hls' à 'hlsInstance' pour plus de clarté
-    let channels = []; // Liste des chaînes chargées depuis channels.json
-    let hasVideoEverPlayed = false; // Indicateur pour la première lecture de vidéo
+    let hlsInstance = null;
+    let channels = [];
+    let hasVideoEverPlayed = false;
 
     // L'URL exacte de votre proxy Vercel qui utilise le chemin /api
     const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url=';
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const channelItem = document.createElement('div');
             channelItem.classList.add('channel-item');
             channelItem.setAttribute('data-channel-id', channel.name.replace(/\s/g, '-'));
-            channelItem.setAttribute('data-channel-url', channel.url);
+            channelItem.setAttribute('data-channel-url', channel.url); // originalUrl sera ici
 
             const img = document.createElement('img');
             img.src = channel.logo;
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const nameSpan = document.createElement('span');
             nameSpan.textContent = channel.name;
-            nameSpan.classList.add('channel-name'); // Ajout de la classe pour la récupération du nom
+            nameSpan.classList.add('channel-name');
 
             // Indicateur VPN
             const vpnIndicator = document.createElement('span');
@@ -129,33 +129,28 @@ document.addEventListener('DOMContentLoaded', () => {
             hlsInstance.destroy();
             hlsInstance = null;
         }
-        videoElement.src = ''; // Vide la source actuelle
-        videoElement.removeAttribute('type'); // Supprime l'attribut type au cas où il aurait été défini
-        videoElement.load(); // Recharge l'élément vidéo pour nettoyer l'état précédent
+        videoElement.src = '';
+        videoElement.removeAttribute('type');
+        videoElement.load();
         // --- Fin du nettoyage ---
 
-        let finalUrl = originalUrl;
+        let finalUrl; // Laissons finalUrl non défini pour qu'il soit assigné dans le bloc proxy
         let useHlsJs = false; // Indicateur pour savoir si nous devons utiliser HLS.js
 
-        // Appliquer le proxy si l'URL est HTTP (et pour gérer CORS si nécessaire)
-        if (originalUrl.startsWith('http://')) {
-            const encodedUrl = encodeURIComponent(originalUrl);
-            finalUrl = PROXY_BASE_URL + encodedUrl;
-            console.log(`[Client] Redirection du flux HTTP via le proxy : ${finalUrl}`);
-        } else {
-            console.log(`[Client] Chargement direct du flux (déjà HTTPS) : ${originalUrl}`);
-        }
+        // *** DÉBUT DE LA MODIFICATION CRUCIALE ***
+        // Nous allons TOUJOURS passer par le proxy Vercel,
+        // car xTeVe n'envoie pas les en-têtes CORS nécessaires pour l'accès direct depuis GitHub Pages.
+        const encodedUrl = encodeURIComponent(originalUrl);
+        finalUrl = PROXY_BASE_URL + encodedUrl;
+        console.log(`[Client] Tentative de chargement via le proxy Vercel : ${finalUrl}`);
+        // *** FIN DE LA MODIFICATION CRUCIALE ***
 
         // --- Logique de sélection du lecteur améliorée ---
-        // Utiliser hls.js si l'URL contient '.m3u8' OU si elle semble être un flux TS direct.
-        // Un flux TS direct est souvent une URL sans extension de fichier classique ou avec une extension .ts.
-        // Pour votre cas spécifique (iptvtuga.iptv.uno:80/...), on sait que c'est un TS.
-        if (originalUrl.includes('.m3u8') || originalUrl.includes('iptvtuga.iptv.uno')) {
+        // Utiliser hls.js si l'URL contient '.m3u8' OU si elle vient de votre Synology via xTeVe.
+        // Les URLs de xTeVe contiennent souvent '/stream/' et votre nom de domaine Synology.
+        if (originalUrl.includes('.m3u8') || originalUrl.includes('/stream/') || originalUrl.includes('radioswebmp3.synology.me')) {
             useHlsJs = true;
-        } 
-        // Vous pouvez ajouter d'autres conditions ici pour d'autres types de flux TS si vous en avez.
-        // Exemple: || originalUrl.endsWith('.ts') || originalUrl.includes('/live/')
-
+        }
         // --- Fin de la logique de sélection du lecteur améliorée ---
 
         if (useHlsJs) {
@@ -165,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 hlsInstance.loadSource(finalUrl);
                 hlsInstance.attachMedia(videoElement);
                 hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-                    hlsInstance.subtitleTrack = -1; // Désactiver les sous-titres HLS par défaut
+                    hlsInstance.subtitleTrack = -1;
                     console.log("Subtitles disabled via hls.subtitleTrack = -1");
 
                     if (videoElement.textTracks) {
@@ -180,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 hlsInstance.on(Hls.Events.ERROR, function(event, data) {
                     console.error('Erreur HLS:', data);
-                    //showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
+                    showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`); // Affiche l'erreur à l'utilisateur
 
                     if (data.fatal) {
                         console.error("Erreur fatale détectée, tentative de récupération...");
@@ -188,9 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             hlsInstance.destroy();
                             hlsInstance = null;
                         }
-                        // En cas d'erreur fatale avec hls.js, on peut essayer le fallback natif en dernier recours,
-                        // mais pour les TS, hls.js est souvent le meilleur choix.
-                        // Pour ce type de flux, il est plus probable qu'il y ait un problème avec le flux lui-même.
                         console.log(`[Client] hls.js a échoué fatalement. Tentative de lecture native en dernier recours pour : ${finalUrl}`);
                         videoElement.src = finalUrl;
                         videoElement.type = 'video/mp2t'; // Spécifier le type MIME pour aider le navigateur
@@ -206,12 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Le navigateur ne supporte pas HLS et hls.js ne peut pas être utilisé.');
                 showMessage(`Votre navigateur ne supporte pas la lecture HLS. Veuillez essayer avec un autre navigateur.`);
             }
-        } else { // Lecture native pour les flux non gérés par hls.js (ex: MP4 directs, WebM directs, etc.)
+        } else {
             console.log(`[Client] Tentative de lecture native (non-HLS, non-TS traité par hls.js) pour : ${finalUrl}`);
             videoElement.src = finalUrl;
-            // Ne pas spécifier de type ici, laisser le navigateur deviner pour les MP4/WebM, etc.
-            // Si c'est un TS qui n'a pas été capturé par la logique 'useHlsJs', il est moins probable que la lecture native fonctionne bien.
-            videoElement.removeAttribute('type'); 
+            videoElement.removeAttribute('type');
 
             videoElement.play().catch(e => {
                 console.error("Erreur de lecture native (non-HLS):", e);
@@ -232,12 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
             channels = data;
             populateChannels();
 
-            // S'assurer que le placeholder est visible au démarrage et la vidéo cachée
             if (videoElement) videoElement.classList.remove('active');
             if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
 
-            // Optionnel : Sélectionnez la première chaîne comme "active" par défaut visuellement,
-            // mais ne la lancez pas encore.
             if (channels.length > 0) {
                 const firstChannelItem = channelListDiv.querySelector('.channel-item');
                 if (firstChannelItem) {
@@ -251,7 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Erreur lors du chargement des chaînes:", error);
             console.error(`Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`);
             showMessage(`Erreur au chargement des chaînes: Vérifiez le fichier 'channels.json'.`);
-            // En cas d'erreur de chargement JSON, assurez l'affichage du placeholder
             if (videoElement) videoElement.classList.remove('active');
             if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
         });
