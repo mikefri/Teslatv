@@ -132,5 +132,11 @@
     "url": "https://jmp2.uk/sam-FR2600002X9.m3u8",
     "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR2600002X9_20240827T040439SQUARE.png",
     "needsVPN": false
+  },
+   {
+    "name": "Cstar",
+    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/refs/heads/main/streams/canalplus/cstar-dm.m3u8",
+    "logo": "https://i.ibb.co/Sm9PtLR/cstar.png",
+    "needsVPN": false
   }
 ]
