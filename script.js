@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let hasVideoEverPlayed = false;
 
     // L'URL exacte de votre proxy Vercel qui utilise le chemin /api
-    //const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url=';
+    const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url=';
 
 
     // Fonction pour afficher une boîte de message personnalisée
