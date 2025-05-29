@@ -6,51 +6,7 @@
     "needsVPN": false
   },
 
-  
-  
-    {
-    "name": "France 2",
-    "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/ftv/py2/fr2nv.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/France_2_2018.svg/512px-France_2_2018.svg.png",
-    "needsVPN": true
-  },
-  {
-    "name": "France 3",
-    "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/ftv/py/fr3.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/France_3_2018.svg/512px-France_3_2018.svg.png",
-    "needsVPN": false
-  },
-     {
-    "name": "Canal+",
-    "url": "https://radioswebmp3.synology.me/live/CANALPLUS.m3u8",
-     "logo": "https://cdn.freebiesupply.com/logos/large/2x/canal-numerique-logo-png-transparent.png",
-    "needsVPN": true
-  },
-  {
-    "name": "France 4",
-    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france4.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/France_4_2018.svg/512px-France_4_2018.svg.png",
-    "needsVPN": false
-  },
-  {
-    "name": "France 5",
-    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france5.m3u8",
-    "logo": "https://logowik.com/content/uploads/images/france-5-20182646.logowik.com.webp",
-    "needsVPN": false
-  },
-     {
-    "name": "M6",
-    "url": "http://gratuittv.free.fr/Files/m6/live/playlist.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/fr/archive/4/42/20110724110736%21M6HD_2011.png",
-    "needsVPN": true
-  },
-{
-    "name": "6TERs",
-    "url": "https://radioswebmp3.synology.me/live/6TER.m3u8",
-    "logo": "https://i.imgur.com/QxHt9NC.png",
-    "needsVPN": true
-  },
-  
+    
   {
     "name": "TMC",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
@@ -70,73 +26,14 @@
     "logo": "https://i.imgur.com/DED8EXs.png",
     "needsVPN": false
   },
-  {
-    "name": "BFM",
-    "url": "https://live-cdn-stream-euw1.bfmtv.bct.nextradiotv.com/master.m3u8",
-    "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FRBD410000783_20231213T034713SQUARE.png_20231213034713.png",
-    "needsVPN": false
-  },
 
   {
     "name": "Sport en France",
     "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
     "logo": "https://i.imgur.com/1IXQoWq.png",
     "needsVPN": false
-  },
-     {
-    "name": "Canal+Sport",
-    "url": "https://radioswebmp3.synology.me/live/CANALPLUSSPORT.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2c/C%2B_Sport_%282023%29.png",
-    "needsVPN": true
-  },
-
-  {
-    "name": "RMC Decouverte",
-    "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/b3/RMC_D%C3%A9couverte_logo_2017.svg/langfr-350px-RMC_D%C3%A9couverte_logo_2017.svg.png",
-    "needsVPN": false
-  },
-  {
-    "name": "RMC Story",
-    "url": "https://d36bxc1bknkxrk.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-3ewcp19zjaxpt/index.m3u8",
-    "logo": "https://i.imgur.com/h53nsyJ.png",
-    "needsVPN": false
-  },
-  
-  {
-    "name": "Doctor Who",
-    "url": "https://jmp2.uk/sam-FR2700001WW.m3u8",
-    "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR2700001WW_20241015T040255SQUARE.png",
-    "needsVPN": false
-  },
-    {
-    "name": "GameOne",
-    "url": "https://radioswebmp3.synology.me:10443/stream/ce8cd22145d01bed734b0a70f4e191e3",
-    "logo": "https://i.imgur.com/QxHt9NC.png",
-    "needsVPN": true
-  },
-  {
-    "name": "Wonderland Kids TV",
-    "url": "https://jmp2.uk/sam-FR1800002C4.m3u8",
-    "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR1800002C4_20241210T052800SQUARE.png",
-    "needsVPN": false
-  },
-  {
-    "name": "Top Films - Rakuten TV",
-    "url": "https://jmp2.uk/sam-FR2600007CB.m3u8",
-    "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR2600007CB_20250415T020909SQUARE.png",
-    "needsVPN": false
-  },
-  {
-    "name": "Films d'action - Rakuten TV",
-    "url": "https://jmp2.uk/sam-FR2600002X9.m3u8",
-    "logo": "https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR2600002X9_20240827T040439SQUARE.png",
-    "needsVPN": false
-  },
-   {
-    "name": "Cstar",
-    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/refs/heads/main/streams/canalplus/cstar-dm.m3u8",
-    "logo": "https://i.ibb.co/Sm9PtLR/cstar.png",
-    "needsVPN": false
   }
+
+  
+  
 ]
