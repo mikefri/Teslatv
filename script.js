@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Récupération des éléments du DOM
     const videoContainer = document.getElementById('videoPlayer');
-    const videoElement = document.getElementById('video');
+    const videoElement = document.getElementById('video'); // Assurez-vous que l'ID est 'video'
     const videoPlaceholder = document.getElementById('videoPlaceholder');
     const channelListDiv = document.getElementById('channelList');
     const currentTimeDiv = document.getElementById('currentTime');
@@ -134,24 +134,16 @@ document.addEventListener('DOMContentLoaded', () => {
         videoElement.load();
         // --- Fin du nettoyage ---
 
-        let finalUrl; // Laissons finalUrl non défini pour qu'il soit assigné dans le bloc proxy
-        let useHlsJs = false; // Indicateur pour savoir si nous devons utiliser HLS.js
+        let finalUrl;
+        let useHlsJs = false;
 
-        // *** DÉBUT DE LA MODIFICATION CRUCIALE ***
-        // Nous allons TOUJOURS passer par le proxy Vercel,
-        // car xTeVe n'envoie pas les en-têtes CORS nécessaires pour l'accès direct depuis GitHub Pages.
         const encodedUrl = encodeURIComponent(originalUrl);
         finalUrl = PROXY_BASE_URL + encodedUrl;
         console.log(`[Client] Tentative de chargement via le proxy Vercel : ${finalUrl}`);
-        // *** FIN DE LA MODIFICATION CRUCIALE ***
 
-        // --- Logique de sélection du lecteur améliorée ---
-        // Utiliser hls.js si l'URL contient '.m3u8' OU si elle vient de votre Synology via xTeVe.
-        // Les URLs de xTeVe contiennent souvent '/stream/' et votre nom de domaine Synology.
         if (originalUrl.includes('.m3u8') || originalUrl.includes('/stream/') || originalUrl.includes('radioswebmp3.synology.me')) {
             useHlsJs = true;
         }
-        // --- Fin de la logique de sélection du lecteur améliorée ---
 
         if (useHlsJs) {
             console.log(`[Client] Tentative de lecture HLS avec hls.js pour : ${finalUrl}`);
@@ -173,22 +165,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     videoElement.play().catch(e => console.error("Erreur de lecture vidéo (play) après MANIFEST_PARSED:", e));
                 });
+
+                // **** DÉBUT DE LA MODIFICATION ****
                 hlsInstance.on(Hls.Events.ERROR, function(event, data) {
                     console.error('Erreur HLS:', data);
-                    showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`); // Affiche l'erreur à l'utilisateur
 
-                    if (data.fatal) {
+                    // Vérifiez si l'erreur est un levelLoadError NON fatal
+                    if (data.type === Hls.ErrorTypes.NETWORK_ERROR && data.details === Hls.ErrorDetails.LEVEL_LOAD_ERROR && !data.fatal) {
+                        console.warn(`[Client] LevelLoadError non fatal pour ${channelName} détecté et sera ignoré (la lecture devrait continuer).`);
+                        // Cacher le message d'erreur si la chaîne continue de jouer
+                        hideMessage(); // <--- Appelle votre fonction pour masquer la boîte
+                        // Ne pas afficher de nouveau message pour cette erreur
+                    } else if (data.fatal) {
+                        // Pour les erreurs fatales, vous voulez toujours afficher un message ou tenter une récupération
                         console.error("Erreur fatale détectée, tentative de récupération...");
                         if (hlsInstance) {
                             hlsInstance.destroy();
                             hlsInstance = null;
                         }
+                        showMessage(`Erreur de lecture fatale pour ${channelName}: ${data.details || 'Erreur inconnue'}. Tentative de fallback...`);
                         console.log(`[Client] hls.js a échoué fatalement. Tentative de lecture native en dernier recours pour : ${finalUrl}`);
                         videoElement.src = finalUrl;
                         videoElement.type = 'video/mp2t'; // Spécifier le type MIME pour aider le navigateur
                         videoElement.play().catch(e => console.error("Erreur de lecture native (fallback HLS):", e));
+                    } else {
+                        // Pour les autres erreurs non fatales qui ne sont pas levelLoadError (si vous voulez les afficher)
+                        showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
                     }
                 });
+                // **** FIN DE LA MODIFICATION ****
+
             } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
                 // Lecture native HLS pour les navigateurs compatibles (Safari)
                 console.log(`[Client] Lecture HLS native pour : ${finalUrl}`);
