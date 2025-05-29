@@ -10,7 +10,7 @@
   
     {
     "name": "France 2",
-    "url": "https://radioswebmp3.synology.me/live/France2.m3u8",
+    "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/ftv/py2/fr2nv.m3u8",
     "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/France_2_2018.svg/512px-France_2_2018.svg.png",
     "needsVPN": true
   },
@@ -40,7 +40,7 @@
   },
      {
     "name": "M6",
-    "url": "https://radioswebmp3.synology.me/live/M6HD.m3u8",
+    "url": "http://gratuittv.free.fr/Files/m6/live/playlist.m3u8",
     "logo": "https://upload.wikimedia.org/wikipedia/fr/archive/4/42/20110724110736%21M6HD_2011.png",
     "needsVPN": true
   },
