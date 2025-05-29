@@ -111,7 +111,7 @@
   },
     {
     "name": "GameOne",
-    "url": "https://radioswebmp3.synology.me/live/GameOne.m3u8",
+    "url": "https://radioswebmp3.synology.me:10443/stream/ce8cd22145d01bed734b0a70f4e191e3",
     "logo": "https://i.imgur.com/QxHt9NC.png",
     "needsVPN": true
   },
