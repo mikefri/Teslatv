@@ -32,6 +32,12 @@
     "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
     "logo": "https://i.imgur.com/1IXQoWq.png",
     "needsVPN": false
+  },
+  {
+    "name": "Sport en France",
+    "url": "https://cherie25.nrjaudio.fm/hls/live/2038375/c25/master.m3u8",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
   }
 
   
