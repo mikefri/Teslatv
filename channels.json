@@ -156,5 +156,11 @@
     "url": "https://raw.githubusercontent.com/schumijo/iptv/main/playlists/mytf1/naruto.m3u8",
     "logo": "https://photos.tf1.fr/0/40/logo-chaine-stream-naruto-4dda81-03df71-0@3x.png",
     "needsVPN": false
+  },
+  {
+    "name": "NARUTO NEXT GEN TV",
+    "url": "https://raw.githubusercontent.com/schumijo/iptv/main/playlists/mytf1/boruto-naruto-next-generatio.m3u8",
+    "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
+    "needsVPN": false
   }
 ]
