@@ -124,5 +124,11 @@
     "url": "https://tutvlive.ru/player/2/20",
     "logo": "https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg",
     "needsVPN": false
+  },
+  {
+    "name": "DAZN",
+    "url": "https://tutvlive.ru/player/4/23",
+    "logo": "https://www.automoto-lachaine.fr/upload/media/logo-automoto-5fbb171ff21f2.png",
+    "needsVPN": false
   }
 ]
