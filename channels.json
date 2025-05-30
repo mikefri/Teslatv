@@ -59,10 +59,33 @@
     "needsVPN": false
   },
     {
-         "name": "cc",
+         "name": "Canal+ Sport",
     "url": "https://tutvlive.ru/player/2/13",
     "logo": "https://i.imgur.com/1IXQoWq.png",
     "needsVPN": false
+  },
+  {
+         "name": "Canal+ Sport 360",
+    "url": "https://tutvlive.ru/player/2/14",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "EuroSport 1",
+    "url": "https://tutvlive.ru/player/2/15",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "EuroSport 2",
+    "url": "https://tutvlive.ru/player/2/16",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
   }
-]
 
+
+
+
+
+
+]
