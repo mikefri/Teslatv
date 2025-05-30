@@ -26,7 +26,7 @@
   {
     "name": "Cherie25",
     "url": "https://cherie25.nrjaudio.fm/hls/live/2038375/c25/master.m3u8",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Logo_Ch%C3%A9rie_25.svg/512px-Logo_Ch%C3%A9rie_25.svg.png",
     "needsVPN": false
   },
   {
@@ -38,85 +38,85 @@
   {
     "name": "RMC DÉCOUVERTE",
     "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/b3/RMC_D%C3%A9couverte_logo_2017.svg/langfr-350px-RMC_D%C3%A9couverte_logo_2017.svg.png",
     "needsVPN": false
   },
   {
     "name": "RMC Story",
     "url": "https://d36bxc1bknkxrk.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-3ewcp19zjaxpt/index.m3u8",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://i.imgur.com/h53nsyJ.png",
     "needsVPN": false
   },
   {
     "name": "Canal +",
     "url": "https://tutvlive.ru/player/2/11",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Logo_Canal%2B_1995.svg",
     "needsVPN": false
   },
   {
     "name": "Canal+ Sport",
     "url": "https://tutvlive.ru/player/2/13",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2c/C%2B_Sport_%282023%29.png",
     "needsVPN": false
   },
   {
     "name": "Canal+ Sport 360",
     "url": "https://tutvlive.ru/player/2/14",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/6/64/Canal%2BSport_360.png",
     "needsVPN": false
   },
   {
     "name": "BeinSport 1",
     "url": "https://tutvlive.ru/player/2/1",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://seeklogo.com/images/B/bein-sports-1-logo-4E5E4AE6B8-seeklogo.com.png",
     "needsVPN": false
   },
   {
     "name": "BeinSport 2",
     "url": "https://tutvlive.ru/player/2/2",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://logowik.com/content/uploads/images/bein-sports-25584.logowik.com.webp",
     "needsVPN": false
   },
   {
     "name": "RMC Sport 1",
     "url": "https://tutvlive.ru/player/2/17",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Logo_RMC_Sport_1_2018.svg/2560px-Logo_RMC_Sport_1_2018.svg.png",
     "needsVPN": false
   },
   {
     "name": "RMC Sport 2",
     "url": "https://tutvlive.ru/player/2/18",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_RMC_Sport_2_2018.svg/2560px-Logo_RMC_Sport_2_2018.svg.png",
     "needsVPN": false
   },
   {
     "name": "EuroSport 1",
     "url": "https://tutvlive.ru/player/2/15",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://e7.pngegg.com/pngimages/350/883/png-clipart-eurosport-1-eurosport-2-television-channel-1-euro-television-blue-thumbnail.png",
     "needsVPN": false
   },
   {
     "name": "EuroSport 2",
     "url": "https://tutvlive.ru/player/2/16",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://img.favpng.com/6/20/21/eurosport-1-television-channel-logo-eurosport-2-png-favpng-v4QiSJ7BjDEzcRE5QGZfjctk8.jpg",
     "needsVPN": false
   },
   {
     "name": "L'équipe",
     "url": "https://tutvlive.ru/player/2/19",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://lacartefrancaise.fr//wp-content/uploads/2023/06/bon-achat-equipe.png",
     "needsVPN": false
   },
   {
     "name": "Sport en France",
     "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/8/83/Sport_en_France_Logo.png/1200px-Sport_en_France_Logo.png",
     "needsVPN": false
   },
   {
     "name": "DAZN",
     "url": "https://tutvlive.ru/player/2/20",
-    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg",
     "needsVPN": false
   }
 ]
