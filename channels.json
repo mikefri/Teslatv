@@ -120,6 +120,13 @@
     "logo": "https://i.ibb.co/KXhYwm0/lequipe.png",
     "needsVPN": false
   },
+   },
+      {
+    "name": "L'ÉQUIPE LIVE FOOT",
+    "url": "https://raw.githubusercontent.com/schumijo/iptv/main/playlists/lequipe/lequipelive5.m3u8",
+    "logo": "https://i.ibb.co/KXhYwm0/lequipe.png",
+    "needsVPN": false
+  },
   {
     "name": "Sport en France",
     "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
