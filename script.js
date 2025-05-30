@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let channels = [];
     let hasVideoEverPlayed = false;
 
-    // L'URL exacte de votre proxy Vercel qui utilise le chemin /api
-    const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url=';
+    // --- L'URL du proxy n'est plus nécessaire, je l'ai commentée. ---
+    // const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url=';
 
 
     // Fonction pour afficher une boîte de message personnalisée
@@ -134,12 +134,14 @@ document.addEventListener('DOMContentLoaded', () => {
         videoElement.load();
         // --- Fin du nettoyage ---
 
-        let finalUrl;
+        // --- Changement ici : on utilise directement originalUrl au lieu de finalUrl ---
+        let finalUrl = originalUrl;
         let useHlsJs = false;
 
-        const encodedUrl = encodeURIComponent(originalUrl);
-        finalUrl = PROXY_BASE_URL + encodedUrl;
-        console.log(`[Client] Tentative de chargement via le proxy Vercel : ${finalUrl}`);
+        // Le proxy n'est plus utilisé, donc cette ligne est supprimée
+        // const encodedUrl = encodeURIComponent(originalUrl);
+        // finalUrl = PROXY_BASE_URL + encodedUrl;
+        console.log(`[Client] Tentative de chargement direct de : ${finalUrl}`); // Message de log mis à jour
 
         if (originalUrl.includes('.m3u8') || originalUrl.includes('/stream/') || originalUrl.includes('radioswebmp3.synology.me')) {
             useHlsJs = true;
@@ -166,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     videoElement.play().catch(e => console.error("Erreur de lecture vidéo (play) après MANIFEST_PARSED:", e));
                 });
 
-                // **** DÉBUT DE LA MODIFICATION ****
                 hlsInstance.on(Hls.Events.ERROR, function(event, data) {
                     console.error('Erreur HLS:', data);
 
@@ -193,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
                     }
                 });
-                // **** FIN DE LA MODIFICATION ****
 
             } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
                 // Lecture native HLS pour les navigateurs compatibles (Safari)
