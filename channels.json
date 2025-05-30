@@ -122,9 +122,9 @@
   },
    
   {
-    "name": "L'ÉQUIPE LIVE FOOT",
+    "name": "BFM",
     "url": "https://ncdn-live-bfm.pfd.sfr.net/shls/LIVE$BFM_TV/index.m3u8?start=LIVE&end=END",
-    "logo": "https://i.ibb.co/KXhYwm0/lequipe.png",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/40/BFM_TV_logo.png",
     "needsVPN": false
   },
   {
