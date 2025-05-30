@@ -1,7 +1,13 @@
-[
+[  
   {
     "name": "TF1",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
+    "logo": "https://i.imgur.com/QxHt9NC.png",
+    "needsVPN": false
+  },
+  {
+    "name": "France 2",
+    "url": "https://frenchtv.fun/watch/fr-france-2-fhd",
     "logo": "https://i.imgur.com/QxHt9NC.png",
     "needsVPN": false
   },
