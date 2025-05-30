@@ -186,13 +186,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 hlsInstance.destroy();
                                 hlsInstance = null;
                             }
-                            showMessage(`Erreur de lecture fatale pour ${channelName}: ${data.details || 'Erreur inconnue'}. Tentative de fallback...`);
+                            //showMessage(`Erreur de lecture fatale pour ${channelName}: ${data.details || 'Erreur inconnue'}. Tentative de fallback...`);
                             console.log(`[Client] hls.js a échoué fatalement. Tentative de lecture native en dernier recours pour : ${finalUrl}`);
                             videoElement.src = finalUrl;
                             videoElement.type = 'video/mp2t';
                             videoElement.play().catch(e => console.error("Erreur de lecture native (fallback HLS):", e));
                         } else {
-                            showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
+                            //showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
                         }
                     });
 
