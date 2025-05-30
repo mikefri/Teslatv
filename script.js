@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`[Client] Chargement de la page de lecteur via iframe pour : ${originalUrl}`);
             iframePlayer.src = originalUrl;
             iframePlayer.classList.add('active'); // Rends l'iframe visible
-            showMessage(`Chargement de la chaîne ${channelName} (via lecteur externe).`); // Message pour l'utilisateur
+            //showMessage(`Chargement de la chaîne ${channelName} (via lecteur externe).`); // Message pour l'utilisateur
             // Les contrôles de lecture/pause ne s'appliquent pas directement à l'iframe
         } else {
             // Logique existante pour les flux directs (HLS ou natifs)
