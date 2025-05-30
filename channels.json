@@ -81,6 +81,54 @@
     "url": "https://tutvlive.ru/player/2/16",
     "logo": "https://i.imgur.com/1IXQoWq.png",
     "needsVPN": false
+  },
+  {
+         "name": "RMC Sport 1",
+    "url": "https://tutvlive.ru/player/2/17",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "RMC Sport 2",
+    "url": "https://tutvlive.ru/player/2/18",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "L'équipe",
+    "url": "https://tutvlive.ru/player/2/19",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "DAZN",
+    "url": "https://tutvlive.ru/player/2/20",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "BeinSport 1",
+    "url": "https://tutvlive.ru/player/2/1",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "BeinSport 2",
+    "url": "https://tutvlive.ru/player/2/2",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "BeinSport 2",
+    "url": "https://tutvlive.ru/player/2/2",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
+  },
+  {
+         "name": "Canal +",
+    "url": "https://tutvlive.ru/player/2/11",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false
   }
 
 
