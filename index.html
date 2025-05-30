@@ -11,37 +11,39 @@
     <h1>Tesla TV</h1>
 
     <div class="message">Bienvenue sur Tesla TV !</div>
-     <hr> <a href="https://vavoo.to/" target="_blank" class="external-link-button">
+    <hr> 
+    <a href="https://vavoo.to/" target="_blank" class="external-link-button">
         Accéder à VAVOO.to
     </a>
 
     <div class="main-container">
-<div id="videoPlayer">
-        <div id="videoPlaceholder">
-            <img src="https://mikefri.github.io/Teslatv/image.jpg" alt="Image de remplacement Tesla TV">
-            <div class="play-overlay">
-               
-                <span>Charger une chaîne</span>
+        <div id="videoPlayer">
+            <div id="videoPlaceholder">
+                <img src="https://mikefri.github.io/Teslatv/image.jpg" alt="Image de remplacement Tesla TV">
+                <div class="play-overlay">
+                    <span>Charger une chaîne</span>
+                </div>
             </div>
+            <video id="video" class="video-element" controls autoplay></video>
+            <iframe id="iframePlayer" class="iframe-player" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
         </div>
-        <video id="video" controls ></video></div>
 
 
         <div id="channelListContainer">
             <div id="currentTime"></div>
             <div id="channelList">
-                </div>
+            </div>
         </div>
     </div>
 
-    
-
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="script.js"></script>
-        <div id="messageBox" class="hidden">
+    
+    <div id="messageBox" class="hidden">
         <div class="message-content">
             <span id="closeMessage" class="close-button">&times;</span>
-            <p id="messageText"></p>  </div>
+            <p id="messageText"></p>
+        </div>
     </div>
 </body>
 </html>

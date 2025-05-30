@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Récupération des éléments du DOM
     const videoContainer = document.getElementById('videoPlayer');
-    const videoElement = document.getElementById('video'); // Assurez-vous que l'ID est 'video'
+    const videoElement = document.getElementById('video');
+    const iframePlayer = document.getElementById('iframePlayer'); // <--- NOUVEAU
     const videoPlaceholder = document.getElementById('videoPlaceholder');
     const channelListDiv = document.getElementById('channelList');
     const currentTimeDiv = document.getElementById('currentTime');
@@ -12,10 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let hlsInstance = null;
     let channels = [];
     let hasVideoEverPlayed = false;
-
-    // --- L'URL du proxy n'est plus nécessaire, je l'ai commentée. ---
-    // const PROXY_BASE_URL = 'https://proxy-tesla-tv.vercel.app/api?url=';
-
 
     // Fonction pour afficher une boîte de message personnalisée
     function showMessage(message) {
@@ -68,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const channelItem = document.createElement('div');
             channelItem.classList.add('channel-item');
             channelItem.setAttribute('data-channel-id', channel.name.replace(/\s/g, '-'));
-            channelItem.setAttribute('data-channel-url', channel.url); // originalUrl sera ici
+            channelItem.setAttribute('data-channel-url', channel.url);
 
             const img = document.createElement('img');
             img.src = channel.logo;
@@ -118,13 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (videoPlaceholder) {
                 videoPlaceholder.classList.add('hidden');
             }
-            if (videoElement) {
-                videoElement.classList.add('active');
-            }
             hasVideoEverPlayed = true;
         }
 
-        // --- Détruire HLS.js et réinitialiser l'élément vidéo avant de charger un nouveau flux ---
+        // --- NOUVELLE LOGIQUE POUR CHOISIR ENTRE VIDEO ET IFRAME ---
+        const isPlayerPage = originalUrl.includes('/player/') || originalUrl.includes('tutvlive.ru/player/'); // Ajoute d'autres domaines si nécessaire
+
+        // Cache les deux éléments et réinitialise HLS.js
         if (hlsInstance) {
             hlsInstance.destroy();
             hlsInstance = null;
@@ -132,87 +129,92 @@ document.addEventListener('DOMContentLoaded', () => {
         videoElement.src = '';
         videoElement.removeAttribute('type');
         videoElement.load();
-        // --- Fin du nettoyage ---
+        videoElement.classList.remove('active');
+        iframePlayer.src = ''; // Vide l'iframe
+        iframePlayer.classList.remove('active');
 
-        // --- Changement ici : on utilise directement originalUrl au lieu de finalUrl ---
-        let finalUrl = originalUrl;
-        let useHlsJs = false;
 
-        // Le proxy n'est plus utilisé, donc cette ligne est supprimée
-        // const encodedUrl = encodeURIComponent(originalUrl);
-        // finalUrl = PROXY_BASE_URL + encodedUrl;
-        console.log(`[Client] Tentative de chargement direct de : ${finalUrl}`); // Message de log mis à jour
+        if (isPlayerPage) {
+            console.log(`[Client] Chargement de la page de lecteur via iframe pour : ${originalUrl}`);
+            iframePlayer.src = originalUrl;
+            iframePlayer.classList.add('active'); // Rends l'iframe visible
+            showMessage(`Chargement de la chaîne ${channelName} (via lecteur externe).`); // Message pour l'utilisateur
+            // Les contrôles de lecture/pause ne s'appliquent pas directement à l'iframe
+        } else {
+            // Logique existante pour les flux directs (HLS ou natifs)
+            console.log(`[Client] Tentative de chargement direct de : ${originalUrl}`);
+            videoElement.classList.add('active'); // Rends l'élément vidéo visible
 
-        if (originalUrl.includes('.m3u8') || originalUrl.includes('/stream/') || originalUrl.includes('radioswebmp3.synology.me')) {
-            useHlsJs = true;
-        }
+            let finalUrl = originalUrl;
+            let useHlsJs = false;
 
-        if (useHlsJs) {
-            console.log(`[Client] Tentative de lecture HLS avec hls.js pour : ${finalUrl}`);
-            if (Hls.isSupported()) {
-                hlsInstance = new Hls();
-                hlsInstance.loadSource(finalUrl);
-                hlsInstance.attachMedia(videoElement);
-                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-                    hlsInstance.subtitleTrack = -1;
-                    console.log("Subtitles disabled via hls.subtitleTrack = -1");
+            if (originalUrl.includes('.m3u8') || originalUrl.includes('/stream/') || originalUrl.includes('radioswebmp3.synology.me')) {
+                useHlsJs = true;
+            }
 
-                    if (videoElement.textTracks) {
-                        for (let i = 0; i < videoElement.textTracks.length; i++) {
-                            if (videoElement.textTracks[i].mode !== 'disabled') {
-                                videoElement.textTracks[i].mode = 'disabled';
-                                console.log(`Piste de sous-titre ${videoElement.textTracks[i].label || i} désactivée.`);
+            if (useHlsJs) {
+                console.log(`[Client] Tentative de lecture HLS avec hls.js pour : ${finalUrl}`);
+                if (Hls.isSupported()) {
+                    hlsInstance = new Hls();
+                    hlsInstance.loadSource(finalUrl);
+                    hlsInstance.attachMedia(videoElement);
+                    hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                        hlsInstance.subtitleTrack = -1;
+                        console.log("Subtitles disabled via hls.subtitleTrack = -1");
+
+                        if (videoElement.textTracks) {
+                            for (let i = 0; i < videoElement.textTracks.length; i++) {
+                                if (videoElement.textTracks[i].mode !== 'disabled') {
+                                    videoElement.textTracks[i].mode = 'disabled';
+                                    console.log(`Piste de sous-titre ${videoElement.textTracks[i].label || i} désactivée.`);
+                                }
                             }
                         }
-                    }
-                    videoElement.play().catch(e => console.error("Erreur de lecture vidéo (play) après MANIFEST_PARSED:", e));
-                });
+                        videoElement.play().catch(e => console.error("Erreur de lecture vidéo (play) après MANIFEST_PARSED:", e));
+                        hideMessage(); // Cache le message si la lecture démarre
+                    });
 
-                hlsInstance.on(Hls.Events.ERROR, function(event, data) {
-                    console.error('Erreur HLS:', data);
+                    hlsInstance.on(Hls.Events.ERROR, function(event, data) {
+                        console.error('Erreur HLS:', data);
 
-                    // Vérifiez si l'erreur est un levelLoadError NON fatal
-                    if (data.type === Hls.ErrorTypes.NETWORK_ERROR && data.details === Hls.ErrorDetails.LEVEL_LOAD_ERROR && !data.fatal) {
-                        console.warn(`[Client] LevelLoadError non fatal pour ${channelName} détecté et sera ignoré (la lecture devrait continuer).`);
-                        // Cacher le message d'erreur si la chaîne continue de jouer
-                        hideMessage(); // <--- Appelle votre fonction pour masquer la boîte
-                        // Ne pas afficher de nouveau message pour cette erreur
-                    } else if (data.fatal) {
-                        // Pour les erreurs fatales, vous voulez toujours afficher un message ou tenter une récupération
-                        console.error("Erreur fatale détectée, tentative de récupération...");
-                        if (hlsInstance) {
-                            hlsInstance.destroy();
-                            hlsInstance = null;
+                        if (data.type === Hls.ErrorTypes.NETWORK_ERROR && data.details === Hls.ErrorDetails.LEVEL_LOAD_ERROR && !data.fatal) {
+                            console.warn(`[Client] LevelLoadError non fatal pour ${channelName} détecté et sera ignoré (la lecture devrait continuer).`);
+                            hideMessage();
+                        } else if (data.fatal) {
+                            console.error("Erreur fatale détectée, tentative de récupération...");
+                            if (hlsInstance) {
+                                hlsInstance.destroy();
+                                hlsInstance = null;
+                            }
+                            showMessage(`Erreur de lecture fatale pour ${channelName}: ${data.details || 'Erreur inconnue'}. Tentative de fallback...`);
+                            console.log(`[Client] hls.js a échoué fatalement. Tentative de lecture native en dernier recours pour : ${finalUrl}`);
+                            videoElement.src = finalUrl;
+                            videoElement.type = 'video/mp2t';
+                            videoElement.play().catch(e => console.error("Erreur de lecture native (fallback HLS):", e));
+                        } else {
+                            showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
                         }
-                        showMessage(`Erreur de lecture fatale pour ${channelName}: ${data.details || 'Erreur inconnue'}. Tentative de fallback...`);
-                        console.log(`[Client] hls.js a échoué fatalement. Tentative de lecture native en dernier recours pour : ${finalUrl}`);
-                        videoElement.src = finalUrl;
-                        videoElement.type = 'video/mp2t'; // Spécifier le type MIME pour aider le navigateur
-                        videoElement.play().catch(e => console.error("Erreur de lecture native (fallback HLS):", e));
-                    } else {
-                        // Pour les autres erreurs non fatales qui ne sont pas levelLoadError (si vous voulez les afficher)
-                        showMessage(`Erreur de lecture pour ${channelName}: ${data.details || 'Erreur inconnue'}.`);
-                    }
-                });
+                    });
 
-            } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-                // Lecture native HLS pour les navigateurs compatibles (Safari)
-                console.log(`[Client] Lecture HLS native pour : ${finalUrl}`);
-                videoElement.src = finalUrl;
-                videoElement.play().catch(e => console.error("Erreur de lecture native (HLS):", e));
+                } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                    console.log(`[Client] Lecture HLS native pour : ${finalUrl}`);
+                    videoElement.src = finalUrl;
+                    videoElement.play().catch(e => console.error("Erreur de lecture native (HLS):", e));
+                    hideMessage(); // Cache le message si la lecture démarre
+                } else {
+                    console.error('Le navigateur ne supporte pas HLS et hls.js ne peut pas être utilisé.');
+                    showMessage(`Votre navigateur ne supporte pas la lecture HLS. Veuillez essayer avec un autre navigateur.`);
+                }
             } else {
-                console.error('Le navigateur ne supporte pas HLS et hls.js ne peut pas être utilisé.');
-                showMessage(`Votre navigateur ne supporte pas la lecture HLS. Veuillez essayer avec un autre navigateur.`);
-            }
-        } else {
-            console.log(`[Client] Tentative de lecture native (non-HLS, non-TS traité par hls.js) pour : ${finalUrl}`);
-            videoElement.src = finalUrl;
-            videoElement.removeAttribute('type');
+                console.log(`[Client] Tentative de lecture native (non-HLS) pour : ${finalUrl}`);
+                videoElement.src = finalUrl;
+                videoElement.removeAttribute('type');
 
-            videoElement.play().catch(e => {
-                console.error("Erreur de lecture native (non-HLS):", e);
-                showMessage(`Impossible de lire la chaîne ${channelName} nativement. Format non supporté ou erreur de lecture. (${e.message})`);
-            });
+                videoElement.play().catch(e => {
+                    console.error("Erreur de lecture native (non-HLS):", e);
+                    showMessage(`Impossible de lire la chaîne ${channelName} nativement. Format non supporté ou erreur de lecture. (${e.message})`);
+                });
+            }
         }
     }
 
@@ -228,7 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
             channels = data;
             populateChannels();
 
+            // Initialement, cache la vidéo et l'iframe, montre le placeholder
             if (videoElement) videoElement.classList.remove('active');
+            if (iframePlayer) iframePlayer.classList.remove('active');
             if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
 
             if (channels.length > 0) {
@@ -245,6 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(`Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`);
             showMessage(`Erreur au chargement des chaînes: Vérifiez le fichier 'channels.json'.`);
             if (videoElement) videoElement.classList.remove('active');
+            if (iframePlayer) iframePlayer.classList.remove('active');
             if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
         });
 

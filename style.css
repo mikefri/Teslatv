@@ -10,6 +10,10 @@
 }
 
 /* Styles généraux du corps de la page */
+html, body {
+    height: 100%; /* Assure que le html et le body prennent toute la hauteur de la fenêtre */
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
@@ -38,7 +42,7 @@ h1 {
 .main-container {
     display: flex; /* Active Flexbox pour aligner les enfants (vidéo et liste) */
     flex-direction: row; /* Aligne les enfants horizontalement (par défaut, mais explicite) */
-    flex-wrap: nowrap; /* ❤️ TRÈS IMPORTANT : Empêche les éléments de passer à la ligne */
+    flex-wrap: nowrap; /* Empêche les éléments de passer à la ligne */
     width: 95%; /* Prend 95% de la largeur du parent (body) */
     max-width: 1200px; /* Ne dépasse pas 1200px de large */
     margin-top: 20px;
@@ -48,31 +52,38 @@ h1 {
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--neon-blue-dark);
     align-items: flex-start; /* Aligne les éléments enfants en haut du conteneur */
-
-    /* La hauteur du .main-container sera dictée par la hauteur du #videoPlayer (via padding-bottom). */
-    /* La ligne suivante est commentée car elle pourrait limiter la hauteur et causer des problèmes. */
-    /* max-height: calc(100vh - 80px); */
 }
 
+/* Conteneur du lecteur vidéo (parent de <video> et <iframe>) */
 #videoPlayer {
     flex-grow: 1;
     background-color: #000;
-    /* overflow: hidden; <-- SUPPRIMEZ OU COMMENTEZ CETTE LIGNE */
     position: relative;
     padding-bottom: 56.25%; /* Définit la hauteur du lecteur (ratio 16:9 de sa largeur) */
     height: 0; /* Assure que padding-bottom définit la hauteur */
     border-right: 1px solid var(--neon-blue-dark);
 }
 
-#videoPlayer video {
-    position: absolute; /* Positionne la vidéo absolument par rapport à #videoPlayer */
+/* Styles pour l'élément <video> et l'élément <iframe> */
+/* Ils sont positionnés absolument et cachés par défaut */
+#video,
+#iframePlayer {
+    position: absolute; /* Positionne les lecteurs absolument par rapport à #videoPlayer */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    
-    object-fit: contain; /* Utiliser 'contain' pour éviter le rognage et voir toute la vidéo */
+    display: none; /* Cache les deux par défaut. JavaScript gérera 'active' */
+    border: none; /* Supprime la bordure par défaut de l'iframe */
+    object-fit: contain; /* Utiliser 'contain' pour la vidéo pour éviter le rognage et voir toute la vidéo */
 }
+
+/* Règle pour afficher le lecteur actif (appliquée par JS) */
+#video.active,
+#iframePlayer.active {
+    display: block; /* Affiche l'élément qui a la classe 'active' */
+}
+
 
 /* Conteneur de la liste des chaînes (y compris l'heure) */
 #channelListContainer {
@@ -80,12 +91,8 @@ h1 {
     background-color: var(--bg-medium);
     display: flex; /* Active Flexbox pour empiler l'heure et la liste */
     flex-direction: column; /* Empile les enfants (heure et liste) verticalement */
-    /* overflow-y: auto; est retiré d'ici, il est maintenant sur #channelList */
     padding-bottom: 15px; /* Espace en bas du conteneur global des chaînes */
-
-    /* ❤️ TRÈS IMPORTANT : Prend 100% de la hauteur disponible de son parent (.main-container) */
-    height: 100%;
-    /* max-height: 100%; est redondant avec height: 100% dans ce contexte */
+    height: 100%; /* Prend 100% de la hauteur disponible de son parent (.main-container) */
 }
 
 /* Style de l'heure actuelle */
@@ -106,16 +113,14 @@ h1 {
 
 /* Conteneur de la liste réelle des chaînes (qui défile) */
 #channelList {
-    flex-grow: 1; /* ❤️ Permet à la liste de prendre TOUT l'espace vertical restant */
-    overflow-y: auto; /* ❤️ C'est ICI que le défilement vertical est activé */
+    flex-grow: 1; /* Permet à la liste de prendre TOUT l'espace vertical restant */
+    overflow-y: auto; /* C'est ICI que le défilement vertical est activé */
     padding-top: 15px; /* Padding en haut de la liste (sous l'heure) */
     padding-left: 10px;
     padding-right: 10px;
-    /* Le padding-bottom est géré par le #channelListContainer */
 }
 
 /* Scrollbar personnalisée pour la liste des chaînes */
-/* Appliquez ces styles à l'élément qui a overflow-y: auto, c'est-à-dire #channelList */
 #channelList::-webkit-scrollbar {
     width: 8px; /* Largeur de la barre de défilement */
 }
@@ -195,25 +200,19 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
     border: 1px solid var(--neon-blue-dark);
 }
-html, body {
-    height: 100%; /* Assure que le html et le body prennent toute la hauteur de la fenêtre */
-}
-body {
-    /* ... votre CSS existant pour body ... */
-    min-height: 100vh; /* Gardez ceci pour les cas où le contenu est plus petit que la fenêtre */
-}
+
+/* Reset Box Sizing */
 *, *::before, *::after {
     box-sizing: border-box;
 }
-
 
 /* Style de l'image de remplacement */
 #videoPlaceholder {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* Important : le conteneur doit prendre 100% de son parent #videoPlayer */
-    height: 100%; /* Important : le conteneur doit prendre 100% de son parent #videoPlayer */
+    width: 100%;
+    height: 100%;
     display: flex; /* Pour centrer le contenu (icône play et texte) */
     justify-content: center;
     align-items: center;
@@ -222,25 +221,23 @@ body {
     z-index: 2;
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
-    /* Assurez-vous qu'aucun autre style n'interfère avec width/height ici */
 }
 
 #videoPlaceholder.hidden {
     opacity: 0;
-    pointer-events: none;
+    pointer-events: none; /* Permet aux clics de passer à travers quand caché */
     z-index: 0;
 }
 
 #videoPlaceholder img {
-    width: 100%; /* L'image prend 100% de la largeur de son parent #videoPlaceholder */
-    height: 100%; /* L'image prend 100% de la hauteur de son parent #videoPlaceholder */
-    object-fit: cover; /* ❤️ C'est CE QUI FAIT L'ADAPTATION ! */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* C'est CE QUI FAIT L'ADAPTATION ! */
     display: block; /* Important pour éviter les espaces sous l'image */
-    /* Assurez-vous qu'aucun autre style n'interfère avec width/height/object-fit ici */
 }
 
 .play-overlay {
-    position: absolute; /* Permet le centrage avec transform */
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -249,81 +246,74 @@ body {
     align-items: center;
     color: var(--neon-blue-light);
     text-shadow: 0 0 5px var(--neon-blue);
-    font-size: 1.5em; /* La taille du texte "Charger une chaîne" reste proportionnelle */
+    font-size: 1.5em;
     font-weight: bold;
-    pointer-events: none;
+    pointer-events: none; /* Permet aux clics de passer à travers vers le placeholder */
     opacity: 0.8;
-    /* Supprimez les styles width/height ici si vous les définissez dans le HTML du SVG */
-    /* width: auto; */
-    /* height: auto; */
 }
 
 .play-overlay svg {
-    /* La taille est maintenant définie dans le HTML directement sur la balise SVG (width="15%" height="auto") */
-    /* Mais vous pouvez aussi la définir ici si vous préférez gérer ça avec CSS */
-    /* Par exemple: */
-    /* width: 15vw; */ /* 15% de la largeur du viewport, peut être moins précis */
-    /* width: 10%; */ /* 10% de la largeur du parent .play-overlay */
-    /* height: auto; */
     margin-bottom: 10px;
     filter: drop-shadow(0 0 8px var(--neon-blue));
 }
 
 
-
 /* --- Styles pour l'indicateur VPN --- */
 .vpn-indicator {
-  display: inline-flex; /* Utilisation de flexbox pour centrer le contenu si c'est une icône ou du texte */
-  align-items: center;
-  justify-content: center;
-  width: 24px; /* Taille de l'icône/espace */
-  height: 24px;
-  margin-left: auto; /* Pousse l'indicateur tout à droite du channel-item */
-  flex-shrink: 0; /* Empêche l'indicateur de rétrécir */
-  /* Styles pour l'icône si vous utilisez background-image */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  font-size: 0.8em; /* Taille du texte si vous utilisez du texte */
-  font-weight: bold;
-  border-radius: 4px; /* Un peu d'arrondi pour le fond */
-  padding: 2px; /* Un peu de padding interne */
+    display: inline-flex; /* Utilisation de flexbox pour centrer le contenu si c'est une icône ou du texte */
+    align-items: center;
+    justify-content: center;
+    width: 24px; /* Taille de l'icône/espace */
+    height: 24px;
+    margin-left: auto; /* Pousse l'indicateur tout à droite du channel-item */
+    flex-shrink: 0; /* Empêche l'indicateur de rétrécir */
+    /* Styles pour l'icône si vous utilisez background-image */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-size: 0.8em; /* Taille du texte si vous utilisez du texte */
+    font-weight: bold;
+    border-radius: 4px; /* Un peu d'arrondi pour le fond */
+    padding: 2px; /* Un peu de padding interne */
 }
 
 /* Style pour les chaînes qui NÉCESSITENT un VPN */
 .vpn-indicator[data-needs-vpn="true"] {
-  /* Option 1: Utiliser une image d'icône VPN */
-  background-image: url("https://i.imgur.com/your-vpn-icon.png"); /* REMPLACEZ PAR L'URL D'UNE ICÔNE VPN ROUGE/AVERTISSEMENT */
-  background-color: rgba(255, 0, 0, 0.2); /* Un léger fond rouge transparent */
-  border: 1px solid red;
-  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    /* Option 1: Utiliser une image d'icône VPN */
+    /* REMPLACEZ PAR L'URL D'UNE ICÔNE VPN ROUGE/AVERTISSEMENT */
+    background-image: url("https://i.imgur.com/your-vpn-icon.png"); 
+    background-color: rgba(255, 0, 0, 0.2); /* Un léger fond rouge transparent */
+    border: 1px solid red;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 
-  /* Option 2: Utiliser du texte (décommentez si vous préférez cette option) */
-  /* content: 'VPN'; */
-  /* color: red; */
-  /* background-color: rgba(255, 0, 0, 0.2); */
-  /* border: 1px solid red; */
-  /* box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); */
+    /* Option 2: Utiliser du texte (décommentez si vous préférez cette option) */
+    /* content: 'VPN'; */
+    /* color: red; */
+    /* background-color: rgba(255, 0, 0, 0.2); */
+    /* border: 1px solid red; */
+    /* box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); */
 }
 
 /* Style pour les chaînes qui NE NÉCESSITENT PAS de VPN */
 .vpn-indicator[data-needs-vpn="false"] {
-  /* Option 1: Utiliser une image d'icône "pas de VPN" (ex: un cadenas ouvert, un crochet vert) */
-  background-image: url("https://i.imgur.com/your-no-vpn-icon.png"); /* REMPLACEZ PAR L'URL D'UNE ICÔNE VERTE/OK */
-  background-color: rgba(0, 255, 0, 0.1); /* Un léger fond vert transparent */
-  border: 1px solid limegreen;
-  box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    /* Option 1: Utiliser une image d'icône "pas de VPN" (ex: un cadenas ouvert, un crochet vert) */
+    /* REMPLACEZ PAR L'URL D'UNE ICÔNE VERTE/OK */
+    background-image: url("https://i.imgur.com/your-no-vpn-icon.png"); 
+    background-color: rgba(0, 255, 0, 0.1); /* Un léger fond vert transparent */
+    border: 1px solid limegreen;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
 
-  /* Option 2: Utiliser du texte (décommentez si vous préférez cette option) */
-  /* content: 'OK'; */
-  /* color: limegreen; */
-  /* background-color: rgba(0, 255, 0, 0.1); */
-  /* border: 1px solid limegreen; */
-  /* box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); */
+    /* Option 2: Utiliser du texte (décommentez si vous préférez cette option) */
+    /* content: 'OK'; */
+    /* color: limegreen; */
+    /* background-color: rgba(0, 255, 0, 0.1); */
+    /* border: 1px solid limegreen; */
+    /* box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); */
 
-  /* Option 3: Ne rien afficher du tout si pas de VPN (décommentez pour cacher l'indicateur) */
-  /* display: none; */
+    /* Option 3: Ne rien afficher du tout si pas de VPN (décommentez pour cacher l'indicateur) */
+    /* display: none; */
 }
+
 /* Style de la boîte de message */
 #messageBox {
     position: fixed;
@@ -343,14 +333,14 @@ body {
 }
 
 .message-content {
-    background-color: #fff;
+    background-color: #fff; /* Tu pourrais utiliser une variable de couleur néon ici pour la cohérence */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
     position: relative;
     max-width: 80%;
-    color: #333;
+    color: #333; /* Tu pourrais utiliser une variable de couleur néon ici */
 }
 
 .close-button {
@@ -359,11 +349,11 @@ body {
     right: 15px;
     font-size: 24px;
     cursor: pointer;
-    color: #aaa;
+    color: #aaa; /* Tu pourrais utiliser une variable de couleur néon ici */
 }
 
 .close-button:hover {
-    color: #333;
+    color: #333; /* Tu pourrais utiliser une variable de couleur néon ici */
 }
 
 #messageText {
