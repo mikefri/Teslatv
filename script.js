@@ -15,18 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let hasVideoEverPlayed = false;
 
     // Fonction pour afficher une boîte de message personnalisée
-    function showMessage(message) {
-        if (messageText) {
-            messageText.textContent = message;
-        } else {
-            console.error("L'élément 'messageText' n'a pas été trouvé dans le DOM.");
-        }
-        if (messageBox) {
-            messageBox.classList.remove('hidden');
-        } else {
-            console.error("L'élément 'messageBox' n'a pas été trouvé dans le DOM.");
-        }
-    }
+    //function showMessage(message) {
+      //  if (messageText) {
+          //  messageText.textContent = message;
+       // } else {
+           // console.error("L'élément 'messageText' n'a pas été trouvé dans le DOM.");
+      //  }
+       // if (messageBox) {
+       //     messageBox.classList.remove('hidden');
+      //  } else {
+       //     console.error("L'élément 'messageBox' n'a pas été trouvé dans le DOM.");
+      //  }
+   // }
 
     // Fonction pour masquer la boîte de message
     function hideMessage() {
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     hideMessage(); // Cache le message si la lecture démarre
                 } else {
                     console.error('Le navigateur ne supporte pas HLS et hls.js ne peut pas être utilisé.');
-                    showMessage(`Votre navigateur ne supporte pas la lecture HLS. Veuillez essayer avec un autre navigateur.`);
+                    //showMessage(`Votre navigateur ne supporte pas la lecture HLS. Veuillez essayer avec un autre navigateur.`);
                 }
             } else {
                 console.log(`[Client] Tentative de lecture native (non-HLS) pour : ${finalUrl}`);
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 videoElement.play().catch(e => {
                     console.error("Erreur de lecture native (non-HLS):", e);
-                    showMessage(`Impossible de lire la chaîne ${channelName} nativement. Format non supporté ou erreur de lecture. (${e.message})`);
+                    //showMessage(`Impossible de lire la chaîne ${channelName} nativement. Format non supporté ou erreur de lecture. (${e.message})`);
                 });
             }
         }
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error("Erreur lors du chargement des chaînes:", error);
             console.error(`Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`);
-            showMessage(`Erreur au chargement des chaînes: Vérifiez le fichier 'channels.json'.`);
+            //showMessage(`Erreur au chargement des chaînes: Vérifiez le fichier 'channels.json'.`);
             if (videoElement) videoElement.classList.remove('active');
             if (iframePlayer) iframePlayer.classList.remove('active');
             if (videoPlaceholder) videoPlaceholder.classList.remove('hidden');
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadChannel(channelUrl, channelName, channelId);
                 } else {
                     console.warn("Aucune chaîne sélectionnée pour lancer depuis le placeholder.");
-                    showMessage("Veuillez sélectionner une chaîne dans la liste pour commencer la lecture.");
+                    //showMessage("Veuillez sélectionner une chaîne dans la liste pour commencer la lecture.");
                 }
             }
         });
