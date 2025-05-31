@@ -93,7 +93,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const m3uUrl = 'https://mikefri.github.io/Teslatv/vod.m3u';
+            const m3uUrl = 'https://mikefri.github.io/vod.m3u'; // J'ai remis l'URL M3U originale si c'est celle-ci que vous utilisez
             const proxyUrl = 'https://proxy-tesla-tv.vercel.app/'; // Votre URL de proxy
             const movieListDiv = document.getElementById('movie-list');
             const videoPlayer = document.getElementById('video-player');
@@ -152,8 +152,9 @@
                 movieItem.appendChild(titleP);
 
                 movieItem.addEventListener('click', () => {
-                    // Construction de l'URL du film via le proxy
-                    const proxiedMovieUrl = proxyUrl + movie.url;
+                    // C'EST LA LIGNE CLÉ MODIFIÉE : Construction de l'URL du film via le proxy
+                    // L'URL originale est encodée et passée comme paramètre 'url'
+                    const proxiedMovieUrl = proxyUrl + '?url=' + encodeURIComponent(movie.url);
                     console.log('Lecture via proxy:', proxiedMovieUrl); // Pour le débogage
 
                     videoPlayer.src = proxiedMovieUrl;
