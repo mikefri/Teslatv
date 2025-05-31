@@ -1,259 +1,261 @@
 [
   {
-    "category": "Généralistes",
-    "channels": [
-      {
-        "name": "TF1",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
-        "logo": "https://i.imgur.com/QxHt9NC.png",
-        "needsVPN": false
-      },
-      {
-        "name": "TFX",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tfx.m3u8",
-        "logo": "https://i.imgur.com/d91GcVf.png",
-        "needsVPN": false
-      },
-      {
-        "name": "TMC",
-        "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/5/54/TMC_logo.svg/512px-TMC_logo.svg.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Cherie25",
-        "url": "https://cherie25.nrjaudio.fm/hls/live/2038375/c25/master.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Logo_Ch%C3%A9rie_25.svg/512px-Logo_Ch%C3%A9rie_25.svg.png",
-        "needsVPN": false
-      }
-    ]
+    "name": "TF1",
+    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
+    "logo": "https://i.imgur.com/QxHt9NC.png",
+    "needsVPN": false,
+    "category": "Généraliste"
   },
   {
-    "category": "Information",
-    "channels": [
-      {
-        "name": "LCI",
-        "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8",
-        "logo": "https://i.imgur.com/DED8EXs.png",
-        "needsVPN": false
-      },
-      {
-        "name": "BFM",
-        "url": "https://ncdn-live-bfm.pfd.sfr.net/shls/LIVE$BFM_TV/index.m3u8?start=LIVE&end=END",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/4/40/BFM_TV_logo.png",
-        "needsVPN": false
-      }
-    ]
+    "name": "LCI",
+    "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8",
+    "logo": "https://i.imgur.com/DED8EXs.png",
+    "needsVPN": false,
+    "category": "Information"
   },
   {
-    "category": "Sport",
-    "channels": [
-      {
-        "name": "Canal +",
-        "url": "https://tutvlive.ru/player/2/11",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Logo_Canal%2B_1995.svg",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Sport",
-        "url": "https://tutvlive.ru/player/2/13",
-        "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2c/C%2B_Sport_%282023%29.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Sport 360",
-        "url": "https://tutvlive.ru/player/2/14",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/6/64/Canal%2BSport_360.png",
-        "needsVPN": false
-      },
-      {
-        "name": "BeinSport 1",
-        "url": "https://tutvlive.ru/player/2/1",
-        "logo": "https://seeklogo.com/images/B/bein-sports-1-logo-4E5E4AE6B8-seeklogo.com.png",
-        "needsVPN": false
-      },
-      {
-        "name": "BeinSport 2",
-        "url": "https://tutvlive.ru/player/2/2",
-        "logo": "https://logowik.com/content/uploads/images/bein-sports-25584.logowik.com.webp",
-        "needsVPN": false
-      },
-      {
-        "name": "RMC Sport 1",
-        "url": "https://tutvlive.ru/player/2/17",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Logo_RMC_Sport_1_2018.svg/2560px-Logo_RMC_Sport_1_2018.svg.png",
-        "needsVPN": false
-      },
-      {
-        "name": "RMC Sport 2",
-        "url": "https://tutvlive.ru/player/2/18",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_RMC_Sport_2_2018.svg/2560px-Logo_RMC_Sport_2_2018.svg.png",
-        "needsVPN": false
-      },
-      {
-        "name": "EuroSport 1",
-        "url": "https://tutvlive.ru/player/2/15",
-        "logo": "https://e7.pngegg.com/pngimages/350/883/png-clipart-eurosport-1-eurosport-2-television-channel-1-euro-television-blue-thumbnail.png",
-        "needsVPN": false
-      },
-      {
-        "name": "EuroSport 2",
-        "url": "https://tutvlive.ru/player/2/16",
-        "logo": "https://img.favpng.com/6/20/21/eurosport-1-television-channel-logo-eurosport-2-png-favpng-v4QiSJ7BjDEzcRE5QGZfjctk8.jpg",
-        "needsVPN": false
-      },
-      {
-        "name": "L'équipe",
-        "url": "https://tutvlive.ru/player/2/19",
-        "logo": "https://lacartefrancaise.fr//wp-content/uploads/2023/06/bon-achat-equipe.png",
-        "needsVPN": false
-      },
-      {
-        "name": "L'ÉQUIPE LIVE 1",
-        "url": "https://d3awaj0f2u3w26.cloudfront.net/3/media.m3u8",
-        "logo": "https://i.ibb.co/KXhYwm0/lequipe.png",
-        "needsVPN": false
-      },
-      {
-        "name": "L'ÉQUIPE LIVE 2",
-        "url": "https://d2l55nvfkhk4sg.cloudfront.net/3/media.m3u8",
-        "logo": "https://i.ibb.co/KXhYwm0/lequipe.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Sport en France",
-        "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/8/83/Sport_en_France_Logo.png/1200px-Sport_en_France_Logo.png",
-        "needsVPN": false
-      },
-      {
-        "name": "DAZN",
-        "url": "https://tutvlive.ru/player/2/20",
-        "logo": "https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg",
-        "needsVPN": false
-      },
-      {
-        "name": "Automoto",
-        "url": "https://tutvlive.ru/player/4/23",
-        "logo": "https://www.automoto-lachaine.fr/upload/media/logo-automoto-5fbb171ff21f2.png",
-        "needsVPN": false
-      }
-    ]
+    "name": "TFX",
+    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tfx.m3u8",
+    "logo": "https://i.imgur.com/d91GcVf.png",
+    "needsVPN": false,
+    "category": "Généraliste"
   },
   {
-    "category": "Découverte et Documentaires",
-    "channels": [
-      {
-        "name": "RMC DÉCOUVERTE",
-        "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/b3/RMC_D%C3%A9couverte_logo_2017.svg/langfr-350px-RMC_D%C3%A9couverte_logo_2017.svg.png",
-        "needsVPN": false
-      },
-      {
-        "name": "RMC Story",
-        "url": "https://d36bxc1bknkxrk.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-3ewcp19zjaxpt/index.m3u8",
-        "logo": "https://i.imgur.com/h53nsyJ.png",
-        "needsVPN": false
-      }
-    ]
+    "name": "TMC",
+    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tmc.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/5/54/TMC_logo.svg/512px-TMC_logo.svg.png",
+    "needsVPN": false,
+    "category": "Généraliste"
   },
   {
-    "category": "Cinéma et Divertissement",
-    "channels": [
-      {
-        "name": "RAKUTEN TOP FILMS TV",
-        "url": "https://01ac9352fbfa4204998783d41f9b1a2e.mediatailor.eu-west-1.amazonaws.com/v1/master/0547f18649bd788bec7b67b746e47670f558b6b2/production-LiveChannel-6068/master.m3u8",
-        "logo": "https://i.imgur.com/1IXQoWq.png",
-        "needsVPN": false
-      }
-    ]
+    "name": "Cherie25",
+    "url": "https://cherie25.nrjaudio.fm/hls/live/2038375/c25/master.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Logo_Ch%C3%A9rie_25.svg/512px-Logo_Ch%C3%A9rie_25.svg.png",
+    "needsVPN": false,
+    "category": "Généraliste"
   },
   {
-    "category": "Jeunesse",
-    "channels": [
-      {
-        "name": "Gulli",
-        "url": "https://origin-caf900c010ea8046.live.6cloud.fr/out/v1/c65696b42ca34e97a9b5f54758d6dd50/cmaf/hlsfmp4_short_q2hyb21h_gulli_sd_index.m3u8",
-        "logo": "https://upload.wikimedia.org/wikipedia/fr/4/43/18._Gulli.png",
-        "needsVPN": false
-      },
-      {
-        "name": "NARUTO TV",
-        "url": "https://raw.githubusercontent.com/schumijo/iptv/main/playlists/mytf1/naruto.m3u8",
-        "logo": "https://photos.tf1.fr/0/40/logo-chaine-stream-naruto-4dda81-03df71-0@3x.png",
-        "needsVPN": false
-      },
-      {
-        "name": "NARUTO NEXT GEN TV",
-        "url": "https://raw.githubusercontent.com/schumijo/iptv/main/playlists/mytf1/boruto-naruto-next-generatio.m3u8",
-        "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
-        "needsVPN": false
-      }
-    ]
+    "name": "RAKUTEN TOP FILMS TV",
+    "url": "https://01ac9352fbfa4204998783d41f9b1a2e.mediatailor.eu-west-1.amazonaws.com/v1/master/0547f18649bd788bec7b67b746e47670f558b6b2/production-LiveChannel-6068/master.m3u8",
+    "logo": "https://i.imgur.com/1IXQoWq.png",
+    "needsVPN": false,
+    "category": "Cinéma et Divertissement"
   },
   {
-    "category": "Canal+ Live",
-    "channels": [
-      {
-        "name": "Canal+ Live 1",
-        "url": "https://tutvlive.ru/player/2/31",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-1-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 2",
-        "url": "https://tutvlive.ru/player/2/32",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-2-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 3",
-        "url": "https://tutvlive.ru/player/2/33",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-3-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 4",
-        "url": "https://tutvlive.ru/player/2/34",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-4-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 5",
-        "url": "https://tutvlive.ru/player/2/35",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-5-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 6",
-        "url": "https://tutvlive.ru/player/2/36",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-6-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 7",
-        "url": "https://tutvlive.ru/player/2/37",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-7-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 8",
-        "url": "https://tutvlive.ru/player/2/38",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-8-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 9",
-        "url": "https://tutvlive.ru/player/2/39",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-9-fr.png",
-        "needsVPN": false
-      },
-      {
-        "name": "Canal+ Live 10",
-        "url": "https://tutvlive.ru/player/2/40",
-        "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-10-fr.png",
-        "needsVPN": false
-      }
-    ]
+    "name": "RMC DÉCOUVERTE",
+    "url": "https://d2mt8for1pddy4.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6uronj7gzvy4j/index.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/b3/RMC_D%C3%A9couverte_logo_2017.svg/langfr-350px-RMC_D%C3%A9couverte_logo_2017.svg.png",
+    "needsVPN": false,
+    "category": "Découverte et Documentaires"
+  },
+  {
+    "name": "RMC Story",
+    "url": "https://d36bxc1bknkxrk.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-3ewcp19zjaxpt/index.m3u8",
+    "logo": "https://i.imgur.com/h53nsyJ.png",
+    "needsVPN": false,
+    "category": "Découverte et Documentaires"
+  },
+  {
+    "name": "Canal +",
+    "url": "https://tutvlive.ru/player/2/11",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Logo_Canal%2B_1995.svg",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "Canal+ Sport",
+    "url": "https://tutvlive.ru/player/2/13",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/2/2c/C%2B_Sport_%282023%29.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "Canal+ Sport 360",
+    "url": "https://tutvlive.ru/player/2/14",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/6/64/Canal%2BSport_360.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "BeinSport 1",
+    "url": "https://tutvlive.ru/player/2/1",
+    "logo": "https://seeklogo.com/images/B/bein-sports-1-logo-4E5E4AE6B8-seeklogo.com.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "BeinSport 2",
+    "url": "https://tutvlive.ru/player/2/2",
+    "logo": "https://logowik.com/content/uploads/images/bein-sports-25584.logowik.com.webp",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "RMC Sport 1",
+    "url": "https://tutvlive.ru/player/2/17",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Logo_RMC_Sport_1_2018.svg/2560px-Logo_RMC_Sport_1_2018.svg.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "RMC Sport 2",
+    "url": "https://tutvlive.ru/player/2/18",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Logo_RMC_Sport_2_2018.svg/2560px-Logo_RMC_Sport_2_2018.svg.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "EuroSport 1",
+    "url": "https://tutvlive.ru/player/2/15",
+    "logo": "https://e7.pngegg.com/pngimages/350/883/png-clipart-eurosport-1-eurosport-2-television-channel-1-euro-television-blue-thumbnail.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "EuroSport 2",
+    "url": "https://tutvlive.ru/player/2/16",
+    "logo": "https://img.favpng.com/6/20/21/eurosport-1-television-channel-logo-eurosport-2-png-favpng-v4QiSJ7BjDEzcRE5QGZfjctk8.jpg",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "L'équipe",
+    "url": "https://tutvlive.ru/player/2/19",
+    "logo": "https://lacartefrancaise.fr//wp-content/uploads/2023/06/bon-achat-equipe.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "L'ÉQUIPE LIVE 1",
+    "url": "https://d3awaj0f2u3w26.cloudfront.net/3/media.m3u8",
+    "logo": "https://i.ibb.co/KXhYwm0/lequipe.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "L'ÉQUIPE LIVE 2",
+    "url": "https://d2l55nvfkhk4sg.cloudfront.net/3/media.m3u8",
+    "logo": "https://i.ibb.co/KXhYwm0/lequipe.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "BFM",
+    "url": "https://ncdn-live-bfm.pfd.sfr.net/shls/LIVE$BFM_TV/index.m3u8?start=LIVE&end=END",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/4/40/BFM_TV_logo.png",
+    "needsVPN": false,
+    "category": "Information"
+  },
+  {
+    "name": "Sport en France",
+    "url": "https://sp1564435593.mytvchain.info/live/sp1564435593_720/index.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/8/83/Sport_en_France_Logo.png/1200px-Sport_en_France_Logo.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "DAZN",
+    "url": "https://tutvlive.ru/player/2/20",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/06/DAZN_Logo_Master.svg",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "Automoto",
+    "url": "https://tutvlive.ru/player/4/23",
+    "logo": "https://www.automoto-lachaine.fr/upload/media/logo-automoto-5fbb171ff21f2.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+  {
+    "name": "Gulli",
+    "url": "https://origin-caf900c010ea8046.live.6cloud.fr/out/v1/c65696b42ca34e97a9b5f54758d6dd50/cmaf/hlsfmp4_short_q2hyb21h_gulli_sd_index.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/fr/4/43/18._Gulli.png",
+    "needsVPN": false,
+    "category": "Jeunesse"
+  },
+  {
+    "name": "NARUTO TV",
+    "url": "https://raw.githubusercontent.com/schumijo/iptv/main/playlists/mytf1/naruto.m3u8",
+    "logo": "https://photos.tf1.fr/0/40/logo-chaine-stream-naruto-4dda81-03df71-0@3x.png",
+    "needsVPN": false,
+    "category": "Jeunesse"
+  },
+  {
+    "name": "NARUTO NEXT GEN TV",
+    "url": "https://raw.githubusercontent.com/schumijo/iptv/main/playlists/mytf1/boruto-naruto-next-generatio.m3u8",
+    "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
+    "needsVPN": false,
+    "category": "Jeunesse"
+  },
+  {
+    "name": "Canal+ Live 1",
+    "url": "https://tutvlive.ru/player/2/31",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-1-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 2",
+    "url": "https://tutvlive.ru/player/2/32",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-2-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 3",
+    "url": "https://tutvlive.ru/player/2/33",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-3-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 4",
+    "url": "https://tutvlive.ru/player/2/34",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-4-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 5",
+    "url": "https://tutvlive.ru/player/2/35",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-5-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 6",
+    "url": "https://tutvlive.ru/player/2/36",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-6-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 7",
+    "url": "https://tutvlive.ru/player/2/37",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-7-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 8",
+    "url": "https://tutvlive.ru/player/2/38",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-8-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 9",
+    "url": "https://tutvlive.ru/player/2/39",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-9-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
+  },
+  {
+    "name": "Canal+ Live 10",
+    "url": "https://tutvlive.ru/player/2/40",
+    "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-10-fr.png",
+    "needsVPN": false,
+    "category": "Sport (Live)"
   }
 ]
