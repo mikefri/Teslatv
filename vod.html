@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecteur VOD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #movie-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .movie-item {
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            transition: transform 0.2s;
+        }
+        .movie-item:hover {
+            transform: translateY(-5px);
+        }
+        .movie-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-bottom: 1px solid #eee;
+        }
+        .movie-item p {
+            padding: 10px;
+            margin: 0;
+            font-size: 0.9em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #video-player-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        #video-player {
+            width: 100%;
+            max-width: 800px;
+            height: 450px; /* Ratio 16:9 pour la vidéo */
+            background-color: #000;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+        }
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Films disponibles</h1>
+        <div class="loading" id="loading-message">Chargement des films...</div>
+        <div id="movie-list">
+            </div>
+
+        <hr>
+
+        <div id="video-player-container">
+            <h2>Lecteur Vidéo</h2>
+            <video id="video-player" controls>
+                Votre navigateur ne supporte pas la balise vidéo.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const m3uUrl = 'https://mikefri.github.io/vod.m3u';
+            const movieListDiv = document.getElementById('movie-list');
+            const videoPlayer = document.getElementById('video-player');
+            const loadingMessage = document.getElementById('loading-message');
+
+            fetch(m3uUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur de réseau lors du chargement du fichier M3U.');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    loadingMessage.style.display = 'none'; // Masquer le message de chargement
+                    const lines = data.split('\n');
+                    let currentMovie = {};
+
+                    lines.forEach(line => {
+                        line = line.trim();
+                        if (line.startsWith('#EXTINF:')) {
+                            const matchTitle = line.match(/tvg-name="([^"]*)"/);
+                            const matchLogo = line.match(/tvg-logo="([^"]*)"/);
+                            const title = matchTitle ? matchTitle[1] : 'Titre inconnu';
+                            const logo = matchLogo ? matchLogo[1] : ''; // L'URL de l'image
+
+                            currentMovie = {
+                                title: title,
+                                logo: logo
+                            };
+                        } else if (line.startsWith('http')) {
+                            currentMovie.url = line; // Le lien du film
+                            if (currentMovie.title && currentMovie.url) {
+                                displayMovie(currentMovie);
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    loadingMessage.textContent = 'Erreur lors du chargement des films. Veuillez réessayer plus tard.';
+                    loadingMessage.style.color = 'red';
+                });
+
+            function displayMovie(movie) {
+                const movieItem = document.createElement('div');
+                movieItem.classList.add('movie-item');
+
+                const img = document.createElement('img');
+                img.src = movie.logo || 'https://via.placeholder.com/180x270?text=Pas+d%27image'; // Image par défaut si pas de logo
+                img.alt = movie.title;
+
+                const titleP = document.createElement('p');
+                titleP.textContent = movie.title;
+
+                movieItem.appendChild(img);
+                movieItem.appendChild(titleP);
+
+                movieItem.addEventListener('click', () => {
+                    videoPlayer.src = movie.url;
+                    videoPlayer.load();
+                    videoPlayer.play();
+                    window.scrollTo({ top: document.getElementById('video-player-container').offsetTop, behavior: 'smooth' });
+                });
+
+                movieListDiv.appendChild(movieItem);
+            }
+        });
+    </script>
+</body>
+</html>
