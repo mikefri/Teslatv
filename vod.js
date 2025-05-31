@@ -5,17 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoPlayer = document.getElementById('video-player');
     const loadingMessage = document.getElementById('loading-message');
 
+    let firstMovieFound = null; // Variable pour stocker le premier film
+
     if (!movieListDiv || !videoPlayer || !loadingMessage) {
         console.error('Un ou plusieurs éléments DOM requis sont manquants. Assurez-vous que les IDs "movie-list", "video-player" et "loading-message" existent dans votre HTML.');
         loadingMessage.textContent = 'Erreur: Éléments de l\'interface utilisateur manquants.';
         loadingMessage.style.color = 'red';
-        return; // Arrête l'exécution si les éléments essentiels ne sont pas trouvés.
+        return;
     }
 
     fetch(m3uUrl)
         .then(response => {
             if (!response.ok) {
-                // Amélioration: Plus de détails sur l'erreur HTTP
                 throw new Error(`Erreur réseau lors du chargement du fichier M3U: ${response.status} ${response.statusText}`);
             }
             return response.text();
@@ -23,12 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             loadingMessage.style.display = 'none';
             const lines = data.split('\n');
-            let currentMovie = {}; // Stocke les informations du film en cours de parsing
+            let currentMovie = {};
 
             lines.forEach(line => {
                 line = line.trim();
                 if (line.startsWith('#EXTINF:')) {
-                    // Utilisation de la déstructuration pour extraire plus facilement les attributs
                     const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
                     const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
                     const title = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
@@ -37,19 +37,45 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentMovie = {
                         title: title,
                         logo: logo,
-                        url: '' // Initialise l'URL pour chaque nouveau film
+                        url: ''
                     };
                 } else if (line.startsWith('http')) {
-                    // Vérifie si un film est en cours de traitement et attribue l'URL
                     if (currentMovie.title) {
                         currentMovie.url = line;
-                        displayMovie(currentMovie);
-                        currentMovie = {}; // Réinitialise pour le prochain film
+                        displayMovie(currentMovie); // Affiche le film dans la liste
+
+                        // Si c'est le premier film, stockez-le pour le chargement automatique
+                        if (!firstMovieFound) {
+                            firstMovieFound = currentMovie;
+                        }
+                        currentMovie = {};
                     }
                 }
             });
 
-            if (movieListDiv.children.length === 0) {
+            // --- NOUVEAU : Lecture du premier film automatiquement ---
+            if (firstMovieFound) {
+                const proxiedMovieUrl = `${proxyUrl}?url=${encodeURIComponent(firstMovieFound.url)}`;
+                console.log('Chargement automatique du premier film:', proxiedMovieUrl);
+
+                videoPlayer.src = proxiedMovieUrl;
+                videoPlayer.load();
+                videoPlayer.muted = true; // IMPORTANT: Mute the video for autoplay to work
+                videoPlayer.play()
+                    .then(() => {
+                        console.log('Lecture automatique du premier film lancée.');
+                        // Optionnel: défiler vers le lecteur après le démarrage
+                        const videoPlayerContainer = document.getElementById('video-player-container');
+                        if (videoPlayerContainer) {
+                            window.scrollTo({ top: videoPlayerContainer.offsetTop, behavior: 'smooth' });
+                        }
+                    })
+                    .catch(playError => {
+                        console.warn('Lecture automatique bloquée par le navigateur (souvent dû au son). Veuillez cliquer sur le bouton de lecture ou activer le son.');
+                        // Afficher une alerte ou un message à l'utilisateur si la lecture échoue
+                        // You could display a more user-friendly message here if you want.
+                    });
+            } else if (movieListDiv.children.length === 0) {
                 loadingMessage.style.display = 'block';
                 loadingMessage.textContent = 'Aucun film trouvé dans le fichier M3U.';
                 loadingMessage.style.color = 'orange';
@@ -57,26 +83,26 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Erreur lors du traitement du fichier M3U:', error);
-            loadingMessage.style.display = 'block'; // S'assurer que le message est visible en cas d'erreur
+            loadingMessage.style.display = 'block';
             loadingMessage.textContent = `Erreur lors du chargement des films: ${error.message}. Veuillez réessayer plus tard.`;
             loadingMessage.style.color = 'red';
         });
 
     function displayMovie(movie) {
         const movieItem = document.createElement('div');
-        movieItem.classList.add('movie-item'); // Assurez-vous d'avoir des styles CSS pour cette classe
+        movieItem.classList.add('movie-item');
 
         const img = document.createElement('img');
         img.src = movie.logo || 'https://via.placeholder.com/180x270?text=Pas+d%27image';
         img.alt = movie.title;
-        img.onerror = () => { // Gérer les erreurs de chargement d'image
+        img.onerror = () => {
             img.src = 'https://via.placeholder.com/180x270?text=Image+non+disponible';
             console.warn(`Impossible de charger l'image pour: ${movie.title} depuis ${movie.logo}`);
         };
 
         const titleP = document.createElement('p');
         titleP.textContent = movie.title;
-        titleP.classList.add('movie-title'); // Ajoute une classe pour styliser le titre
+        titleP.classList.add('movie-title');
 
         movieItem.appendChild(img);
         movieItem.appendChild(titleP);
@@ -87,13 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             videoPlayer.src = proxiedMovieUrl;
             videoPlayer.load();
+            videoPlayer.muted = false; // Unmute when user clicks on a movie
             videoPlayer.play()
                 .catch(playError => {
                     console.error('Erreur lors de la lecture de la vidéo:', playError);
                     alert('Impossible de lire la vidéo automatiquement. Veuillez cliquer sur le bouton de lecture.');
                 });
 
-            // Défilement fluide vers le lecteur vidéo
             const videoPlayerContainer = document.getElementById('video-player-container');
             if (videoPlayerContainer) {
                 window.scrollTo({ top: videoPlayerContainer.offsetTop, behavior: 'smooth' });
