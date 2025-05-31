@@ -9,13 +9,6 @@
   },
 
   {
-    "name": "Cstar",
-    "url": "https://tvradiozap.eu/tools/dm-m3u8.php/x5gv5v0",
-    "logo": "https://app.ladn-data.eu/storage/uploads/companies/a70beb63-7a59-40c0-b097-b6428b18cd36.jpg",
-    "needsVPN": false,
-    "category": "Généraliste"
-  },
-  {
     "name": "TF1",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
     "logo": "https://i.imgur.com/QxHt9NC.png",
