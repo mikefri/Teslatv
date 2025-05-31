@@ -7,13 +7,6 @@
     "needsVPN": false,
     "category": "Cinéma et Divertissement"
   },
-{
-    "name": "France TV Roland Garros",
-    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/rg/rgcdirecttv.m3u8",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/France.tv_-_logo_2022.svg/330px-France.tv_-_logo_2022.svg.png",
-    "needsVPN": false,
-    "category": "Sport"
-  },
 
   {
     "name": "Cstar",
@@ -321,5 +314,12 @@
     "logo": "https://logos-marques.com/wp-content/uploads/2022/03/CNews-Logo.jpg",
     "needsVPN": false,
     "category": "Information"
-  }
+  },
+  {
+    "name": "France TV Roland Garros",
+    "url": "http://live.adultiptv.net/gay.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/France.tv_-_logo_2022.svg/330px-France.tv_-_logo_2022.svg.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
 ]
