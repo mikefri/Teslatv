@@ -1,4 +1,20 @@
 [
+
+{
+    "name": "Top Sci-Fi",
+    "url": "https://amg01796-amg01796c14-samsung-fr-5846.playouts.now.amagi.tv/playlist/amg01796-fastmediafast-topscifi-samsungfr/playlist.m3u8#origine=https://tvradiozap.eu/1028",
+    "logo": "https://tvpdotcomdynamiclogopeu.samsungcloud.tv/resize?url=https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR4600001FK_20250121T012945SQUARE.png",
+    "needsVPN": false,
+    "category": "Cinéma et Divertissement"
+  },
+{
+    "name": "France TV Roland Garros",
+    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/rg/rgcdirecttv.m3u8#origine=https://tvradiozap.eu/1243",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/France.tv_-_logo_2022.svg/330px-France.tv_-_logo_2022.svg.png",
+    "needsVPN": false,
+    "category": "Sport"
+  },
+
   {
     "name": "Cstar",
     "url": "https://tvradiozap.eu/tools/dm-m3u8.php/x5gv5v0",
