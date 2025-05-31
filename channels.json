@@ -291,5 +291,12 @@
     "logo": "https://www.lyngsat.com/logo/tv/cc/canal-plus-live-10-fr.png",
     "needsVPN": false,
     "category": "Sport (Live)"
+  },
+  {
+    "name": "CNews",
+    "url": "https://hls-m015-live-aka-canalplus.akamaized.net/live/disk/cnews-clair-hd/hls-v3-hd-clair/cnews-clair-hd.m3u8#origine=https://tvradiozap.eu/642",
+    "logo": "https://logos-marques.com/wp-content/uploads/2022/03/CNews-Logo.jpg",
+    "needsVPN": false,
+    "category": "Information"
   }
 ]
