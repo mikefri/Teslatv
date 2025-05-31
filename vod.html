@@ -93,7 +93,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const m3uUrl = 'https://mikefri.github.io/Teslatv/vod.m3u';
+            const m3uUrl = 'https://mikefri.github.io/vod.m3u';
+            const proxyUrl = 'https://proxy-tesla-tv.vercel.app/'; // Votre URL de proxy
             const movieListDiv = document.getElementById('movie-list');
             const videoPlayer = document.getElementById('video-player');
             const loadingMessage = document.getElementById('loading-message');
@@ -123,7 +124,7 @@
                                 logo: logo
                             };
                         } else if (line.startsWith('http')) {
-                            currentMovie.url = line; // Le lien du film
+                            currentMovie.url = line; // Le lien du film original
                             if (currentMovie.title && currentMovie.url) {
                                 displayMovie(currentMovie);
                             }
@@ -151,7 +152,11 @@
                 movieItem.appendChild(titleP);
 
                 movieItem.addEventListener('click', () => {
-                    videoPlayer.src = movie.url;
+                    // Construction de l'URL du film via le proxy
+                    const proxiedMovieUrl = proxyUrl + movie.url;
+                    console.log('Lecture via proxy:', proxiedMovieUrl); // Pour le débogage
+
+                    videoPlayer.src = proxiedMovieUrl;
                     videoPlayer.load();
                     videoPlayer.play();
                     window.scrollTo({ top: document.getElementById('video-player-container').offsetTop, behavior: 'smooth' });
