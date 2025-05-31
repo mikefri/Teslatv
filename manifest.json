@@ -8,12 +8,12 @@
   "icons": [
     
     {
-      "src": "favicon-512x512.png",
+      "src": "./icons/favicon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "favicon-96x96.png",
+      "src": "./icons/favicon-96x96.png",
       "sizes": "96x96",
       "type": "image/png"
     }
