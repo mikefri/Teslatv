@@ -11,14 +11,8 @@ const urlsToCache = [
   'https://mikefri.github.io/Teslatv/image.jpg', // L'image de remplacement de ton lecteur vidéo
   // Ajoute ici TOUTES les icônes de ta PWA générées par RealFaviconGenerator ou autre
   // Assure-toi que les chemins correspondent exactement à l'emplacement réel de tes fichiers d'icônes
-  '/icons/android-chrome-72x72.png',  // Exemple de nom après génération
-  '/icons/favicon-96x96.png',
-  '/icons/android-chrome-128x128.png',
-  '/icons/android-chrome-144x144.png',
-  '/icons/android-chrome-152x152.png',
-  '/icons/android-chrome-192x192.png',
-  '/icons/android-chrome-384x384.png',
-  '/icons/favicon-512x512.png'
+    '/icons/favicon-96x96.png',
+    '/icons/favicon-512x512.png'
   // N'oublie pas d'inclure toutes les autres ressources statiques importantes (polices, autres images, etc.)
 ];
 
