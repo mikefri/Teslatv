@@ -193,5 +193,35 @@
     "url": "https://tutvlive.ru/player/2/35",
     "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
     "needsVPN": false
+  },
+  {
+    "name": "Canal+ Live 6",
+    "url": "https://tutvlive.ru/player/2/36",
+    "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
+    "needsVPN": false
+  },
+  {
+    "name": "Canal+ Live 7",
+    "url": "https://tutvlive.ru/player/2/37",
+    "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
+    "needsVPN": false
+  },
+  {
+    "name": "Canal+ Live 8",
+    "url": "https://tutvlive.ru/player/2/38",
+    "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
+    "needsVPN": false
+  },
+  {
+    "name": "Canal+ Live 9",
+    "url": "https://tutvlive.ru/player/2/39",
+    "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
+    "needsVPN": false
+  },
+  {
+    "name": "Canal+ Live 10",
+    "url": "https://tutvlive.ru/player/2/40",
+    "logo": "https://photos.tf1.fr/0/40/logo-chaine-boruto-44610c-3dd03d-0@3x.png",
+    "needsVPN": false
   }
 ]
