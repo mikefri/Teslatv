@@ -14,6 +14,13 @@
     "category": "Généraliste"
   },
   {
+    "name": "France 3",
+    "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/francetv/france3.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/France_3_2018.svg/512px-France_3_2018.svg.png",
+    "needsVPN": false,
+    "category": "Généraliste"
+  },
+  {
     "name": "LCI",
     "url": "https://raw.githubusercontent.com/ipstreet312/freeiptv/master/ressources/btv/py/lci1.m3u8",
     "logo": "https://i.imgur.com/DED8EXs.png",
