@@ -5,7 +5,7 @@ const urlsToCache = [
   '/style.css',
   '/script.js',
   '/manifest.json',
-  '/favicon.ico', // Ton favicon
+  '/icons/favicon.ico', // Ton favicon
   // Les dépendances externes (CDN), assure-toi qu'elles sont stables
   'https://cdn.jsdelivr.net/npm/hls.js@latest',
   'https://mikefri.github.io/Teslatv/image.jpg', // L'image de remplacement de ton lecteur vidéo
