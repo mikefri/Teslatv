@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoPlayer = document.getElementById('video-player');
     const loadingMessage = document.getElementById('loading-message');
 
-    let firstMovieFound = null; // Variable pour stocker le premier film
-
     if (!movieListDiv || !videoPlayer || !loadingMessage) {
         console.error('Un ou plusieurs éléments DOM requis sont manquants. Assurez-vous que les IDs "movie-list", "video-player" et "loading-message" existent dans votre HTML.');
         loadingMessage.textContent = 'Erreur: Éléments de l\'interface utilisateur manquants.';
@@ -42,40 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (line.startsWith('http')) {
                     if (currentMovie.title) {
                         currentMovie.url = line;
-                        displayMovie(currentMovie); // Affiche le film dans la liste
-
-                        // Si c'est le premier film, stockez-le pour le chargement automatique
-                        if (!firstMovieFound) {
-                            firstMovieFound = currentMovie;
-                        }
+                        displayMovie(currentMovie);
                         currentMovie = {};
                     }
                 }
             });
 
-            // --- NOUVEAU : Lecture du premier film automatiquement ---
-            if (firstMovieFound) {
-                const proxiedMovieUrl = `${proxyUrl}?url=${encodeURIComponent(firstMovieFound.url)}`;
-                console.log('Chargement automatique du premier film:', proxiedMovieUrl);
-
-                videoPlayer.src = proxiedMovieUrl;
-                videoPlayer.load();
-                videoPlayer.muted = true; // IMPORTANT: Mute the video for autoplay to work
-                videoPlayer.play()
-                    .then(() => {
-                        console.log('Lecture automatique du premier film lancée.');
-                        // Optionnel: défiler vers le lecteur après le démarrage
-                        const videoPlayerContainer = document.getElementById('video-player-container');
-                        if (videoPlayerContainer) {
-                            window.scrollTo({ top: videoPlayerContainer.offsetTop, behavior: 'smooth' });
-                        }
-                    })
-                    .catch(playError => {
-                        console.warn('Lecture automatique bloquée par le navigateur (souvent dû au son). Veuillez cliquer sur le bouton de lecture ou activer le son.');
-                        // Afficher une alerte ou un message à l'utilisateur si la lecture échoue
-                        // You could display a more user-friendly message here if you want.
-                    });
-            } else if (movieListDiv.children.length === 0) {
+            if (movieListDiv.children.length === 0) {
                 loadingMessage.style.display = 'block';
                 loadingMessage.textContent = 'Aucun film trouvé dans le fichier M3U.';
                 loadingMessage.style.color = 'orange';
@@ -107,19 +78,21 @@ document.addEventListener('DOMContentLoaded', () => {
         movieItem.appendChild(img);
         movieItem.appendChild(titleP);
 
+        // --- C'est CETTE PARTIE QUI GÈRE LA LECTURE AU CLIC ---
         movieItem.addEventListener('click', () => {
             const proxiedMovieUrl = `${proxyUrl}?url=${encodeURIComponent(movie.url)}`;
             console.log('Lecture via proxy:', proxiedMovieUrl);
 
             videoPlayer.src = proxiedMovieUrl;
-            videoPlayer.load();
-            videoPlayer.muted = false; // Unmute when user clicks on a movie
-            videoPlayer.play()
+            videoPlayer.load(); // Charge la vidéo
+            videoPlayer.muted = false; // Important : assurez-vous que la vidéo n'est PAS muette au clic
+            videoPlayer.play() // Tente de démarrer la lecture
                 .catch(playError => {
                     console.error('Erreur lors de la lecture de la vidéo:', playError);
                     alert('Impossible de lire la vidéo automatiquement. Veuillez cliquer sur le bouton de lecture.');
                 });
 
+            // Défilement fluide vers le lecteur vidéo
             const videoPlayerContainer = document.getElementById('video-player-container');
             if (videoPlayerContainer) {
                 window.scrollTo({ top: videoPlayerContainer.offsetTop, behavior: 'smooth' });
