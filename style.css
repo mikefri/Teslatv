@@ -111,11 +111,62 @@ h1 {
     z-index: 1; /* Assure qu'il est au-dessus du contenu de la liste */
 }
 
+/* Conteneur du filtre de catégorie - NOUVEAU */
+.category-filter {
+    background-color: var(--bg-dark); /* Plus foncé que le bg-medium de la liste */
+    padding: 10px;
+    border-bottom: 1px solid var(--neon-blue-dark);
+    display: flex;
+    flex-direction: column; /* Empile label et select */
+    align-items: flex-start; /* Aligne le texte et le select à gauche */
+    gap: 8px; /* Espace entre le label et le select */
+    flex-shrink: 0;
+    position: sticky; /* Reste collant */
+    top: 49px; /* Juste en dessous de currentTime (si currentTime a une hauteur d'environ 49px avec padding) */
+    z-index: 1; /* Pour qu'il soit au-dessus de la liste */
+}
+
+.category-filter label {
+    font-size: 0.9em;
+    color: var(--neon-blue-light);
+    text-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
+}
+
+#category-select {
+    width: 100%; /* Prend toute la largeur disponible */
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--neon-blue-dark);
+    background-color: var(--bg-light);
+    color: var(--text-color);
+    font-size: 0.9em;
+    cursor: pointer;
+    appearance: none; /* Supprime le style par défaut du select sur certains navigateurs */
+    -webkit-appearance: none; /* Pour Safari */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%2388FFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Icône de flèche déroulante */
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 20px;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+}
+
+#category-select:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+}
+
+#category-select option {
+    background-color: var(--bg-dark); /* Couleur de fond des options */
+    color: var(--text-color);
+}
+
+
 /* Conteneur de la liste réelle des chaînes (qui défile) */
 #channelList {
     flex-grow: 1; /* Permet à la liste de prendre TOUT l'espace vertical restant */
     overflow-y: auto; /* C'est ICI que le défilement vertical est activé */
-    padding-top: 15px; /* Padding en haut de la liste (sous l'heure) */
+    padding-top: 15px; /* Padding en haut de la liste (sous le filtre) */
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -147,6 +198,7 @@ h1 {
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
     border: 1px solid transparent; /* Bordure transparente par défaut */
+    position: relative; /* Pour positionner l'indicateur VPN */
 }
 .channel-item:hover {
     background-color: var(--bg-dark);
@@ -177,13 +229,14 @@ h1 {
     box-shadow: 0 0 10px var(--neon-blue);
 }
 
-.channel-item span {
+.channel-item span.channel-name { /* Spécifier le span.channel-name pour éviter les conflits */
     font-size: 1em;
     font-weight: bold;
     color: var(--text-color);
     text-shadow: 0 0 3px rgba(0, 255, 255, 0.3);
+    flex-grow: 1; /* Permet au nom de prendre l'espace restant */
 }
-.channel-item.active span {
+.channel-item.active span.channel-name {
     color: var(--neon-blue-light);
     text-shadow: 0 0 5px var(--neon-blue-light);
 }
@@ -260,58 +313,42 @@ h1 {
 
 /* --- Styles pour l'indicateur VPN --- */
 .vpn-indicator {
-    display: inline-flex; /* Utilisation de flexbox pour centrer le contenu si c'est une icône ou du texte */
+    position: absolute; /* Positionne l'indicateur par rapport à .channel-item */
+    top: 8px;
+    right: 8px;
+    width: 16px; /* Taille de l'icône/point */
+    height: 16px;
+    border-radius: 50%; /* Forme ronde */
+    display: flex; /* Pour centrer une icône ou un texte si utilisé */
     align-items: center;
     justify-content: center;
-    width: 24px; /* Taille de l'icône/espace */
-    height: 24px;
-    margin-left: auto; /* Pousse l'indicateur tout à droite du channel-item */
-    flex-shrink: 0; /* Empêche l'indicateur de rétrécir */
-    /* Styles pour l'icône si vous utilisez background-image */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    font-size: 0.8em; /* Taille du texte si vous utilisez du texte */
+    font-size: 0.7em;
     font-weight: bold;
-    border-radius: 4px; /* Un peu d'arrondi pour le fond */
-    padding: 2px; /* Un peu de padding interne */
+    color: white; /* Couleur du texte/icône interne */
+    border: 1px solid transparent;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
 }
 
 /* Style pour les chaînes qui NÉCESSITENT un VPN */
 .vpn-indicator[data-needs-vpn="true"] {
-    /* Option 1: Utiliser une image d'icône VPN */
-    /* REMPLACEZ PAR L'URL D'UNE ICÔNE VPN ROUGE/AVERTISSEMENT */
-    background-image: url("https://i.imgur.com/your-vpn-icon.png"); 
-    background-color: rgba(255, 0, 0, 0.2); /* Un léger fond rouge transparent */
-    border: 1px solid red;
-    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
-
-    /* Option 2: Utiliser du texte (décommentez si vous préférez cette option) */
-    /* content: 'VPN'; */
-    /* color: red; */
-    /* background-color: rgba(255, 0, 0, 0.2); */
-    /* border: 1px solid red; */
-    /* box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); */
+    background-color: #FF4500; /* Orange vif */
+    border-color: #FF0000; /* Bordure rouge */
+    box-shadow: 0 0 8px #FF4500, 0 0 4px #FF0000; /* Double ombre néon */
+    animation: pulse 1.5s infinite ease-in-out; /* Animation de pulsation */
 }
 
 /* Style pour les chaînes qui NE NÉCESSITENT PAS de VPN */
 .vpn-indicator[data-needs-vpn="false"] {
-    /* Option 1: Utiliser une image d'icône "pas de VPN" (ex: un cadenas ouvert, un crochet vert) */
-    /* REMPLACEZ PAR L'URL D'UNE ICÔNE VERTE/OK */
-    background-image: url("https://i.imgur.com/your-no-vpn-icon.png"); 
-    background-color: rgba(0, 255, 0, 0.1); /* Un léger fond vert transparent */
-    border: 1px solid limegreen;
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    background-color: #32CD32; /* Vert citron */
+    border-color: #008000; /* Vert foncé */
+    box-shadow: 0 0 8px #32CD32, 0 0 4px #008000;
+}
 
-    /* Option 2: Utiliser du texte (décommentez si vous préférez cette option) */
-    /* content: 'OK'; */
-    /* color: limegreen; */
-    /* background-color: rgba(0, 255, 0, 0.1); */
-    /* border: 1px solid limegreen; */
-    /* box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); */
-
-    /* Option 3: Ne rien afficher du tout si pas de VPN (décommentez pour cacher l'indicateur) */
-    /* display: none; */
+/* Animation de pulsation pour l'indicateur VPN */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 /* Style de la boîte de message */
@@ -333,14 +370,15 @@ h1 {
 }
 
 .message-content {
-    background-color: #fff; /* Tu pourrais utiliser une variable de couleur néon ici pour la cohérence */
+    background-color: var(--bg-medium); /* Utilisez une de vos variables pour la cohérence */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px var(--neon-blue); /* Ombre néon pour la boîte de message */
     text-align: center;
     position: relative;
     max-width: 80%;
-    color: #333; /* Tu pourrais utiliser une variable de couleur néon ici */
+    color: var(--text-color); /* Couleur du texte */
+    border: 1px solid var(--neon-blue-light);
 }
 
 .close-button {
@@ -349,11 +387,12 @@ h1 {
     right: 15px;
     font-size: 24px;
     cursor: pointer;
-    color: #aaa; /* Tu pourrais utiliser une variable de couleur néon ici */
+    color: var(--neon-blue-light); /* Couleur néon pour le bouton de fermeture */
+    text-shadow: 0 0 5px var(--neon-blue);
 }
 
 .close-button:hover {
-    color: #333; /* Tu pourrais utiliser une variable de couleur néon ici */
+    color: var(--neon-blue); /* Couleur néon plus intense au survol */
 }
 
 #messageText {
@@ -361,7 +400,32 @@ h1 {
     font-size: 1.1em;
 }
 
-/* Assurez-vous que .channel-name existe dans votre CSS pour le sélecteur du placeholder */
-.channel-name {
-    /* Ajoutez des styles si nécessaire */
+/* Media Queries pour les petits écrans (responsive design) */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column; /* Empile les éléments verticalement sur petits écrans */
+        width: 100%; /* Prend toute la largeur */
+    }
+
+    #videoPlayer {
+        width: 100%;
+        border-right: none; /* Supprime la bordure droite */
+        border-bottom: 1px solid var(--neon-blue-dark); /* Ajoute une bordure en bas */
+    }
+
+    #channelListContainer {
+        width: 100%; /* Prend toute la largeur disponible */
+        height: auto; /* Hauteur automatique */
+        padding-bottom: 0;
+    }
+
+    #currentTime {
+        position: static; /* Ne plus le rendre sticky sur les petits écrans */
+        border-top: 1px solid var(--neon-blue-dark); /* Ajoute une bordure en haut */
+    }
+    
+    .category-filter {
+        position: static; /* Ne plus le rendre sticky sur les petits écrans */
+        top: auto;
+    }
 }
