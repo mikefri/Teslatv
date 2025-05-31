@@ -22,18 +22,24 @@
             </div>
             <video id="video" class="video-element" controls autoplay></video>
             <iframe
-  id="iframePlayer"
-  class="iframe-player"
-  src="YOUR_VIDEO_SOURCE_URL_HERE"
- allow="autoplay=1&mute=0&controls=1; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write;"
-  allowfullscreen
-  webkitallowfullscreen
-  mozallowfullscreen
+    id="iframePlayer"
+    class="iframe-player"
+    src="YOUR_VIDEO_SOURCE_URL_HERE"
+    allow="autoplay=1&mute=0&controls=1; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer; clipboard-write;"
+    allowfullscreen
+    webkitallowfullscreen
+    mozallowfullscreen
 ></iframe>
         </div>
 
         <div id="channelListContainer">
             <div id="currentTime"></div>
+            <div class="category-filter">
+                <label for="category-select">Filtrer par catégorie :</label>
+                <select id="category-select">
+                    <option value="all">Toutes les chaînes</option>
+                    </select>
+            </div>
             <div id="channelList">
             </div>
         </div>
