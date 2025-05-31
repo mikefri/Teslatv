@@ -1,121 +1,315 @@
-/* General Body Styles */
+/* Variables pour les couleurs néon */
+:root {
+    --neon-blue: #00FFFF; /* Bleu cyan vif */
+    --neon-blue-light: #88FFFF; /* Bleu plus clair pour le texte */
+    --neon-blue-dark: #008080; /* Bleu foncé pour les accents */
+    --bg-dark: #0a0a0a; /* Fond très sombre */
+    --bg-medium: #1a1a1a; /* Fond légèrement moins sombre */
+    --bg-light: #2c2c2c; /* Fond pour les éléments interactifs */
+    --text-color: #e0e0e0; /* Couleur de texte par défaut */
+    --error-red: #FF4500; /* Rouge pour les messages d'erreur */
+}
+
+/* Styles généraux du corps de la page */
+html, body {
+    height: 100%;
+    box-sizing: border-box; /* IMPORTANT: Inclut padding et border dans la taille totale */
+}
+
 body {
-    font-family: 'Arial', sans-serif; /* Use a common sans-serif font */
-    background-color: #f0f2f5; /* A slightly softer background color */
-    color: #333; /* Standard dark text color */
-    margin: 0; /* Remove default body margin */
-    padding: 20px; /* Add padding around the entire content */
-    line-height: 1.6; /* Improve readability for text */
-}
-
-/* Main Container for Content */
-.container {
-    max-width: 1200px;
-    margin: 0 auto; /* Center the container */
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px; /* Slightly more rounded corners */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Slightly more prominent shadow */
-}
-
-/* Movie List Grid */
-#movie-list {
-    display: grid;
-    /* Responsive grid: auto-fill available space, min width 180px, 1fr for flex */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 25px; /* Slightly larger gap between items */
-    margin-top: 30px; /* More space above the list */
-}
-
-/* Individual Movie Item */
-.movie-item {
-    cursor: pointer; /* Indicates it's clickable */
-    text-align: center;
-    border: 1px solid #e0e0e0; /* Lighter border */
-    border-radius: 10px; /* Match container border-radius */
-    overflow: hidden; /* Ensures content respects border-radius */
-    background-color: #fff;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for hover effects */
-    display: flex; /* Use flexbox to stack image and text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
     flex-direction: column;
-}
-
-.movie-item:hover {
-    transform: translateY(-8px); /* More pronounced lift effect on hover */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
-}
-
-.movie-item img {
-    width: 100%; /* Ensure image fills its container horizontally */
-    height: 270px; /* Fixed height for consistent image size (adjust as needed for 180x270 ratio) */
-    object-fit: cover; /* Ensures image covers the area without distortion */
-    display: block;
-    border-bottom: 1px solid #eee;
-}
-
-/* Movie Title Paragraph */
-.movie-item p {
-    padding: 10px;
+    justify-content: flex-start;
+    align-items: center; /* Centre le contenu horizontalement */
+    min-height: 100vh;
+    background-color: var(--bg-dark);
+    color: var(--text-color);
     margin: 0;
-    font-size: 0.95em; /* Slightly larger font */
-    font-weight: bold; /* Make title bolder */
-    color: #444; /* Slightly darker text for titles */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis for long titles */
-    flex-grow: 1; /* Allow title to take remaining space */
-    display: flex; /* Use flexbox for vertical alignment if needed */
-    align-items: center; /* Center text vertically if it wraps to multiple lines */
-    justify-content: center; /* Center text horizontally */
+    padding: 20px;
+    overflow-x: hidden; /* Empêche le défilement horizontal de la page */
 }
 
-/* Video Player Container */
-#video-player-container {
-    margin-top: 50px; /* More vertical space */
+/* Reset Box Sizing for all elements */
+*, *::before, *::after {
+    box-sizing: inherit; /* Inherit from html/body for consistency */
+}
+
+/* Style du titre principal (adapté au VOD) */
+h1 {
+    color: var(--neon-blue);
+    margin-bottom: 30px; /* Plus d'espace sous le titre */
     text-align: center;
-    background-color: #222; /* Darker background for video section */
+    text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+    font-size: 2.8em; /* Légèrement plus grand */
+    font-weight: 700;
+}
+
+/* Conteneur principal pour le contenu VOD */
+.container { /* Renommé ou utilisé à la place de .main-container pour le VOD */
+    max-width: 1200px;
+    margin: 20px auto; /* Centre le conteneur et ajoute de l'espace */
+    padding: 25px; /* Plus de padding interne */
+    background-color: var(--bg-medium);
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
+    border: 1px solid var(--neon-blue-dark);
+}
+
+/* Section du lecteur vidéo (adaptée au VOD) */
+#video-player-container { /* Utilisé l'ID de votre premier code */
+    margin-top: 50px;
+    text-align: center;
+    background-color: var(--bg-medium); /* Utilise la couleur de fond néon */
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), 0 0 10px rgba(0, 255, 255, 0.1); /* Ombre néon */
+    border: 1px solid var(--neon-blue-dark);
 }
 
-/* Video Player Element */
-#video-player {
+#video-player { /* L'élément <video> lui-même */
     width: 100%;
-    max-width: 900px; /* Slightly wider max-width for the player */
-    /* Use padding-top for responsive aspect ratio, height: 0 */
+    max-width: 900px;
     height: 0;
-    padding-top: 56.25%; /* 16:9 aspect ratio (9 / 16 * 100%) */
-    position: relative; /* Needed for absolute positioning of video */
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    position: relative;
     background-color: #000;
     border-radius: 8px;
-    margin: 0 auto; /* Center the video player within its container */
-    overflow: hidden; /* Ensures video respects border-radius */
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid var(--neon-blue-light); /* Bordure néon subtile */
 }
 
-#video-player video { /* Target the actual video tag inside the player div if it's nested */
+/* Styles pour l'image de remplacement / placeholder de la vidéo */
+#videoPlaceholder {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-dark); /* Utilise la couleur de fond néon */
+    cursor: pointer;
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
 }
 
-
-/* Main Heading */
-h1 {
-    color: #007bff; /* A more vibrant blue */
-    text-align: center;
-    margin-bottom: 30px; /* Add space below the heading */
-    font-size: 2.5em; /* Larger heading */
-    font-weight: 700; /* Bolder heading */
+#videoPlaceholder.hidden {
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
 }
 
-/* Loading Message */
-.loading {
-    text-align: center;
-    margin-top: 25px;
-    font-size: 1.3em; /* Slightly larger loading message */
-    color: #666;
+#videoPlaceholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--neon-blue-light);
+    text-shadow: 0 0 8px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.5); /* Ombre néon plus prononcée */
+    font-size: 1.8em; /* Plus grande */
     font-weight: bold;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+.play-overlay svg {
+    margin-bottom: 15px; /* Plus d'espace */
+    filter: drop-shadow(0 0 10px var(--neon-blue)); /* Ombre néon plus intense */
+    width: 60px; /* Plus grande icône */
+    height: 60px;
+}
+
+/* Movie List Grid (adapté au VOD) */
+#movie-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 30px; /* Plus d'espace entre les films */
+    margin-top: 40px; /* Plus d'espace au-dessus de la liste */
+}
+
+/* Individual Movie Item (adapté au VOD) */
+.movie-item {
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid var(--neon-blue-dark); /* Utilise la couleur néon pour la bordure */
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--bg-light); /* Fond adapté au thème néon */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.movie-item:hover {
+    transform: translateY(-10px); /* Effet de lift plus prononcé */
+    box-shadow: 0 0 20px var(--neon-blue), 0 0 10px rgba(0, 255, 255, 0.4); /* Ombre néon intense */
+    border-color: var(--neon-blue-light); /* Bordure néon au survol */
+}
+
+.movie-item img {
+    width: 100%;
+    height: 270px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid var(--neon-blue-dark); /* Bordure inférieure néon */
+}
+
+/* Movie Title Paragraph (adapté au VOD) */
+.movie-item p {
+    padding: 12px; /* Plus de padding */
+    margin: 0;
+    font-size: 1em; /* Légèrement plus grand */
+    font-weight: bold;
+    color: var(--neon-blue-light); /* Couleur de texte néon */
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); /* Ombre textuelle néon */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Loading Message (adapté au VOD) */
+#loading-message { /* Utilisez l'ID de votre JS */
+    text-align: center;
+    margin-top: 30px;
+    font-size: 1.5em;
+    color: var(--neon-blue-light); /* Couleur néon */
+    font-weight: bold;
+    text-shadow: 0 0 8px var(--neon-blue);
+}
+
+/* Message d'erreur */
+#loading-message[style*="color: red"] { /* Cible les messages d'erreur du JS */
+    color: var(--error-red) !important; /* Force la couleur rouge d'erreur */
+    text-shadow: 0 0 8px var(--error-red);
+}
+
+/* Style de la boîte de message (modale) */
+#messageBox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Plus opaque */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#messageBox.hidden {
+    display: none;
+}
+
+.message-content {
+    background-color: var(--bg-medium);
+    padding: 25px; /* Plus de padding */
+    border-radius: 12px; /* Coins plus arrondis */
+    box-shadow: 0 0 30px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.6); /* Ombre néon plus intense */
+    text-align: center;
+    position: relative;
+    max-width: 90%; /* Prend plus de largeur sur petits écrans */
+    color: var(--text-color);
+    border: 2px solid var(--neon-blue-light); /* Bordure plus prononcée */
+}
+
+.close-button {
+    position: absolute;
+    top: 15px; /* Plus bas */
+    right: 18px; /* Plus à droite */
+    font-size: 28px; /* Plus grand */
+    cursor: pointer;
+    color: var(--neon-blue-light);
+    text-shadow: 0 0 8px var(--neon-blue); /* Ombre plus forte */
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.close-button:hover {
+    color: var(--neon-blue);
+    text-shadow: 0 0 12px var(--neon-blue);
+}
+
+#messageText {
+    margin: 10px 0 0 0; /* Ajout d'une marge supérieure */
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+
+/* Media Queries for responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px; /* Moins de padding sur les petits écrans */
+    }
+
+    h1 {
+        font-size: 2em; /* Réduit la taille du titre */
+    }
+
+    .container {
+        padding: 15px; /* Moins de padding interne */
+        margin-top: 10px;
+    }
+
+    #movie-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Plus petits items */
+        gap: 15px; /* Réduit l'espace */
+        margin-top: 25px;
+    }
+
+    .movie-item img {
+        height: 225px; /* Hauteur ajustée pour les items plus petits (150x225 ratio) */
+    }
+
+    .movie-item p {
+        font-size: 0.85em; /* Plus petite taille de police */
+        padding: 8px;
+    }
+
+    #video-player-container {
+        margin-top: 30px;
+        padding: 15px;
+    }
+
+    .play-overlay {
+        font-size: 1.2em;
+    }
+
+    .play-overlay svg {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    #movie-list {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* Encore plus petits */
+        gap: 10px;
+    }
+
+    .movie-item img {
+        height: 195px; /* Ajustement (130x195 ratio) */
+    }
+
+    .movie-item p {
+        font-size: 0.8em;
+    }
 }
