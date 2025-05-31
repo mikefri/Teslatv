@@ -1,0 +1,121 @@
+/* General Body Styles */
+body {
+    font-family: 'Arial', sans-serif; /* Use a common sans-serif font */
+    background-color: #f0f2f5; /* A slightly softer background color */
+    color: #333; /* Standard dark text color */
+    margin: 0; /* Remove default body margin */
+    padding: 20px; /* Add padding around the entire content */
+    line-height: 1.6; /* Improve readability for text */
+}
+
+/* Main Container for Content */
+.container {
+    max-width: 1200px;
+    margin: 0 auto; /* Center the container */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px; /* Slightly more rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Slightly more prominent shadow */
+}
+
+/* Movie List Grid */
+#movie-list {
+    display: grid;
+    /* Responsive grid: auto-fill available space, min width 180px, 1fr for flex */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px; /* Slightly larger gap between items */
+    margin-top: 30px; /* More space above the list */
+}
+
+/* Individual Movie Item */
+.movie-item {
+    cursor: pointer; /* Indicates it's clickable */
+    text-align: center;
+    border: 1px solid #e0e0e0; /* Lighter border */
+    border-radius: 10px; /* Match container border-radius */
+    overflow: hidden; /* Ensures content respects border-radius */
+    background-color: #fff;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition for hover effects */
+    display: flex; /* Use flexbox to stack image and text */
+    flex-direction: column;
+}
+
+.movie-item:hover {
+    transform: translateY(-8px); /* More pronounced lift effect on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.movie-item img {
+    width: 100%; /* Ensure image fills its container horizontally */
+    height: 270px; /* Fixed height for consistent image size (adjust as needed for 180x270 ratio) */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    display: block;
+    border-bottom: 1px solid #eee;
+}
+
+/* Movie Title Paragraph */
+.movie-item p {
+    padding: 10px;
+    margin: 0;
+    font-size: 0.95em; /* Slightly larger font */
+    font-weight: bold; /* Make title bolder */
+    color: #444; /* Slightly darker text for titles */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis for long titles */
+    flex-grow: 1; /* Allow title to take remaining space */
+    display: flex; /* Use flexbox for vertical alignment if needed */
+    align-items: center; /* Center text vertically if it wraps to multiple lines */
+    justify-content: center; /* Center text horizontally */
+}
+
+/* Video Player Container */
+#video-player-container {
+    margin-top: 50px; /* More vertical space */
+    text-align: center;
+    background-color: #222; /* Darker background for video section */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Video Player Element */
+#video-player {
+    width: 100%;
+    max-width: 900px; /* Slightly wider max-width for the player */
+    /* Use padding-top for responsive aspect ratio, height: 0 */
+    height: 0;
+    padding-top: 56.25%; /* 16:9 aspect ratio (9 / 16 * 100%) */
+    position: relative; /* Needed for absolute positioning of video */
+    background-color: #000;
+    border-radius: 8px;
+    margin: 0 auto; /* Center the video player within its container */
+    overflow: hidden; /* Ensures video respects border-radius */
+}
+
+#video-player video { /* Target the actual video tag inside the player div if it's nested */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Main Heading */
+h1 {
+    color: #007bff; /* A more vibrant blue */
+    text-align: center;
+    margin-bottom: 30px; /* Add space below the heading */
+    font-size: 2.5em; /* Larger heading */
+    font-weight: 700; /* Bolder heading */
+}
+
+/* Loading Message */
+.loading {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 1.3em; /* Slightly larger loading message */
+    color: #666;
+    font-weight: bold;
+}
