@@ -13,7 +13,7 @@
 /* Styles généraux du corps de la page */
 html, body {
     height: 100%;
-    box-sizing: border-box; /* IMPORTANT: Inclut padding et border dans la taille totale */
+    /* box-sizing: border-box; */ /* Supprimé car *::before, *::after, * suffit */
 }
 
 body {
@@ -32,7 +32,7 @@ body {
 
 /* Reset Box Sizing for all elements */
 *, *::before, *::after {
-    box-sizing: inherit; /* Inherit from html/body for consistency */
+    box-sizing: border-box; /* IMPORTANT: Inclut padding et border dans la taille totale pour TOUS les éléments */
 }
 
 /* Style du titre principal (adapté au VOD) */
@@ -40,45 +40,71 @@ h1 {
     color: var(--neon-blue);
     margin-bottom: 30px; /* Plus d'espace sous le titre */
     text-align: center;
-    text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+    text-shadow: 0 0 8px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.5); /* Ombre néon plus intense */
     font-size: 2.8em; /* Légèrement plus grand */
     font-weight: 700;
+    /* Animation de pulsation subtile pour le titre */
+    animation: neonPulse 2s infinite alternate;
 }
 
+@keyframes neonPulse {
+    from {
+        text-shadow: 0 0 8px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.5);
+    }
+    to {
+        text-shadow: 0 0 12px var(--neon-blue), 0 0 20px rgba(0, 255, 255, 0.7);
+    }
+}
+
+
 /* Conteneur principal pour le contenu VOD */
-.container { /* Renommé ou utilisé à la place de .main-container pour le VOD */
+.container {
     max-width: 1200px;
-    margin: 20px auto; /* Centre le conteneur et ajoute de l'espace */
-    padding: 25px; /* Plus de padding interne */
+    width: 100%; /* Assure qu'il prend la largeur disponible jusqu'à max-width */
+    margin: 20px auto;
+    padding: 25px;
     background-color: var(--bg-medium);
     border-radius: 12px;
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--neon-blue-dark);
+    position: relative; /* Pour le positionnement des messages si besoin */
 }
 
 /* Section du lecteur vidéo (adaptée au VOD) */
-#video-player-container { /* Utilisé l'ID de votre premier code */
+#video-player-container {
     margin-top: 50px;
     text-align: center;
-    background-color: var(--bg-medium); /* Utilise la couleur de fond néon */
+    background-color: var(--bg-medium);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), 0 0 10px rgba(0, 255, 255, 0.1); /* Ombre néon */
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), 0 0 10px rgba(0, 255, 255, 0.1);
     border: 1px solid var(--neon-blue-dark);
+    position: relative; /* Important pour positionner la vidéo et le placeholder */
+    width: 100%; /* S'assure qu'il prend toute la largeur disponible */
+    max-width: 900px; /* Limite la largeur max comme prévu */
+    margin-left: auto; /* Centre le conteneur */
+    margin-right: auto; /* Centre le conteneur */
+
+    /* Hack pour maintenir l'aspect ratio 16:9 */
+    padding-bottom: 56.25%; /* (9 / 16) * 100% */
+    height: 0;
+    overflow: hidden; /* Cache tout ce qui dépasse, important pour les coins arrondis */
 }
 
-#video-player { /* L'élément <video> lui-même */
-    width: 100%;
-    max-width: 900px;
-    height: 0;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
-    position: relative;
+/* L'élément <video> lui-même */
+#video-player {
+    position: absolute; /* Place la vidéo à l'intérieur du conteneur #video-player-container */
+    top: 0;
+    left: 0;
+    width: 100%; /* La fait remplir le conteneur */
+    height: 100%; /* La fait remplir le conteneur */
+    object-fit: contain; /* Ou 'cover' si vous préférez qu'elle remplisse toujours, quitte à couper */
     background-color: #000;
-    border-radius: 8px;
-    margin: 0 auto;
-    overflow: hidden;
+    border-radius: 8px; /* Applique les coins arrondis */
+    display: block; /* S'assure qu'elle est traitée comme un bloc */
     border: 1px solid var(--neon-blue-light); /* Bordure néon subtile */
 }
+
 
 /* Styles pour l'image de remplacement / placeholder de la vidéo */
 #videoPlaceholder {
@@ -92,15 +118,16 @@ h1 {
     align-items: center;
     background-color: var(--bg-dark); /* Utilise la couleur de fond néon */
     cursor: pointer;
-    z-index: 2;
+    z-index: 2; /* S'assure qu'il est au-dessus de la vidéo au début */
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
+    border-radius: 8px; /* Assure les coins arrondis pour le placeholder aussi */
 }
 
 #videoPlaceholder.hidden {
     opacity: 0;
-    pointer-events: none;
-    z-index: 0;
+    pointer-events: none; /* Permet les clics à travers quand il est caché */
+    /* z-index: 0; */ /* Pas besoin de changer z-index si pointer-events: none est suffisant */
 }
 
 #videoPlaceholder img {
@@ -108,6 +135,7 @@ h1 {
     height: 100%;
     object-fit: cover;
     display: block;
+    border-radius: 8px; /* Applique les coins arrondis à l'image du placeholder */
 }
 
 .play-overlay {
@@ -122,7 +150,7 @@ h1 {
     text-shadow: 0 0 8px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.5); /* Ombre néon plus prononcée */
     font-size: 1.8em; /* Plus grande */
     font-weight: bold;
-    pointer-events: none;
+    pointer-events: none; /* Important pour que le clic passe à l'élément parent */
     opacity: 0.9;
 }
 
@@ -139,25 +167,27 @@ h1 {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 30px; /* Plus d'espace entre les films */
     margin-top: 40px; /* Plus d'espace au-dessus de la liste */
+    width: 100%; /* S'assure qu'il utilise toute la largeur disponible */
 }
 
 /* Individual Movie Item (adapté au VOD) */
 .movie-item {
     cursor: pointer;
     text-align: center;
-    border: 1px solid var(--neon-blue-dark); /* Utilise la couleur néon pour la bordure */
+    border: 1px solid var(--neon-blue-dark);
     border-radius: 10px;
     overflow: hidden;
-    background-color: var(--bg-light); /* Fond adapté au thème néon */
+    background-color: var(--bg-light);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
     display: flex;
     flex-direction: column;
+    position: relative; /* Pour les futurs ajouts (overlay de lecture, etc.) */
 }
 
 .movie-item:hover {
-    transform: translateY(-10px); /* Effet de lift plus prononcé */
-    box-shadow: 0 0 20px var(--neon-blue), 0 0 10px rgba(0, 255, 255, 0.4); /* Ombre néon intense */
-    border-color: var(--neon-blue-light); /* Bordure néon au survol */
+    transform: translateY(-10px);
+    box-shadow: 0 0 20px var(--neon-blue), 0 0 10px rgba(0, 255, 255, 0.4);
+    border-color: var(--neon-blue-light);
 }
 
 .movie-item img {
@@ -165,17 +195,17 @@ h1 {
     height: 270px;
     object-fit: cover;
     display: block;
-    border-bottom: 1px solid var(--neon-blue-dark); /* Bordure inférieure néon */
+    border-bottom: 1px solid var(--neon-blue-dark);
 }
 
 /* Movie Title Paragraph (adapté au VOD) */
 .movie-item p {
-    padding: 12px; /* Plus de padding */
+    padding: 12px;
     margin: 0;
-    font-size: 1em; /* Légèrement plus grand */
+    font-size: 1em;
     font-weight: bold;
-    color: var(--neon-blue-light); /* Couleur de texte néon */
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); /* Ombre textuelle néon */
+    color: var(--neon-blue-light);
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -186,18 +216,18 @@ h1 {
 }
 
 /* Loading Message (adapté au VOD) */
-#loading-message { /* Utilisez l'ID de votre JS */
+#loading-message {
     text-align: center;
     margin-top: 30px;
     font-size: 1.5em;
-    color: var(--neon-blue-light); /* Couleur néon */
+    color: var(--neon-blue-light);
     font-weight: bold;
     text-shadow: 0 0 8px var(--neon-blue);
 }
 
 /* Message d'erreur */
-#loading-message[style*="color: red"] { /* Cible les messages d'erreur du JS */
-    color: var(--error-red) !important; /* Force la couleur rouge d'erreur */
+#loading-message[style*="color: red"] {
+    color: var(--error-red) !important;
     text-shadow: 0 0 8px var(--error-red);
 }
 
@@ -208,7 +238,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Plus opaque */
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -221,24 +251,24 @@ h1 {
 
 .message-content {
     background-color: var(--bg-medium);
-    padding: 25px; /* Plus de padding */
-    border-radius: 12px; /* Coins plus arrondis */
-    box-shadow: 0 0 30px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.6); /* Ombre néon plus intense */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 30px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.6);
     text-align: center;
     position: relative;
-    max-width: 90%; /* Prend plus de largeur sur petits écrans */
+    max-width: 90%;
     color: var(--text-color);
-    border: 2px solid var(--neon-blue-light); /* Bordure plus prononcée */
+    border: 2px solid var(--neon-blue-light);
 }
 
 .close-button {
     position: absolute;
-    top: 15px; /* Plus bas */
-    right: 18px; /* Plus à droite */
-    font-size: 28px; /* Plus grand */
+    top: 15px;
+    right: 18px;
+    font-size: 28px;
     cursor: pointer;
     color: var(--neon-blue-light);
-    text-shadow: 0 0 8px var(--neon-blue); /* Ombre plus forte */
+    text-shadow: 0 0 8px var(--neon-blue);
     transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 
@@ -248,7 +278,7 @@ h1 {
 }
 
 #messageText {
-    margin: 10px 0 0 0; /* Ajout d'une marge supérieure */
+    margin: 10px 0 0 0;
     font-size: 1.2em;
     line-height: 1.5;
 }
@@ -257,30 +287,30 @@ h1 {
 /* Media Queries for responsive design */
 @media (max-width: 768px) {
     body {
-        padding: 10px; /* Moins de padding sur les petits écrans */
+        padding: 10px;
     }
 
     h1 {
-        font-size: 2em; /* Réduit la taille du titre */
+        font-size: 2em;
     }
 
     .container {
-        padding: 15px; /* Moins de padding interne */
+        padding: 15px;
         margin-top: 10px;
     }
 
     #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Plus petits items */
-        gap: 15px; /* Réduit l'espace */
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
         margin-top: 25px;
     }
 
     .movie-item img {
-        height: 225px; /* Hauteur ajustée pour les items plus petits (150x225 ratio) */
+        height: 225px;
     }
 
     .movie-item p {
-        font-size: 0.85em; /* Plus petite taille de police */
+        font-size: 0.85em;
         padding: 8px;
     }
 
@@ -301,12 +331,12 @@ h1 {
 
 @media (max-width: 480px) {
     #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* Encore plus petits */
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
         gap: 10px;
     }
 
     .movie-item img {
-        height: 195px; /* Ajustement (130x195 ratio) */
+        height: 195px;
     }
 
     .movie-item p {
