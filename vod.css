@@ -227,8 +227,10 @@ h1 {
     display: flex;
     flex-direction: column;
     position: relative;
-    /* Assurons-nous que le movie-item a une hauteur minimale cohérente si l'image ou le texte pose problème */
-    min-height: 280px; /* Ajout d'une hauteur minimale pour l'ensemble de la vignette */
+    /* Nous allons retirer la hauteur fixe de l'image, donc assurons-nous que le conteneur a une min-height */
+    min-height: 250px; /* Hauteur minimale de la vignette, pour éviter l'écrasement */
+    /* Pour un bon ratio d'aspect visuel si l'image ne charge pas */
+    aspect-ratio: 2 / 3; /* Tente de maintenir un ratio 2:3 (largeur / hauteur) sur la vignette entière */
 }
 
 .movie-item:hover {
@@ -239,32 +241,36 @@ h1 {
 
 .movie-item img {
     width: 100%;
-    /* MODIFICATION MAJEURE ICI POUR LA HAUTEUR DE L'IMAGE (ratio 2:3 avec 180px de largeur -> 270px de hauteur) */
-    height: 270px; /* Hauteur fixe basée sur le ratio 2:3 */
-    object-fit: cover; 
+    /* MODIFICATION MAJEURE ICI : Hauteur automatique pour respecter le ratio natif */
+    height: auto; 
+    /* MODIFICATION : Utilisation de contain pour éviter le recadrage */
+    object-fit: contain; 
+    /* La couleur de fond sera visible si l'image ne remplit pas tout l'espace (avec contain) */
+    background-color: var(--bg-dark); 
     display: block;
     border-bottom: 1px solid var(--neon-blue-dark);
-    /* Ajout d'une max-width pour s'assurer qu'elle ne dépasse pas la taille du conteneur */
-    max-width: 100%; 
+    /* S'assurer que l'image ne dépasse pas la hauteur de la zone d'image si le texte est très court */
+    max-height: 80%; /* L'image prendra au maximum 80% de la hauteur de la vignette */
+    flex-shrink: 0; /* Empêche l'image de se contracter trop */
 }
 
 /* Movie Title Paragraph (adapté au VOD) */
 .movie-item p {
-    padding: 12px; /* Augmentation du padding */
+    padding: 12px; 
     margin: 0;
-    font-size: 1.1em; /* Augmentation de la taille du texte */
+    font-size: 1.1em; 
     font-weight: bold;
     color: var(--neon-blue-light);
     text-shadow: 0 0 2px rgba(0, 255, 255, 0.5); 
     white-space: normal; 
     overflow: hidden; 
     text-overflow: ellipsis; 
-    flex-grow: 1;
+    flex-grow: 1; /* Permet au texte de prendre l'espace restant */
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 60px; /* AUGMENTÉ: Hauteur minimale du paragraphe pour 2-3 lignes de texte */
-    line-height: 1.4; /* Ajuste l'espacement des lignes */
+    min-height: 60px; /* Hauteur minimale du paragraphe */
+    line-height: 1.4; 
 }
 
 /* Loading Message (adapté au VOD) */
@@ -358,13 +364,17 @@ h1 {
         max-width: none;
         padding-top: 0;
         max-height: 60vh; 
-        /* MODIFICATION ICI POUR LES ÉCRANS DE TAILLE MOYENNE */
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Plus grandes ici aussi */
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
         gap: 20px; 
     }
 
+    .movie-item {
+        min-height: 220px; /* Ajustement min-height pour les tailles intermédiaires */
+        aspect-ratio: 2 / 3; 
+    }
     .movie-item img {
-        height: 225px; /* Ajustement pour un ratio 2:3 avec 150px de largeur */
+        height: auto; 
+        max-height: 80%; 
     }
 
     .movie-item p {
@@ -388,21 +398,25 @@ h1 {
     }
 
     #movie-list {
-        /* MODIFICATION ICI POUR LES PETITS ÉCRANS */
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Vignettes de 120px min */
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
         gap: 15px; 
         margin-top: 0;
         max-height: 50vh; 
     }
 
+    .movie-item {
+        min-height: 180px; /* Ajustement min-height pour les petits écrans */
+        aspect-ratio: 2 / 3; 
+    }
     .movie-item img {
-        height: 180px; /* 180px pour correspondre à la largeur de 120px (ratio 2:3) */
+        height: auto; 
+        max-height: 80%; 
     }
 
     .movie-item p {
-        font-size: 0.9em; /* Ajustement de la taille du texte */
+        font-size: 0.9em; 
         padding: 10px;
-        min-height: 40px; /* Ajustement min-height */
+        min-height: 40px; 
     }
 
     #video-player-container {
@@ -421,18 +435,22 @@ h1 {
 
 @media (max-width: 480px) {
     #movie-list {
-        /* MODIFICATION ICI POUR LES PLUS PETITS ÉCRANS */
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Vignettes de 100px min */
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
         gap: 10px;
         max-height: 45vh; 
     }
 
+    .movie-item {
+        min-height: 150px; /* Ajustement min-height pour les très petits écrans */
+        aspect-ratio: 2 / 3; 
+    }
     .movie-item img {
-        height: 150px; /* Ajustement pour 100px de largeur (ratio 2:3) */
+        height: auto; 
+        max-height: 80%; 
     }
 
     .movie-item p {
-        font-size: 0.85em; /* Retour à une taille de texte raisonnable */
+        font-size: 0.85em; 
         min-height: 35px; 
     }
 }
