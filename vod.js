@@ -128,11 +128,13 @@ document.addEventListener('DOMContentLoaded', () => {
         movieItem.classList.add('movie-item');
 
         const img = document.createElement('img');
-        img.src = movie.logo || 'https://via.placeholder.com/180x270?text=Pas+d%27image';
+        // NOUVEAU : Utilise votre image personnalisée comme fallback par défaut
+        img.src = movie.logo || 'https://mikefri.github.io/Teslatv/image.jpg';
         img.alt = movie.title;
         img.onerror = () => {
-            img.src = 'https://via.placeholder.com/180x270?text=Image+non+disponible';
-            console.warn(`Impossible de charger l'image pour: ${movie.title} depuis ${movie.logo}`);
+            // NOUVEAU : Utilise la même image personnalisée en cas d'erreur de chargement
+            img.src = 'https://mikefri.github.io/Teslatv/image.jpg';
+            console.warn(`Impossible de charger l'image pour: ${movie.title} depuis ${movie.logo}. Affichage de l'image par défaut.`);
         };
 
         const titleP = document.createElement('p');
@@ -146,38 +148,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const proxiedMovieUrl = `${proxyUrl}?url=${encodeURIComponent(movie.url)}`;
             console.log('Lecture via proxy:', proxiedMovieUrl);
 
-            // --- Logique de lecture vidéo ---
-            // Pour l'exemple de Google, c'est un MP4 direct, donc HLS.js n'est pas nécessaire.
-            // Nous allons forcer la lecture native pour ce diagnostic.
-            
-            // Si vous avez inclus HLS.js, assurez-vous de le gérer proprement si vous l'utilisiez avant.
-            // Pour ce test, nous allons le désactiver pour se concentrer sur le lecteur natif.
-            // Si hls était défini et attaché, détruisez-le avant de changer la source.
-            if (typeof hls !== 'undefined' && hls) { // Vérifie si la variable hls existe et a une valeur
+            if (typeof hls !== 'undefined' && hls) {
                 console.log('Détection: Instance HLS.js existante. Destruction pour lecture native.');
                 hls.destroy();
-                hls = null; // Réinitialise la variable
+                hls = null;
             }
 
             videoPlayer.src = proxiedMovieUrl;
-            videoPlayer.load(); // Indique au navigateur de charger la nouvelle source
+            videoPlayer.load();
 
-            // Assurez-vous que le volume n'est pas à zéro et que la vidéo n'est pas muette
-            videoPlayer.volume = 1; // Ou la valeur par défaut que vous souhaitez (entre 0 et 1)
+            videoPlayer.volume = 1;
             videoPlayer.muted = false;
 
-            videoPlayer.play() // Tente de démarrer la lecture
+            videoPlayer.play()
                 .then(() => {
                     console.log('Tentation de lecture automatique réussie.');
                 })
                 .catch(playError => {
                     console.error('Erreur lors de la lecture automatique de la vidéo:', playError);
                     alert('La lecture automatique a été bloquée par le navigateur. Veuillez cliquer sur le bouton de lecture (si visible).');
-                    // Cela arrive souvent sur mobile pour des raisons de consommation de données et batterie.
-                    // Si le problème persiste, cela pourrait être dû à un overlay ou un bouton de lecture qui cache la vidéo.
                 });
 
-            // Défilement fluide vers le lecteur vidéo
             const videoPlayerContainer = document.getElementById('video-player-container');
             if (videoPlayerContainer) {
                 window.scrollTo({ top: videoPlayerContainer.offsetTop, behavior: 'smooth' });
