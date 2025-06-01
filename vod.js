@@ -103,6 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const title = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
                     const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
 
+                    // MODIFICATION ICI: Nettoyage du titre
+        let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
+        let cleanedTitle = rawTitle.replace(/^FR:#/, '').trim(); // Supprime "FR:#" au début et les espaces
+
                     currentMovie = {
                         title: title,
                         logo: logo,
