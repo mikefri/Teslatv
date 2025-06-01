@@ -9,22 +9,20 @@
 <body>
     <h1>Films disponibles</h1>
     <div class="container">
-        <div class="search-bar-container">
-            <input type="text" id="search-input" placeholder="Rechercher un film..." aria-label="Rechercher un film">
-        
-
-        <div id="movie-list">
-            <div class="loading" id="loading-message">Chargement des films...</div>
+        <div class="list-section-container">
+            <div class="search-bar-container">
+                <input type="text" id="search-input" placeholder="Rechercher un film..." aria-label="Rechercher un film">
             </div>
-    </div
-
-        <div id="video-player-container">
+            
+            <div id="movie-list">
+                <div class="loading" id="loading-message">Chargement des films...</div>
+                </div>
+        </div> <div id="video-player-container">
             <h2>Lecteur Vidéo</h2>
             <video id="video-player" controls>
                 Votre navigateur ne supporte pas la balise vidéo.
             </video>
             </div>
-    </div>
-    <script src="vod.js"></script>
+    </div> <script src="vod.js"></script>
 </body>
 </html>

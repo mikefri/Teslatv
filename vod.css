@@ -73,8 +73,19 @@ h1 {
     /* NOUVEAU: Flexbox pour organiser les sections Player et Liste */
     display: flex;
     flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur petits écrans */
-    gap: 20px; /* Réduit l'espace entre le player et la liste pour plus de contenu */
+    gap: 20px; /* Espace entre les sections principales (liste/recherche et lecteur) */
     justify-content: center; /* Centre le contenu horizontalement si l'espace est suffisant */
+}
+
+/* NOUVEAU CONTENEUR : list-section-container pour regrouper recherche et liste */
+.list-section-container {
+    display: flex;
+    flex-direction: column; /* La barre de recherche au-dessus de la liste */
+    flex: 1; /* Permet à ce conteneur de prendre de l'espace dans le .container parent */
+    min-width: 300px; /* Largeur minimale de la section (recherche + liste) */
+    max-width: 100%; /* S'adapte à la largeur du parent si nécessaire */
+    gap: 20px; /* Espace entre la barre de recherche et la liste */
+    order: 2; /* Par défaut, la liste/recherche est à droite du lecteur */
 }
 
 /* Section du lecteur vidéo (adaptée au VOD) */
@@ -87,17 +98,17 @@ h1 {
     border: 1px solid var(--neon-blue-dark);
     position: relative;
     
-    flex: 1; 
+    flex: 1; /* Permet au lecteur de prendre de l'espace dans le .container parent */
     min-width: 250px; 
-    max-width: 600px; 
+    max-width: 600px; /* Limite la taille du lecteur */
 
     /* Hack pour maintenir l'aspect ratio 16:9 */
     padding-bottom: 56.25%; /* (9 / 16) * 100% - Garde le ratio */
     height: 0;
     overflow: hidden;
 
-    /* Spécifier l'ordre si nécessaire (Player à gauche) */
-    order: 1; 
+    /* Spécifier l'ordre (Player à gauche) */
+    order: 1; /* Place le lecteur avant la section de la liste dans le layout flex */
 }
 
 /* L'élément <video> lui-même */
@@ -169,21 +180,68 @@ h1 {
     height: 60px;
 }
 
+/* Nouveau style pour le conteneur de la barre de recherche */
+.search-bar-container {
+    width: 100%; /* Prend toute la largeur de son parent .list-section-container */
+    max-width: none; /* Ne pas limiter si le parent gère la largeur */
+    margin: 0; /* Pas de margin auto, le flexbox du parent gère l'alignement */
+    padding: 10px; /* Gardez le padding interne */
+    background-color: var(--bg-medium); /* Maintenez votre style */
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    border: 1px solid var(--neon-blue-dark);
+    flex-shrink: 0; /* Empêche la barre de recherche de se contracter trop */
+}
+
+/* Style pour le champ de saisie */
+#search-input {
+    width: calc(100% - 20px); 
+    padding: 12px 15px;
+    border: 2px solid var(--neon-blue-dark);
+    border-radius: 6px;
+    background-color: var(--bg-dark);
+    color: var(--neon-blue-light);
+    font-size: 1.1em;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#search-input::placeholder {
+    color: rgba(136, 255, 255, 0.6); 
+}
+
+#search-input:focus {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px var(--neon-blue);
+}
+
+/* Si vous ajoutez un bouton de recherche */
+#search-button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: var(--neon-blue-dark);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#search-button:hover {
+    background-color: var(--neon-blue);
+}
+
+
 /* Movie List Grid (adapté au VOD) */
 #movie-list {
-    /* Ajustement de la largeur pour le layout Flexbox */
-    flex: 1; 
-    min-width: 300px; /* AUGMENTÉ: Largeur minimale de la colonne de la liste de films */
-    width: 100%; 
+    flex: 1; /* Permet à la liste de prendre l'espace restant dans list-section-container */
+    min-width: 100%; /* S'assure que la grille de films utilise toute la largeur disponible */
     padding-top: 0px;
 
-    /* Spécifier l'ordre si nécessaire (Liste à droite) */
-    order: 2;
-
     /* NOUVEAU: Permet le défilement vertical si la liste est trop longue */
-    max-height: 80vh; 
+    max-height: 80vh; /* Ajustez si nécessaire, par exemple, calc(100vh - 200px) */
     overflow-y: auto; 
-    padding-right: 10px; 
+    padding-right: 10px; /* Pour laisser de l'espace à la scrollbar */
 
     /* Style de la barre de défilement (Webkit - Chrome, Safari) */
     &::-webkit-scrollbar {
@@ -204,12 +262,8 @@ h1 {
     &::-webkit-scrollbar-thumb:hover {
         background-color: var(--neon-blue);
     }
-}
 
-/* MAINTENIR la grille POUR les items de la liste de films à l'intérieur de #movie-list */
-#movie-list {
     display: grid;
-    /* MODIFICATION ICI POUR DES VIGNETTES ENCORE PLUS GRANDES */
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Vignettes de 180px min */
     gap: 25px; /* Augmente l'espace entre les vignettes */
 }
@@ -229,10 +283,8 @@ h1 {
     position: relative;
     
     /* MAINTENIR UNE HAUTEUR MINIMALE COHÉRENTE POUR L'ENSEMBLE DE LA VIGNETTE */
-    /* La min-height doit être suffisante pour l'image ET le texte */
-    min-height: 280px; /* Base pour une vignette de 180px de large (ratio 2:3 classique est 270px de haut pour l'image seule + le texte) */
-    /* S'assurer que le contenu s'étire pour remplir la hauteur disponible si nécessaire */
-    height: 100%; /* Important pour que flex-grow/shrink fonctionnent bien */
+    min-height: 280px; 
+    height: 100%; 
 }
 
 .movie-item:hover {
@@ -244,12 +296,10 @@ h1 {
 /* Conteneur de l'image à l'intérieur de la vignette pour mieux contrôler sa hauteur */
 .movie-item .image-container {
     width: 100%;
-    /* CLÉ : Fixer une hauteur proportionnelle pour l'image */
-    /* Ici, nous ciblons 75% de la hauteur de la vignette pour l'image */
-    height: 75%; /* Laisser 25% pour le texte */
-    position: relative; /* Pour positionner l'image si besoin */
-    overflow: hidden; /* Assure que l'image ne déborde pas de son conteneur */
-    display: flex; /* Centrer l'image verticalement/horizontalement si object-fit: contain */
+    height: 75%; /* L'image prendra 75% de la hauteur de la vignette */
+    position: relative;
+    overflow: hidden; 
+    display: flex; 
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid var(--neon-blue-dark); /* BORDURE ENTRE IMAGE ET TEXTE */
@@ -360,12 +410,20 @@ h1 {
 /* Media Queries for responsive design */
 @media (max-width: 1024px) {
     .container {
-        flex-direction: column;
+        flex-direction: column; /* Le conteneur principal passe en colonne */
         gap: 20px;
     }
 
+    .list-section-container {
+        order: 2; /* La section liste/recherche vient après le lecteur sur mobile/tablette */
+        flex: none; /* Ne pas grandir/rétrécir sur toute la largeur */
+        width: 100%; /* Prend toute la largeur disponible */
+        max-width: none;
+        gap: 15px; /* Réduire l'espace entre recherche et liste sur petits écrans */
+    }
+
     #video-player-container {
-        order: 1;
+        order: 1; /* Le lecteur vient en premier sur mobile/tablette */
         flex: none;
         width: 100%;
         max-width: none;
@@ -373,12 +431,7 @@ h1 {
     }
 
     #movie-list {
-        order: 2;
-        flex: none;
-        width: 100%;
-        max-width: none;
-        padding-top: 0;
-        max-height: 60vh; 
+        max-height: 60vh; /* Ajuster la hauteur max pour le scroll en mode colonne */
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
         gap: 20px; 
     }
@@ -411,6 +464,10 @@ h1 {
     .container {
         padding: 15px;
         margin-top: 10px;
+    }
+
+    .list-section-container {
+        gap: 10px; /* Réduire l'espace entre recherche et liste encore plus */
     }
 
     #movie-list {
@@ -472,62 +529,12 @@ h1 {
         min-height: 35px; 
     }
 }
-/* Nouveau style pour le conteneur de la barre de recherche */
-.search-bar-container {
-    width: 100%;
-    max-width: 600px; 
-    margin: 20px auto;
-    text-align: center;
-    padding: 10px;
-    background-color: var(--bg-medium);
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-    border: 1px solid var(--neon-blue-dark);
-}
-
-/* Style pour le champ de saisie */
-#search-input {
-    width: calc(100% - 20px); 
-    padding: 12px 15px;
-    border: 2px solid var(--neon-blue-dark);
-    border-radius: 6px;
-    background-color: var(--bg-dark);
-    color: var(--neon-blue-light);
-    font-size: 1.1em;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-#search-input::placeholder {
-    color: rgba(136, 255, 255, 0.6); 
-}
-
-#search-input:focus {
-    border-color: var(--neon-blue);
-    box-shadow: 0 0 10px var(--neon-blue);
-}
-
-/* Si vous ajoutez un bouton de recherche */
-#search-button {
-    margin-left: 10px;
-    padding: 10px 15px;
-    background-color: var(--neon-blue-dark);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#search-button:hover {
-    background-color: var(--neon-blue);
-}
 
 /* Adaptez la barre de recherche sur les petits écrans */
 @media (max-width: 768px) {
     .search-bar-container {
         padding: 8px;
-        margin: 15px auto;
+        margin: 0; /* Réinitialiser les marges, le gap du parent suffit */
     }
     #search-input {
         font-size: 1em;
