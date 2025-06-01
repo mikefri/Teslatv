@@ -589,30 +589,36 @@ h1 {
 .controls-container {
     display: flex; /* Utilise flexbox pour aligner les éléments */
     gap: 10px; /* Espace entre les éléments */
-    margin: 0 0 20px 0; /* Ajustez la marge si besoin, par exemple, seulement en bas */
-    /* Les autres propriétés comme max-width et justify-content peuvent être ajustées si ce conteneur est maintenant imbriqué différemment */
-    /* Dans ce cas, il est un enfant de list-section-container, donc pas besoin de max-width: 900px; ou justify-content: center; ici */
-    /* Flex-wrap est toujours une bonne idée */
-    flex-wrap: wrap; 
+    margin: 20px auto; /* Centre le conteneur et ajoute de la marge */
+    max-width: 900px; /* Largeur maximale pour le conteneur (peut être ajusté si nécessaire) */
+    justify-content: center; /* Centre les éléments horizontalement */
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur de petits écrans */
 }
 
 #search-input,
 #genre-select {
     padding: 10px 15px;
     border: 1px solid var(--neon-blue-light);
-    background-color: var(--dark-grey-bg);
+    background-color: var(--bg-dark); /* Correction ici: utiliser une variable existante */
     color: var(--neon-blue-light);
     border-radius: 8px;
     font-size: 1em;
-    outline: none; /* Supprime le contour bleu/noir au focus */
-    appearance: none; /* Supprime le style par défaut du select sur certains navigateurs */
+    outline: none;
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%237DFFFF%22%20d%3D%22M2%200L0%202h4zM2%205L0%203h4z%22%2F%3E%3C%2Fsvg%3E'); /* Icône de flèche personnalisée */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%237DFFFF%22%20d%3D%22M2%200L0%202h4zM2%205L0%203h4z%22%2F%3E%3C%2Fsvg%3E');
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 8px 10px;
     cursor: pointer;
+    
+    /* NOUVEAU: Pour la gestion de la taille dans flexbox */
+    flex-grow: 1; /* Permet à l'élément de grandir pour prendre de l'espace */
+    flex-shrink: 1; /* Permet à l'élément de rétrécir si nécessaire */
+    flex-basis: auto; /* La taille de base est automatique */
+    min-width: 150px; /* Largeur minimale pour éviter qu'il ne devienne trop petit */
+    max-width: 300px; /* Largeur maximale pour la barre de recherche (ajuster selon le besoin) */
 }
 
 #search-input::placeholder {
