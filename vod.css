@@ -87,13 +87,13 @@ h1 {
     border: 1px solid var(--neon-blue-dark);
     position: relative;
     
-    /* Ajustement de la largeur pour le layout Flexbox */
-    flex: 2; /* Prend 2 parts de l'espace disponible */
-    min-width: 400px; /* Largeur minimale pour que le lecteur reste utilisable */
-    max-width: 1000px; /* Limite la largeur max */
+    /* MODIFICATION ICI POUR RÉDUIRE LE PLAYER */
+    flex: 1.5; /* Prend moins de parts (réduit de 2 à 1.5) */
+    min-width: 300px; /* Largeur minimale un peu plus petite */
+    max-width: 700px; /* Réduit la largeur maximale du player */
 
     /* Hack pour maintenir l'aspect ratio 16:9 */
-    padding-bottom: 56.25%; /* (9 / 16) * 100% */
+    padding-bottom: 56.25%; /* (9 / 16) * 100% - Garde le ratio */
     height: 0;
     overflow: hidden;
 
