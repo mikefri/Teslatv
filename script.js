@@ -10,6 +10,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageText = document.getElementById('messageText');
     const closeMessage = document.getElementById('closeMessage');
 
+
+
+
+
+// PARTIE POUR LE DECLENCHEUR DU POPUP
+    const accessXxButton = document.getElementById('accessXxButton');
+    if (accessXxButton) {
+        accessXxButton.addEventListener('click', (e) => {
+            e.preventDefault(); // Empêche le lien de naviguer directement
+            
+            // Appelle une fonction définie dans popup.js pour ouvrir le popup
+            // Assurez-vous que openPasswordModal est globalement accessible ou exporté/importé
+            if (typeof openPasswordModal === 'function') {
+                openPasswordModal();
+            } else {
+                console.error("La fonction openPasswordModal n'est pas définie dans popup.js ou n'est pas accessible.");
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     // NOUVEAU : Récupération du sélecteur de catégorie
     const categorySelect = document.getElementById('category-select');
 
