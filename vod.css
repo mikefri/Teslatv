@@ -173,7 +173,7 @@ h1 {
 #movie-list {
     /* Ajustement de la largeur pour le layout Flexbox */
     flex: 1; /* Prend 1 part de l'espace disponible */
-    min-width: 180px; 
+    min-width: 250px; /* AUGMENTÉ: Largeur minimale de la colonne de la liste de films */
     width: 100%; /* S'assure qu'il prend toute la largeur disponible dans sa colonne */
     padding-top: 0px;
 
@@ -210,9 +210,9 @@ h1 {
 /* MAINTENIR la grille POUR les items de la liste de films à l'intérieur de #movie-list */
 #movie-list {
     display: grid;
-    /* MODIFICATION ICI POUR DES VIGNETTES PLUS GRANDES */
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Vignettes de 120px min */
-    gap: 15px; /* Augmente le gap entre les vignettes */
+    /* MODIFICATION MAJEURE ICI POUR DES VIGNETTES BEAUCOUP PLUS GRANDES */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Vignettes de 150px min */
+    gap: 20px; /* Augmente l'espace entre les vignettes pour un meilleur espacement */
 }
 
 
@@ -238,29 +238,30 @@ h1 {
 
 .movie-item img {
     width: 100%;
-    /* MODIFICATION ICI POUR LA HAUTEUR DE L'IMAGE (ratio 2:3 avec 120px de largeur -> 180px de hauteur) */
-    height: 180px; 
-    object-fit: cover;
+    /* MODIFICATION MAJEURE ICI POUR LA HAUTEUR DE L'IMAGE (ratio 2:3 avec 150px de largeur -> 225px de hauteur) */
+    height: 225px; 
+    object-fit: cover; /* Assure que l'image couvre l'espace sans être déformée */
     display: block;
     border-bottom: 1px solid var(--neon-blue-dark);
 }
 
 /* Movie Title Paragraph (adapté au VOD) */
 .movie-item p {
-    padding: 8px; /* Augmentation du padding */
+    padding: 10px; /* Augmentation du padding pour plus d'air autour du texte */
     margin: 0;
-    font-size: 0.9em; /* Augmentation de la taille du texte */
+    font-size: 1em; /* Augmentation de la taille du texte */
     font-weight: bold;
     color: var(--neon-blue-light);
     text-shadow: 0 0 2px rgba(0, 255, 255, 0.5); 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal; /* Permet au texte de s'enrouler si nécessaire */
+    overflow: hidden; /* Cache le texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute des points de suspension si le texte est tronqué */
     flex-grow: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px; /* Augmente la hauteur minimale du paragraphe */
+    min-height: 50px; /* Augmente considérablement la hauteur minimale du paragraphe */
+    line-height: 1.3; /* Ajuste l'espacement des lignes */
 }
 
 /* Loading Message (adapté au VOD) */
@@ -356,7 +357,7 @@ h1 {
         max-height: 60vh; 
         /* MODIFICATION ICI POUR LES ÉCRANS DE TAILLE MOYENNE */
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Plus grandes ici aussi */
-        gap: 15px; /* Augmente le gap */
+        gap: 15px; 
     }
 
     .movie-item img {
