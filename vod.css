@@ -626,10 +626,10 @@ h1 {
 }
 
 #search-input::placeholder {
-    color: rgba(17, 17, 17, 0.7); /* Couleur du placeholder */
+    color: rgba(58, 207, 226, 0.7); /* Couleur du placeholder */
 }
 
 #genre-select option {
-    background-color: var(--dark-grey-bg); /* Couleur de fond des options */
+    background-color: var(--bg-dark); /* Correction: Utilise une variable existante */
     color: var(--neon-blue-light); /* Couleur du texte des options */
 }
