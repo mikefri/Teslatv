@@ -35,17 +35,23 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function cleanMovieTitle(title) {
         let cleaned = title;
-        // Supprime les préfixes courants et les espaces superflus
+
+        // 1. Supprime les préfixes courants et les espaces superflus
         // Ex: "FR: # Film Title (2020) - HD" -> "Film Title (2020) - HD"
         cleaned = cleaned.replace(/^(FR:\s*|FR:|\s*#\s*)/i, '').trim();
-        // Supprime les années entre parenthèses à la fin (ex: "Film Title (2019)")
+
+        // 2. Supprime les années entre parenthèses à la fin (ex: "Film Title (2019)")
         cleaned = cleaned.replace(/\s*\(\d{4}\)$/, '').trim();
-        // Supprime tout ce qui se trouve après un trait d'union si c'est un mot clé technique
-        // Ex: "Film Title - Part 1 VOSTFR" -> "Film Title - Part 1"
-        cleaned = cleaned.split(/ - (FHD|HD|VOSTFR|VF|MULTI|FR|SUB|2160P|1080P|720P)\b/i)[0].trim();
-        // Gère le cas des numéros dans les titres comme "10 Cloverfield Lane" pour ne pas les enlever
-        // S'assure que les caractères comme les deux-points sont acceptés par OMDb ou nettoyés si inutiles.
-        // On ne fait pas trop de nettoyage ici, OMDb est relativement intelligent sur la ponctuation si le reste est bon.
+
+        // 3. Supprime les années précédées d'un tiret à la fin (ex: "Film Title - 2017")
+        cleaned = cleaned.replace(/\s*-\s*\d{4}$/, '').trim(); 
+
+        // 4. Supprime tout ce qui se trouve après un tiret s'il y a un mot clé technique (FHD, HD, etc.)
+        cleaned = cleaned.split(/ - (FHD|HD|VOSTFR|VF|MULTI|FR|SUB|2160P|1080P|720P|WEB-DL|BLURAY|DVDRIP|X264|XVID|AC3|DD5.1|DTS|TRUEFRENCH)\b/i)[0].trim();
+        
+        // 5. Assurer qu'il n'y a pas d'espaces multiples consécutifs
+        cleaned = cleaned.replace(/\s+/g, ' ').trim();
+
         return cleaned;
     }
 
@@ -68,12 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const encodedCleanTitle = encodeURIComponent(cleanedTitleForApi);
+        // Utilise OMDB_BASE_URL (HTTPS)
         const searchUrl = `${OMDB_BASE_URL}?apikey=${OMDB_API_KEY}&t=${encodedCleanTitle}&type=movie`;
         console.log(`Requête OMDb pour: "${cleanedTitleForApi}" - URL: ${searchUrl}`); // Pour débogage
 
         try {
             const response = await fetch(searchUrl);
             if (!response.ok) {
+                // Gère les erreurs HTTP (4xx, 5xx)
                 console.error(`Erreur OMDb HTTP pour "${cleanedTitleForApi}": ${response.status} ${response.statusText}`);
                 return null;
             }
@@ -82,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.Response === "True" && data.Poster && data.Poster !== "N/A") {
                 return data.Poster;
             }
+            // Si OMDb ne trouve pas le film, il renvoie un message d'erreur dans 'Error'
             console.warn(`Aucune affiche trouvée sur OMDb pour le film: "${cleanedTitleForApi}" (OMDb Error: ${data.Error || 'Non trouvé'}).`);
             return null;
         } catch (error) {
@@ -291,11 +300,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
                     let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
 
-                    // Nettoyage initial du titre pour le stockage dans allMovies
+                    // Stocke le titre nettoyé initialement pour l'affichage et le passage aux fonctions
                     let cleanedTitleForStorage = rawTitle.replace(/^FR:#?\s*/i, '').trim(); 
                     
                     currentMovie = {
-                        title: cleanedTitleForStorage, // Ce titre est stocké et sera utilisé pour l'affichage et la recherche OMDb
+                        title: cleanedTitleForStorage, 
                         url: ''
                     };
                 } else if (line.startsWith('http')) {
@@ -306,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-            displayMovies(allMovies); // L'appel est maintenant sûr car displayMovies est défini plus haut
+            displayMovies(allMovies); // Cet appel est maintenant sûr car displayMovies est défini plus haut
         })
         .catch(error => {
             console.error('Erreur lors du traitement du fichier M3U:', error);
