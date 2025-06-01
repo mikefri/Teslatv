@@ -77,16 +77,7 @@ h1 {
     justify-content: center; /* Centre le contenu horizontalement si l'espace est suffisant */
 }
 
-/* NOUVEAU CONTENEUR : list-section-container pour regrouper recherche et liste */
-.list-section-container {
-    display: flex;
-    flex-direction: column; /* La barre de recherche au-dessus de la liste */
-    flex: 1; /* Permet à ce conteneur de prendre de l'espace dans le .container parent */
-    min-width: 300px; /* Largeur minimale de la section (recherche + liste) */
-    max-width: 100%; /* S'adapte à la largeur du parent si nécessaire */
-    gap: 20px; /* Espace entre la barre de recherche et la liste */
-    order: 2; /* Par défaut, la liste/recherche est à droite du lecteur */
-}
+
 
 /* Section du lecteur vidéo (adaptée au VOD) */
 #video-player-container {
@@ -592,9 +583,20 @@ h1 {
     display: flex; /* Utilise flexbox pour aligner les éléments */
     gap: 10px; /* Espace entre les éléments */
     margin: 20px auto; /* Centre le conteneur et ajoute de la marge */
-    max-width: 500px; /* Largeur maximale pour le conteneur (peut être ajusté si nécessaire) */
+    max-width: 100%; /* Largeur maximale pour le conteneur (peut être ajusté si nécessaire) */
     justify-content: center; /* Centre les éléments horizontalement */
     flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur de petits écrans */
+}
+
+/* NOUVEAU CONTENEUR : list-section-container pour regrouper recherche et liste */
+.list-section-container {
+    display: flex;
+    flex-direction: column; /* La barre de recherche au-dessus de la liste */
+    flex: 1; /* Permet à ce conteneur de prendre de l'espace dans le .container parent */
+    min-width: 300px; /* Largeur minimale de la section (recherche + liste) */
+    max-width: 100%; /* S'adapte à la largeur du parent si nécessaire */
+    gap: 20px; /* Espace entre la barre de recherche et la liste */
+    order: 2; /* Par défaut, la liste/recherche est à droite du lecteur */
 }
 
 #search-input,
