@@ -592,7 +592,7 @@ h1 {
     display: flex; /* Utilise flexbox pour aligner les éléments */
     gap: 10px; /* Espace entre les éléments */
     margin: 20px auto; /* Centre le conteneur et ajoute de la marge */
-    max-width: 900px; /* Largeur maximale pour le conteneur (peut être ajusté si nécessaire) */
+    max-width: 500px; /* Largeur maximale pour le conteneur (peut être ajusté si nécessaire) */
     justify-content: center; /* Centre les éléments horizontalement */
     flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur de petits écrans */
 }
