@@ -170,14 +170,11 @@ h1 {
 
 /* Movie List Grid (adapté au VOD) */
 #movie-list {
-    gap: 30px; /* Sera re-défini pour la grille interne */
-    margin-top: 0; /* Géré par le gap du conteneur parent */
-    
     /* Ajustement de la largeur pour le layout Flexbox */
     flex: 1; /* Prend 1 part de l'espace disponible */
-    min-width: 250px; /* Largeur minimale pour la liste de films */
+    min-width: 200px; /* Largeur minimale RÉDUITE pour la liste de films, pour accueillir plus de petites vignettes */
     width: 100%; /* S'assure qu'il prend toute la largeur disponible dans sa colonne */
-    padding-top: 0px; /* N'a plus besoin d'un padding pour aligner, le joueur et la liste commenceront en haut */
+    padding-top: 0px;
 
     /* Spécifier l'ordre si nécessaire (Liste à droite) */
     order: 2;
@@ -186,8 +183,9 @@ h1 {
 /* MAINTENIR la grille POUR les items de la liste de films à l'intérieur de #movie-list */
 #movie-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Les vignettes peuvent être un peu plus petites ici */
-    gap: 20px; /* Réduction du gap pour une meilleure utilisation de l'espace */
+    /* NOUVEAU: Largeur des vignettes beaucoup plus petites */
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Vignettes de 100px min */
+    gap: 15px; /* Réduction du gap pour une meilleure utilisation de l'espace avec de petites vignettes */
 }
 
 
@@ -206,14 +204,15 @@ h1 {
 }
 
 .movie-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 0 20px var(--neon-blue), 0 0 10px rgba(0, 255, 255, 0.4);
+    transform: translateY(-5px); /* Effet de lift un peu moins prononcé pour les petites vignettes */
+    box-shadow: 0 0 15px var(--neon-blue), 0 0 8px rgba(0, 255, 255, 0.4); /* Ombre néon ajustée */
     border-color: var(--neon-blue-light);
 }
 
 .movie-item img {
     width: 100%;
-    height: 270px;
+    /* NOUVEAU: Hauteur des images ajustée pour un ratio 2:3 (si largeur 100px, hauteur 150px) */
+    height: 150px; 
     object-fit: cover;
     display: block;
     border-bottom: 1px solid var(--neon-blue-dark);
@@ -221,12 +220,12 @@ h1 {
 
 /* Movie Title Paragraph (adapté au VOD) */
 .movie-item p {
-    padding: 12px;
+    padding: 8px; /* Réduction du padding */
     margin: 0;
-    font-size: 1em;
+    font-size: 0.85em; /* Réduction de la taille du texte pour correspondre aux petites vignettes */
     font-weight: bold;
     color: var(--neon-blue-light);
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+    text-shadow: 0 0 3px rgba(0, 255, 255, 0.5); /* Ombre textuelle néon plus subtile */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -308,12 +307,12 @@ h1 {
 /* Media Queries for responsive design */
 @media (max-width: 1024px) {
     .container {
-        flex-direction: column; /* Les colonnes passent en ligne sur les petits écrans */
+        flex-direction: column;
         gap: 20px;
     }
 
     #video-player-container {
-        order: 1; /* S'assure que le player reste en haut/premier */
+        order: 1;
         flex: none;
         width: 100%;
         max-width: none;
@@ -321,11 +320,22 @@ h1 {
     }
 
     #movie-list {
-        order: 2; /* S'assure que la liste est en bas/deuxième */
+        order: 2;
         flex: none;
         width: 100%;
         max-width: none;
         padding-top: 0;
+        /* NOUVEAU: Ajustement de la grille pour les écrans de taille moyenne */
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Plus petites que sur grand écran, mais plus grandes que sur très petit */
+        gap: 15px;
+    }
+
+    .movie-item img {
+        height: 180px; /* Ajustement pour un ratio 2:3 avec 120px de largeur */
+    }
+
+    .movie-item p {
+        font-size: 0.9em;
     }
 }
 
@@ -344,17 +354,17 @@ h1 {
     }
 
     #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Revert à 100px min pour les plus petits écrans */
+        gap: 10px; /* Encore plus petit gap */
         margin-top: 0;
     }
 
     .movie-item img {
-        height: 225px;
+        height: 150px; /* 150px pour correspondre à la largeur de 100px */
     }
 
     .movie-item p {
-        font-size: 0.85em;
+        font-size: 0.8em;
         padding: 8px;
     }
 
@@ -374,15 +384,15 @@ h1 {
 
 @media (max-width: 480px) {
     #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); /* Encore plus petits sur les téléphones */
+        gap: 8px;
     }
 
     .movie-item img {
-        height: 195px;
+        height: 135px; /* Ajustement pour 90px de largeur */
     }
 
     .movie-item p {
-        font-size: 0.8em;
+        font-size: 0.75em;
     }
 }
