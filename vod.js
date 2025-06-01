@@ -103,10 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
                     const title = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
                     const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
-                    // NOUVEAU : Supprimer "FR:" du titre ici, dès l'extraction
-                    if (title.startsWith('FR:')) {
-                        title = title.substring(3).trim(); // Supprime "FR:" et les espaces
-                    }
+                    
                     currentMovie = {
                         title: title,
                         logo: logo,
