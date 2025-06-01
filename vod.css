@@ -193,6 +193,8 @@ h1 {
     font-size: 1.1em;
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    flex-grow: 2; /* Permet à la barre de recherche de grandir deux fois plus vite que le select */
+    max-width: 400px; /* Une largeur maximale pour la barre de recherche */
 }
 
 #search-input::placeholder {
