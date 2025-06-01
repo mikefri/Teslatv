@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(playError => {
                     console.error('Erreur lors de la tentative de lecture automatique:', playError);
-                    alert('La lecture automatique a été bloquée par le navigateur. Veuillez cliquer sur le bouton de lecture du lecteur vidéo.');
+                    //alert('La lecture automatique a été bloquée par le navigateur. Veuillez cliquer sur le bouton de lecture du lecteur vidéo.');
                 });
 
             // Défilement vers le lecteur vidéo
