@@ -541,3 +541,16 @@ h1 {
         padding: 10px 12px;
     }
 }
+.live-button {
+    display: inline-block; /* Fait du lien un bloc pour lui donner des paddings/marges */
+    padding: 8px 15px;
+    background-color: #e50914; /* Couleur rouge vif typique des boutons "Live" ou "Regarder" */
+    color: white;
+    text-decoration: none; /* Supprime le soulignement du lien */
+    border-radius: 5px; /* Coins arrondis */
+    font-weight: bold;
+    transition: background-color 0.3s ease; /* Effet de transition au survol */
+}
+.live-button:hover {
+    background-color: #ff202b; /* Couleur au survol */
+}
