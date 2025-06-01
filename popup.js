@@ -8,7 +8,7 @@ let submitPasswordButton;
 let closeButton;
 
 // Définir le mot de passe (vous pouvez le changer)
-const CORRECT_PASSWORD = "monmotdepasse"; // <-- REMPLACEZ CECI PAR VOTRE MOT DE PASSE SOUHAITÉ
+const CORRECT_PASSWORD = "Tesla"; // <-- REMPLACEZ CECI PAR VOTRE MOT DE PASSE SOUHAITÉ
 
 // Fonction d'initialisation du popup qui sera appelée une fois le DOM chargé
 function initializePopupElements() {
