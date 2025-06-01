@@ -554,3 +554,43 @@ h1 {
 .live-button:hover {
     background-color: #ff202b; /* Couleur au survol */
 }
+
+
+
+
+/* Styles pour les éléments de film */
+.movie-item {
+    position: relative; /* Important pour positionner la note */
+    /* Assurez-vous que votre 'movie-item' a une taille définie */
+    width: 200px; /* Exemple, ajustez selon votre design */
+    height: auto; /* Ajustez selon votre design */
+    overflow: hidden; /* Cache tout ce qui dépasse, si nécessaire */
+}
+
+.movie-item img {
+    width: 100%;
+    height: auto; /* Ou une hauteur fixe comme 300px avec object-fit: cover; */
+    display: block;
+}
+
+.movie-rating {
+    position: absolute; /* Positionne la note par rapport à .movie-item */
+    top: 5px; /* Distance du haut */
+    right: 5px; /* Distance de la droite */
+    background-color: rgba(0, 0, 0, 0.7); /* Fond semi-transparent */
+    color: white; /* Couleur du texte */
+    padding: 3px 8px; /* Espacement interne */
+    border-radius: 5px; /* Bords arrondis */
+    font-size: 0.9em; /* Taille de la police */
+    font-weight: bold; /* Gras */
+    z-index: 10; /* Assure que la note est au-dessus de l'image */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Légère ombre */
+}
+
+/* Vous pouvez ajouter des étoiles ou des icônes si vous le souhaitez plus tard */
+/* Par exemple, si vous voulez une étoile */
+.movie-rating::before {
+    content: '⭐ '; /* Ajoute une étoile avant le texte */
+    font-size: 0.8em; /* Ajuste la taille de l'étoile */
+    vertical-align: middle; /* Aligne l'étoile au milieu du texte */
+}
