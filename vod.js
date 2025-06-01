@@ -96,30 +96,37 @@ document.addEventListener('DOMContentLoaded', () => {
             let currentMovie = {};
 
             lines.forEach(line => {
-                line = line.trim();
-                if (line.startsWith('#EXTINF:')) {
-                    // Extraction du titre et du logo
-                    const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
-                    const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
-                    const title = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
-                    const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
-                    // NOUVEAU : Supprimer "FR:" du titre ici, dès l'extraction
-                    if (title.startsWith('FR:')) {
-                        title = title.substring(3).trim(); // Supprime "FR:" et les espaces
-                    }
-                    currentMovie = {
-                        title: title,
-                        logo: logo,
-                        url: '' // L'URL sera sur la ligne suivante
-                    };
-                } else if (line.startsWith('http')) {
-                    if (currentMovie.title) { // S'assure qu'un film est en cours de définition
-                        currentMovie.url = line;
-                        allMovies.push(currentMovie); // Stocke le film dans le tableau global
-                        currentMovie = {}; // Réinitialise pour le prochain film
-                    }
-                }
-            });
+    line = line.trim();
+    if (line.startsWith('#EXTINF:')) {
+        // Extraction du titre et du logo
+        const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
+        const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
+        
+        // --- MODIFICATION ICI ---
+        // Déclarez 'title' avec 'let' pour pouvoir le modifier
+        let title = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
+
+        // Supprimer "FR:" du titre ici, dès l'extraction
+        if (title.startsWith('FR:')) {
+            title = title.substring(3).trim(); // Supprime "FR:" et les espaces potentiels
+        }
+        // --- FIN DE LA MODIFICATION ---
+
+        const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
+
+        currentMovie = {
+            title: title, // Utilise le titre déjà nettoyé
+            logo: logo,
+            url: '' // L'URL sera sur la ligne suivante
+        };
+    } else if (line.startsWith('http')) {
+        if (currentMovie.title) { // S'assure qu'un film est en cours de définition
+            currentMovie.url = line;
+            allMovies.push(currentMovie); // Stocke le film dans le tableau global
+            currentMovie = {}; // Réinitialise pour le prochain film
+        }
+    }
+});
 
             // Affiche tous les films au premier chargement
             displayMovies(allMovies);
