@@ -160,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- Fonction pour créer et ajouter un élément de film à la liste ---
     function createMovieItem(movie) {
         const movieItem = document.createElement('div');
         movieItem.classList.add('movie-item');
@@ -174,6 +173,17 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = defaultImageUrl; // Charge l'image par défaut en cas d'erreur
             console.warn(`Impossible de charger l'image pour: "${movie.title}" depuis "${movie.logo}". Affichage de l'image par défaut.`);
         };
+
+        const titleP = document.createElement('p');
+        // Ancienne ligne :
+        // titleP.textContent = movie.title;
+        // Nouvelle ligne :
+        let displayTitle = movie.title;
+        if (displayTitle.startsWith('FR:')) {
+            displayTitle = displayTitle.substring(3).trim(); // Supprime "FR:" et les espaces potentiels
+        }
+        titleP.textContent = displayTitle; // Utilise le titre modifié pour l'affichage
+        titleP.classList.add('movie-title');
 
         const titleP = document.createElement('p');
         titleP.textContent = movie.title;
