@@ -100,15 +100,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Extraction du titre et du logo
                     const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
                     const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
-                    const title = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
+
+                    let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
                     const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
 
-                    // MODIFICATION ICI: Nettoyage du titre
-        let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
-        let cleanedTitle = rawTitle.replace(/^FR:/, '').trim(); // Supprime "FR:#" au début et les espaces
+                    // NOUVEAU: Nettoyage du titre avec la logique du regex.
+                    // Assurez-vous que le '#' est aussi supprimé si c'est "FR:#"
+                    let cleanedTitle = rawTitle.replace(/^FR:#?\s*/i, '').trim(); 
+                    // ^FR:      -> Cherche "FR:" au début de la chaîne
+                    // #?       -> Cherche un "#" zéro ou une fois (c'est-à-dire, il peut être là ou non)
+                    // \s* -> Cherche zéro ou plusieurs espaces après "FR:#" ou "FR:"
+                    // i        -> Rend la recherche insensible à la casse (fr:, FR:, Fr:)
+                    // .trim()  -> Supprime les espaces blancs au début et à la fin
 
                     currentMovie = {
-                        title: title,
+                        title: cleanedTitle, // <<< UTILISEZ cleanedTitle ICI !!!
                         logo: logo,
                         url: '' // L'URL sera sur la ligne suivante
                     };
@@ -136,17 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingMessage.textContent = `Erreur lors du chargement des films: ${error.message}. Veuillez réessayer plus tard.`;
             loadingMessage.style.color = 'red';
         });
-
-    // --- Fonction pour afficher une liste donnée de films ---
-    function displayMovies(moviesToDisplay) {
-        movieListDiv.innerHTML = ''; // Vide la liste actuelle de la galerie
-        if (moviesToDisplay.length === 0) {
-            movieListDiv.innerHTML = '<p style="text-align: center; color: var(--neon-blue-light); margin-top: 20px; width: 100%;">Aucun film ne correspond à votre recherche.</p>';
-        }
-        moviesToDisplay.forEach(movie => {
-            createMovieItem(movie); // Crée et ajoute une vignette de film
-        });
-    }
 
     // --- Écouteur d'événement pour la recherche ---
     if (searchInput) {
