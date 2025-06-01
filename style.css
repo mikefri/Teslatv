@@ -444,24 +444,20 @@ h1 {
 }
 /* Styles pour le fond du popup (similaire à messageBox) */
 .modal {
-    /* IL FAUT QUE CETTE LIGNE SOIT PRÉSENTE ET ACTIVE */
-    display: none; /* <-- C'EST LA LIGNE CLÉ QUI LE CACHE PAR DEFAUT ! */
-
-    position: fixed; /* Reste en place même en scrollant */
-    z-index: 1001; /* Assure qu'il est au-dessus de tout le reste */
+    display: none; /* <-- C'EST LA LIGNE CLÉ QUI LE CACHE INITIALEMENT */
+    position: fixed;
+    z-index: 1001; /* Doit être au-dessus de tout le reste */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Permet le défilement si le contenu du popup est grand */
+    overflow: auto; /* Activer le défilement si le contenu est trop grand */
     background-color: rgba(0, 0, 0, 0.8); /* Fond sombre semi-transparent */
-    
-    /* Ces propriétés 'display: flex', 'justify-content', 'align-items' sont utilisées par le JavaScript
-       pour centrer le popup LORSQU'IL EST RENDU VISIBLE.
-       Elles ne devraient pas empêcher 'display: none;' de cacher le popup initialement. */
-    display: flex; /* Cette ligne sera appliquée par JS quand le popup s'ouvrira */
-    justify-content: center;
-    align-items: center;
+
+    /* Ces propriétés sont pour le centrage. Le JavaScript les appliquera (en changeant display de 'none' à 'flex')
+       quand le popup doit être visible. */
+    justify-content: center; /* Centrer horizontalement */
+    align-items: center;     /* Centrer verticalement */
 }
 
 /* Contenu du popup (similaire à message-content) */
