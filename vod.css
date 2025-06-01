@@ -227,10 +227,12 @@ h1 {
     display: flex;
     flex-direction: column;
     position: relative;
-    /* Nous allons retirer la hauteur fixe de l'image, donc assurons-nous que le conteneur a une min-height */
-    min-height: 250px; /* Hauteur minimale de la vignette, pour éviter l'écrasement */
-    /* Pour un bon ratio d'aspect visuel si l'image ne charge pas */
-    aspect-ratio: 2 / 3; /* Tente de maintenir un ratio 2:3 (largeur / hauteur) sur la vignette entière */
+    
+    /* MAINTENIR UNE HAUTEUR MINIMALE COHÉRENTE POUR L'ENSEMBLE DE LA VIGNETTE */
+    /* La min-height doit être suffisante pour l'image ET le texte */
+    min-height: 280px; /* Base pour une vignette de 180px de large (ratio 2:3 classique est 270px de haut pour l'image seule + le texte) */
+    /* S'assurer que le contenu s'étire pour remplir la hauteur disponible si nécessaire */
+    height: 100%; /* Important pour que flex-grow/shrink fonctionnent bien */
 }
 
 .movie-item:hover {
@@ -239,19 +241,26 @@ h1 {
     border-color: var(--neon-blue-light);
 }
 
+/* Conteneur de l'image à l'intérieur de la vignette pour mieux contrôler sa hauteur */
+.movie-item .image-container {
+    width: 100%;
+    /* CLÉ : Fixer une hauteur proportionnelle pour l'image */
+    /* Ici, nous ciblons 75% de la hauteur de la vignette pour l'image */
+    height: 75%; /* Laisser 25% pour le texte */
+    position: relative; /* Pour positionner l'image si besoin */
+    overflow: hidden; /* Assure que l'image ne déborde pas de son conteneur */
+    display: flex; /* Centrer l'image verticalement/horizontalement si object-fit: contain */
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid var(--neon-blue-dark); /* BORDURE ENTRE IMAGE ET TEXTE */
+}
+
 .movie-item img {
     width: 100%;
-    /* MODIFICATION MAJEURE ICI : Hauteur automatique pour respecter le ratio natif */
-    height: auto; 
-    /* MODIFICATION : Utilisation de contain pour éviter le recadrage */
-    object-fit: contain; 
-    /* La couleur de fond sera visible si l'image ne remplit pas tout l'espace (avec contain) */
-    background-color: var(--bg-dark); 
+    height: 100%; /* L'image remplit la hauteur de son nouveau conteneur */
+    object-fit: cover; /* L'image couvrira l'espace, recadrée si nécessaire */
     display: block;
-    border-bottom: 1px solid var(--neon-blue-dark);
-    /* S'assurer que l'image ne dépasse pas la hauteur de la zone d'image si le texte est très court */
-    max-height: 80%; /* L'image prendra au maximum 80% de la hauteur de la vignette */
-    flex-shrink: 0; /* Empêche l'image de se contracter trop */
+    background-color: var(--bg-dark); /* Couleur de fond si l'image ne charge pas */
 }
 
 /* Movie Title Paragraph (adapté au VOD) */
@@ -263,14 +272,20 @@ h1 {
     color: var(--neon-blue-light);
     text-shadow: 0 0 2px rgba(0, 255, 255, 0.5); 
     white-space: normal; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    flex-grow: 1; /* Permet au texte de prendre l'espace restant */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 60px; /* Hauteur minimale du paragraphe */
+    overflow: hidden; /* Cache le texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute "..." si le texte est tronqué */
+    
+    flex-grow: 1; /* Permet au paragraphe de prendre TOUT l'espace vertical restant */
+    flex-shrink: 0; /* Empêche le paragraphe de se contracter (si il y a une min-height suffisante) */
+    flex-basis: auto; /* La taille de base est la taille de son contenu */
+
+    display: flex; /* Maintien du centrage vertical du texte */
+    align-items: center; /* Centre le texte verticalement dans son conteneur */
+    justify-content: center; /* Centre le texte horizontalement */
+    
+    min-height: 60px; /* Hauteur minimale du paragraphe pour au moins 2-3 lignes */
     line-height: 1.4; 
+    /* background-color: var(--bg-light); */ /* Optionnel: pour visualiser l'espace du titre */
 }
 
 /* Loading Message (adapté au VOD) */
@@ -369,12 +384,13 @@ h1 {
     }
 
     .movie-item {
-        min-height: 220px; /* Ajustement min-height pour les tailles intermédiaires */
-        aspect-ratio: 2 / 3; 
+        min-height: 250px; /* Ajustement min-height pour les tailles intermédiaires */
+    }
+    .movie-item .image-container {
+        height: 70%; /* Légèrement moins d'espace pour l'image sur les écrans moyens */
     }
     .movie-item img {
-        height: auto; 
-        max-height: 80%; 
+        height: 100%; 
     }
 
     .movie-item p {
@@ -405,12 +421,13 @@ h1 {
     }
 
     .movie-item {
-        min-height: 180px; /* Ajustement min-height pour les petits écrans */
-        aspect-ratio: 2 / 3; 
+        min-height: 200px; /* Ajustement min-height pour les petits écrans */
+    }
+    .movie-item .image-container {
+        height: 65%; /* Moins d'espace pour l'image sur les petits écrans */
     }
     .movie-item img {
-        height: auto; 
-        max-height: 80%; 
+        height: 100%; 
     }
 
     .movie-item p {
@@ -441,12 +458,13 @@ h1 {
     }
 
     .movie-item {
-        min-height: 150px; /* Ajustement min-height pour les très petits écrans */
-        aspect-ratio: 2 / 3; 
+        min-height: 170px; /* Ajustement min-height pour les très petits écrans */
+    }
+    .movie-item .image-container {
+        height: 60%; /* Moins d'espace pour l'image sur les très petits écrans */
     }
     .movie-item img {
-        height: auto; 
-        max-height: 80%; 
+        height: 100%; 
     }
 
     .movie-item p {
