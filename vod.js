@@ -1,11 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // URL de votre fichier M3U et de votre proxy Vercel
     const m3uUrl = 'https://mikefri.github.io/Teslatv/vod.m3u';
-    const proxyUrl = 'https://proxy-tesla-tv.vercel.app/api';
+    const proxyUrl = 'https://proxy-tesla-tv.vercel.app/api'; // Assurez-vous que votre proxy est opérationnel
+
+    // Références aux éléments DOM
     const movieListDiv = document.getElementById('movie-list');
     const videoPlayer = document.getElementById('video-player');
     const loadingMessage = document.getElementById('loading-message');
+    const searchInput = document.getElementById('search-input'); // Champ de recherche
 
-    // Vérification des éléments DOM requis au démarrage
+    // Stockage de tous les films chargés initialement
+    let allMovies = [];
+
+    // --- Vérification des éléments DOM requis au démarrage ---
     if (!movieListDiv || !videoPlayer || !loadingMessage) {
         console.error('Erreur: Un ou plusieurs éléments DOM requis sont manquants. Assurez-vous que les IDs "movie-list", "video-player" et "loading-message" existent dans votre HTML.');
         loadingMessage.textContent = 'Erreur: Éléments de l\'interface utilisateur manquants. Veuillez vérifier votre HTML.';
@@ -42,8 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     videoPlayer.addEventListener('error', (event) => {
         console.error('--- Événement Vidéo: ERROR ---');
-        // event.target.error est un objet MediaError
-        const error = event.target.error;
+        const error = event.target.error; // C'est un objet MediaError
         let errorMessage = 'Erreur vidéo inconnue.';
         switch (error.code) {
             case error.MEDIA_ERR_ABORTED:
@@ -74,8 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('--- Événement Vidéo: waiting --- Le lecteur attend des données pour continuer la lecture.');
     });
 
-    // --- Fin des écouteurs d'événements ---
+    // --- Fin des écouteurs d'événements vidéo ---
 
+    // --- Fonction pour charger et parser le fichier M3U ---
     fetch(m3uUrl)
         .then(response => {
             if (!response.ok) {
@@ -84,13 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.text();
         })
         .then(data => {
-            loadingMessage.style.display = 'none';
+            loadingMessage.style.display = 'none'; // Cache le message de chargement une fois les données reçues
             const lines = data.split('\n');
             let currentMovie = {};
 
             lines.forEach(line => {
                 line = line.trim();
                 if (line.startsWith('#EXTINF:')) {
+                    // Extraction du titre et du logo
                     const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
                     const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
                     const title = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
@@ -99,18 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentMovie = {
                         title: title,
                         logo: logo,
-                        url: ''
+                        url: '' // L'URL sera sur la ligne suivante
                     };
                 } else if (line.startsWith('http')) {
-                    if (currentMovie.title) {
+                    if (currentMovie.title) { // S'assure qu'un film est en cours de définition
                         currentMovie.url = line;
-                        displayMovie(currentMovie);
-                        currentMovie = {};
+                        allMovies.push(currentMovie); // Stocke le film dans le tableau global
+                        currentMovie = {}; // Réinitialise pour le prochain film
                     }
                 }
             });
 
-            if (movieListDiv.children.length === 0) {
+            // Affiche tous les films au premier chargement
+            displayMovies(allMovies);
+
+            if (allMovies.length === 0) { // Vérifie le tableau `allMovies` et non `movieListDiv.children.length` qui est vidé
                 loadingMessage.style.display = 'block';
                 loadingMessage.textContent = 'Aucun film trouvé dans le fichier M3U.';
                 loadingMessage.style.color = 'orange';
@@ -123,18 +134,45 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingMessage.style.color = 'red';
         });
 
-    function displayMovie(movie) {
+    // --- Fonction pour afficher une liste donnée de films ---
+    function displayMovies(moviesToDisplay) {
+        movieListDiv.innerHTML = ''; // Vide la liste actuelle de la galerie
+        if (moviesToDisplay.length === 0) {
+            movieListDiv.innerHTML = '<p style="text-align: center; color: var(--neon-blue-light); margin-top: 20px; width: 100%;">Aucun film ne correspond à votre recherche.</p>';
+        }
+        moviesToDisplay.forEach(movie => {
+            createMovieItem(movie); // Utilise la fonction renommée pour créer une vignette
+        });
+    }
+
+    // --- Écouteur d'événement pour la recherche ---
+    if (searchInput) {
+        searchInput.addEventListener('input', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredMovies = allMovies.filter(movie => {
+                // Recherche insensible à la casse
+                return movie.title.toLowerCase().includes(searchTerm);
+            });
+            displayMovies(filteredMovies); // Affiche les films filtrés
+        });
+    } else {
+        console.warn('Le champ de recherche (#search-input) est manquant dans le HTML.');
+    }
+
+
+    // --- Fonction pour créer et ajouter un élément de film à la liste ---
+    function createMovieItem(movie) {
         const movieItem = document.createElement('div');
         movieItem.classList.add('movie-item');
 
         const img = document.createElement('img');
-        // NOUVEAU : Utilise votre image personnalisée comme fallback par défaut
-        img.src = movie.logo || 'https://mikefri.github.io/Teslatv/image.jpg';
+        // Utilise votre image personnalisée comme fallback par défaut et en cas d'erreur
+        const defaultImageUrl = 'https://mikefri.github.io/Teslatv/image.jpg';
+        img.src = movie.logo || defaultImageUrl;
         img.alt = movie.title;
         img.onerror = () => {
-            // NOUVEAU : Utilise la même image personnalisée en cas d'erreur de chargement
-            img.src = 'https://mikefri.github.io/Teslatv/image.jpg';
-            console.warn(`Impossible de charger l'image pour: ${movie.title} depuis ${movie.logo}. Affichage de l'image par défaut.`);
+            img.src = defaultImageUrl; // Charge l'image par défaut en cas d'erreur
+            console.warn(`Impossible de charger l'image pour: "${movie.title}" depuis "${movie.logo}". Affichage de l'image par défaut.`);
         };
 
         const titleP = document.createElement('p');
@@ -144,31 +182,62 @@ document.addEventListener('DOMContentLoaded', () => {
         movieItem.appendChild(img);
         movieItem.appendChild(titleP);
 
+        // Écouteur de clic pour lire le film
         movieItem.addEventListener('click', () => {
             const proxiedMovieUrl = `${proxyUrl}?url=${encodeURIComponent(movie.url)}`;
-            console.log('Lecture via proxy:', proxiedMovieUrl);
+            console.log('Tentative de lecture via proxy:', proxiedMovieUrl);
 
-            if (typeof hls !== 'undefined' && hls) {
-                console.log('Détection: Instance HLS.js existante. Destruction pour lecture native.');
-                hls.destroy();
-                hls = null;
+            // Gérer HLS.js si nécessaire (assurez-vous qu'il est inclus dans votre HTML)
+            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+                let hls;
+                if (videoPlayer.hlsInstance) { // Si une instance HLS.js existe déjà
+                    videoPlayer.hlsInstance.destroy();
+                    videoPlayer.hlsInstance = null;
+                }
+                hls = new Hls();
+                hls.loadSource(proxiedMovieUrl);
+                hls.attachMedia(videoPlayer);
+                videoPlayer.hlsInstance = hls; // Stocke l'instance sur l'élément vidéo
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    console.error('HLS.js Error:', data.details, data.fatal ? 'Fatal error!' : '');
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                // try to recover network error
+                                console.error("fatal network error, trying to recover");
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.error("fatal media error, trying to recover");
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                // cannot recover
+                                hls.destroy();
+                                break;
+                        }
+                    }
+                });
+            } else {
+                // Lecture native si HLS.js n'est pas supporté ou n'est pas présent
+                videoPlayer.src = proxiedMovieUrl;
+                console.log('HLS.js non disponible ou non supporté, lecture native...');
             }
 
-            videoPlayer.src = proxiedMovieUrl;
-            videoPlayer.load();
-
-            videoPlayer.volume = 1;
-            videoPlayer.muted = false;
+            videoPlayer.load(); // Charge la nouvelle source
+            videoPlayer.volume = 1; // Assure que le volume n'est pas à zéro
+            videoPlayer.muted = false; // Assure que le son n'est pas coupé
 
             videoPlayer.play()
                 .then(() => {
-                    console.log('Tentation de lecture automatique réussie.');
+                    console.log('Lecture automatique de la vidéo réussie.');
                 })
                 .catch(playError => {
-                    console.error('Erreur lors de la lecture automatique de la vidéo:', playError);
-                    alert('La lecture automatique a été bloquée par le navigateur. Veuillez cliquer sur le bouton de lecture (si visible).');
+                    console.error('Erreur lors de la tentative de lecture automatique:', playError);
+                    alert('La lecture automatique a été bloquée par le navigateur. Veuillez cliquer sur le bouton de lecture du lecteur vidéo.');
                 });
 
+            // Défilement vers le lecteur vidéo
             const videoPlayerContainer = document.getElementById('video-player-container');
             if (videoPlayerContainer) {
                 window.scrollTo({ top: videoPlayerContainer.offsetTop, behavior: 'smooth' });
