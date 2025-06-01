@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('--- Événement Vidéo: loadedmetadata ---');
         console.log(`Dimensions de la vidéo: ${videoPlayer.videoWidth}x${videoPlayer.videoHeight}`);
         console.log(`Durée de la vidéo: ${videoPlayer.duration} secondes`);
-        // Si les dimensions sont 0x0, la vidéo n'est pas décodée correctement (ou est invisible)
         if (videoPlayer.videoWidth === 0 && videoPlayer.videoHeight === 0) {
             console.warn('ATTENTION: Les dimensions de la vidéo sont 0x0. La vidéo pourrait ne pas être rendue ou décodée correctement.');
         }
@@ -121,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Affiche tous les films au premier chargement
             displayMovies(allMovies);
 
-            if (allMovies.length === 0) { // Vérifie le tableau `allMovies` et non `movieListDiv.children.length` qui est vidé
+            if (allMovies.length === 0) {
                 loadingMessage.style.display = 'block';
                 loadingMessage.textContent = 'Aucun film trouvé dans le fichier M3U.';
                 loadingMessage.style.color = 'orange';
@@ -141,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             movieListDiv.innerHTML = '<p style="text-align: center; color: var(--neon-blue-light); margin-top: 20px; width: 100%;">Aucun film ne correspond à votre recherche.</p>';
         }
         moviesToDisplay.forEach(movie => {
-            createMovieItem(movie); // Utilise la fonction renommée pour créer une vignette
+            createMovieItem(movie); // Crée et ajoute une vignette de film
         });
     }
 
@@ -159,14 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Le champ de recherche (#search-input) est manquant dans le HTML.');
     }
 
-
     // --- Fonction pour créer et ajouter un élément de film à la liste ---
     function createMovieItem(movie) {
         const movieItem = document.createElement('div');
         movieItem.classList.add('movie-item');
 
         const img = document.createElement('img');
-        // Utilise votre image personnalisée comme fallback par défaut et en cas d'erreur
         const defaultImageUrl = 'https://mikefri.github.io/Teslatv/image.jpg';
         img.src = movie.logo || defaultImageUrl;
         img.alt = movie.title;
@@ -187,46 +184,65 @@ document.addEventListener('DOMContentLoaded', () => {
             const proxiedMovieUrl = `${proxyUrl}?url=${encodeURIComponent(movie.url)}`;
             console.log('Tentative de lecture via proxy:', proxiedMovieUrl);
 
-            // Gérer HLS.js si nécessaire (assurez-vous qu'il est inclus dans votre HTML)
-            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                let hls;
-                if (videoPlayer.hlsInstance) { // Si une instance HLS.js existe déjà
-                    videoPlayer.hlsInstance.destroy();
-                    videoPlayer.hlsInstance = null;
-                }
-                hls = new Hls();
+            // 1. Arrêter toute lecture et détruire HLS.js si une instance existe
+            if (videoPlayer.hlsInstance) {
+                videoPlayer.hlsInstance.destroy();
+                videoPlayer.hlsInstance = null;
+                console.log('Ancienne instance HLS.js détruite.');
+            }
+            videoPlayer.src = ''; // Réinitialiser la source du lecteur HTML5 pour éviter les résidus
+
+            // 2. Déterminer le type de fichier source original pour choisir le bon lecteur
+            const fileExtension = movie.url.split('.').pop().toLowerCase();
+            console.log(`Extension de fichier détectée: ${fileExtension}`);
+
+            if (fileExtension === 'm3u8' && typeof Hls !== 'undefined' && Hls.isSupported()) {
+                console.log('Format HLS (.m3u8) détecté, utilisation de HLS.js.');
+                let hls = new Hls();
                 hls.loadSource(proxiedMovieUrl);
                 hls.attachMedia(videoPlayer);
-                videoPlayer.hlsInstance = hls; // Stocke l'instance sur l'élément vidéo
+                videoPlayer.hlsInstance = hls; // Stocke l'instance HLS.js sur l'élément vidéo
+
                 hls.on(Hls.Events.ERROR, function (event, data) {
-                    console.error('HLS.js Error:', data.details, data.fatal ? 'Fatal error!' : '');
+                    console.error('HLS.js Erreur:', data.details, data.fatal ? 'Erreur fatale!' : '');
                     if (data.fatal) {
+                        // Tenter de récupérer ou informer l'utilisateur en cas d'erreur fatale HLS.js
                         switch(data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
-                                // try to recover network error
-                                console.error("fatal network error, trying to recover");
+                                console.error("Erreur réseau fatale HLS.js, tentative de récupération...");
                                 hls.startLoad();
                                 break;
                             case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.error("fatal media error, trying to recover");
+                                console.error("Erreur média fatale HLS.js, tentative de récupération...");
                                 hls.recoverMediaError();
                                 break;
                             default:
-                                // cannot recover
+                                console.error("Erreur HLS.js irrécupérable, destruction de l'instance.");
                                 hls.destroy();
+                                videoPlayer.hlsInstance = null;
+                                // Fallback optionnel: tenter la lecture native si l'erreur était un problème de format HLS inattendu
+                                // videoPlayer.src = proxiedMovieUrl;
+                                // videoPlayer.load();
                                 break;
                         }
                     }
                 });
-            } else {
-                // Lecture native si HLS.js n'est pas supporté ou n'est pas présent
+            } else if (['mp4', 'mkv'].includes(fileExtension)) {
+                // Formats souvent supportés nativement par les navigateurs modernes
+                console.log(`Format natif (${fileExtension}) détecté, utilisation de la lecture HTML5.`);
                 videoPlayer.src = proxiedMovieUrl;
-                console.log('HLS.js non disponible ou non supporté, lecture native...');
+            } else {
+                // Autres formats (comme .avi) ou formats inconnus, tenter la lecture native
+                console.warn(`Format de fichier (${fileExtension}) potentiellement non supporté nativement ou inconnu. Tentative de lecture HTML5.`);
+                videoPlayer.src = proxiedMovieUrl;
+                // Vous pouvez ajouter une alerte plus forte ici si .avi est très problématique
+                // alert(`Attention: Le format ${fileExtension} peut ne pas être entièrement supporté par votre navigateur.`);
             }
 
-            videoPlayer.load(); // Charge la nouvelle source
-            videoPlayer.volume = 1; // Assure que le volume n'est pas à zéro
-            videoPlayer.muted = false; // Assure que le son n'est pas coupé
+            // 3. Charger la nouvelle source et tenter la lecture
+            videoPlayer.load(); // Indispensable pour charger la nouvelle source
+            videoPlayer.volume = 1; // S'assurer que le volume n'est pas à zéro
+            videoPlayer.muted = false; // S'assurer que le son n'est pas coupé (peut être outrepassé par le navigateur)
 
             videoPlayer.play()
                 .then(() => {
