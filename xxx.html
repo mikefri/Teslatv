@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecteur VOD</title>
+    <link rel="stylesheet" href="vod.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+
+
+    <h1>Section XXXX</h1>
+    <div class="top-nav">
+            <a href="https://mikefri.github.io/Teslatv/" class="live-button">Tv</a>
+       
+            <a href="https://mikefri.github.io/RadiosWeb/" class="live-button">Radios</a>
+    </div>
+<div class="container">
+    <div class="list-section-container">
+        <div class="controls-container">
+            <input type="text" id="search-input" placeholder="Rechercher un film..." />
+            <select id="genre-select">
+                <option value="all">Chargement des genres...</option>
+            </select>
+        </div>
+        <div id="movie-list">
+            <div class="loading" id="loading-message">Chargement des films...</div>
+        </div>
+    </div> 
+    <div id="video-player-container">
+        <h2>Lecteur Vidéo</h2>
+        <video id="video-player" controls autoplay>
+            Votre navigateur ne supporte pas la balise vidéo.
+        </video>
+    </div>
+</div>
+    <script src="vod.js"></script>
+</body>
+</html>
