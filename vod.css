@@ -628,9 +628,9 @@ h1 {
 
 /* NOUVEAU: Styles spécifiques pour la barre de recherche */
 #search-input {
-    flex-grow: 2; /* Permet à la barre de recherche de grandir deux fois plus que les autres éléments flex */
+    flex-grow: 1; /* Permet à la barre de recherche de grandir deux fois plus que les autres éléments flex */
     max-width: 400px; /* Limite la largeur maximale de la barre de recherche */
-    min-width: 180px; /* S'assurer qu'elle est suffisamment large pour la recherche */
+    min-width: 100px; /* S'assurer qu'elle est suffisamment large pour la recherche */
 }
 
 /* NOUVEAU: Styles spécifiques pour le sélecteur de genre */
