@@ -87,10 +87,9 @@ h1 {
     border: 1px solid var(--neon-blue-dark);
     position: relative;
     
-    /* MODIFICATIONS ICI POUR RÉDUIRE ENCORE LE PLAYER */
-    flex: 1; /* Prend désormais la même proportion que la liste (1 part) */
-    min-width: 250px; /* Réduit la largeur minimale */
-    max-width: 600px; /* Réduit encore la largeur maximale du player */
+    flex: 1; 
+    min-width: 250px; 
+    max-width: 600px; 
 
     /* Hack pour maintenir l'aspect ratio 16:9 */
     padding-bottom: 56.25%; /* (9 / 16) * 100% - Garde le ratio */
@@ -174,7 +173,7 @@ h1 {
 #movie-list {
     /* Ajustement de la largeur pour le layout Flexbox */
     flex: 1; /* Prend 1 part de l'espace disponible */
-    min-width: 180px; /* RÉDUIT encore la largeur minimale pour la liste de films */
+    min-width: 180px; 
     width: 100%; /* S'assure qu'il prend toute la largeur disponible dans sa colonne */
     padding-top: 0px;
 
@@ -211,9 +210,9 @@ h1 {
 /* MAINTENIR la grille POUR les items de la liste de films à l'intérieur de #movie-list */
 #movie-list {
     display: grid;
-    /* NOUVEAU: Largeur des vignettes encore plus petites */
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Vignettes de 80px min */
-    gap: 10px; /* Réduit le gap */
+    /* MODIFICATION ICI POUR DES VIGNETTES PLUS GRANDES */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Vignettes de 120px min */
+    gap: 15px; /* Augmente le gap entre les vignettes */
 }
 
 
@@ -232,15 +231,15 @@ h1 {
 }
 
 .movie-item:hover {
-    transform: translateY(-5px); /* Effet de lift un peu moins prononcé pour les petites vignettes */
-    box-shadow: 0 0 15px var(--neon-blue), 0 0 8px rgba(0, 255, 255, 0.4); /* Ombre néon ajustée */
+    transform: translateY(-5px); 
+    box-shadow: 0 0 15px var(--neon-blue), 0 0 8px rgba(0, 255, 255, 0.4); 
     border-color: var(--neon-blue-light);
 }
 
 .movie-item img {
     width: 100%;
-    /* NOUVEAU: Hauteur des images ajustée pour un ratio 2:3 avec 80px de largeur -> 120px de hauteur */
-    height: 120px; 
+    /* MODIFICATION ICI POUR LA HAUTEUR DE L'IMAGE (ratio 2:3 avec 120px de largeur -> 180px de hauteur) */
+    height: 180px; 
     object-fit: cover;
     display: block;
     border-bottom: 1px solid var(--neon-blue-dark);
@@ -248,12 +247,12 @@ h1 {
 
 /* Movie Title Paragraph (adapté au VOD) */
 .movie-item p {
-    padding: 6px; /* Réduction du padding */
+    padding: 8px; /* Augmentation du padding */
     margin: 0;
-    font-size: 0.75em; /* Réduction de la taille du texte pour correspondre aux petites vignettes */
+    font-size: 0.9em; /* Augmentation de la taille du texte */
     font-weight: bold;
     color: var(--neon-blue-light);
-    text-shadow: 0 0 2px rgba(0, 255, 255, 0.5); /* Ombre textuelle néon plus subtile */
+    text-shadow: 0 0 2px rgba(0, 255, 255, 0.5); 
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -261,7 +260,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 30px; /* S'assure que le paragraphe a une hauteur minimale même avec peu de texte */
+    min-height: 40px; /* Augmente la hauteur minimale du paragraphe */
 }
 
 /* Loading Message (adapté au VOD) */
@@ -354,18 +353,19 @@ h1 {
         width: 100%;
         max-width: none;
         padding-top: 0;
-        max-height: 60vh; /* Réduit la hauteur maximale sur tablette pour laisser plus de place au lecteur */
-        /* NOUVEAU: Ajustement de la grille pour les écrans de taille moyenne */
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Revert à 100px min */
-        gap: 10px;
+        max-height: 60vh; 
+        /* MODIFICATION ICI POUR LES ÉCRANS DE TAILLE MOYENNE */
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Plus grandes ici aussi */
+        gap: 15px; /* Augmente le gap */
     }
 
     .movie-item img {
-        height: 150px; /* Ajustement pour un ratio 2:3 avec 100px de largeur */
+        height: 180px; /* Ajustement pour un ratio 2:3 avec 120px de largeur */
     }
 
     .movie-item p {
-        font-size: 0.85em;
+        font-size: 0.9em;
+        min-height: 40px;
     }
 }
 
@@ -384,19 +384,21 @@ h1 {
     }
 
     #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Revert à 80px min pour les petits écrans */
-        gap: 8px; /* Encore plus petit gap */
+        /* MODIFICATION ICI POUR LES PETITS ÉCRANS */
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Vignettes de 100px min */
+        gap: 10px; 
         margin-top: 0;
-        max-height: 50vh; /* Encore moins de hauteur sur mobile */
+        max-height: 50vh; 
     }
 
     .movie-item img {
-        height: 120px; /* 120px pour correspondre à la largeur de 80px */
+        height: 150px; /* 150px pour correspondre à la largeur de 100px (ratio 2:3) */
     }
 
     .movie-item p {
-        font-size: 0.75em;
-        padding: 6px;
+        font-size: 0.8em; /* Ajustement de la taille du texte */
+        padding: 8px;
+        min-height: 35px; /* Ajustement min-height */
     }
 
     #video-player-container {
@@ -415,24 +417,25 @@ h1 {
 
 @media (max-width: 480px) {
     #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); /* Encore plus petits sur les téléphones */
-        gap: 6px;
-        max-height: 45vh; /* Très peu de hauteur sur les plus petits écrans */
+        /* MODIFICATION ICI POUR LES PLUS PETITS ÉCRANS */
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Vignettes de 80px min */
+        gap: 8px;
+        max-height: 45vh; 
     }
 
     .movie-item img {
-        height: 105px; /* Ajustement pour 70px de largeur */
+        height: 120px; /* Ajustement pour 80px de largeur (ratio 2:3) */
     }
 
     .movie-item p {
-        font-size: 0.7em;
-        min-height: 25px; /* Min-height légèrement plus petite */
+        font-size: 0.75em; /* Retour à une taille de texte raisonnable */
+        min-height: 30px; 
     }
 }
 /* Nouveau style pour le conteneur de la barre de recherche */
 .search-bar-container {
     width: 100%;
-    max-width: 600px; /* Adaptez à la largeur que vous souhaitez */
+    max-width: 600px; 
     margin: 20px auto;
     text-align: center;
     padding: 10px;
@@ -444,7 +447,7 @@ h1 {
 
 /* Style pour le champ de saisie */
 #search-input {
-    width: calc(100% - 20px); /* 100% moins le padding */
+    width: calc(100% - 20px); 
     padding: 12px 15px;
     border: 2px solid var(--neon-blue-dark);
     border-radius: 6px;
@@ -456,7 +459,7 @@ h1 {
 }
 
 #search-input::placeholder {
-    color: rgba(136, 255, 255, 0.6); /* Couleur du placeholder */
+    color: rgba(136, 255, 255, 0.6); 
 }
 
 #search-input:focus {
