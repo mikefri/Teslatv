@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // MODIFICATION ICI: Nettoyage du titre
         let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
-        let cleanedTitle = rawTitle.replace(/^FR:#/, '').trim(); // Supprime "FR:#" au début et les espaces
+        let cleanedTitle = rawTitle.replace(/^FR:/, '').trim(); // Supprime "FR:#" au début et les espaces
 
                     currentMovie = {
                         title: title,
