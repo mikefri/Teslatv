@@ -12,7 +12,10 @@
 
 /* Styles généraux du corps de la page */
 html, body {
-    height: 100%;
+    height: 100%; /* S'assure que le body prend toute la hauteur de la fenêtre */
+    margin: 0;
+    padding: 0; /* Réinitialiser le padding du body pour un contrôle total */
+    overflow-x: hidden; /* Empêche le défilement horizontal de la page */
 }
 
 body {
@@ -24,9 +27,8 @@ body {
     min-height: 100vh;
     background-color: var(--bg-dark);
     color: var(--text-color);
-    margin: 0;
-    padding: 20px;
-    overflow-x: hidden; /* Empêche le défilement horizontal de la page */
+    padding: 20px; /* Padding global pour le contenu principal */
+    /* overflow-y: auto; */ /* Permet le défilement vertical du body si le contenu est trop long */
 }
 
 /* Reset Box Sizing for all elements */
@@ -58,7 +60,7 @@ h1 {
 
 /* Conteneur principal pour le contenu VOD */
 .container {
-    max-width: 1400px; /* Augmenté la largeur maximale pour un layout side-by-side */
+    max-width: 1600px; /* Augmenté la largeur maximale pour un layout side-by-side */
     width: 100%;
     margin: 20px auto;
     padding: 25px;
@@ -71,7 +73,7 @@ h1 {
     /* NOUVEAU: Flexbox pour organiser les sections Player et Liste */
     display: flex;
     flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur petits écrans */
-    gap: 30px; /* Espace entre le player et la liste */
+    gap: 20px; /* Réduit l'espace entre le player et la liste pour plus de contenu */
     justify-content: center; /* Centre le contenu horizontalement si l'espace est suffisant */
 }
 
@@ -88,7 +90,7 @@ h1 {
     /* Ajustement de la largeur pour le layout Flexbox */
     flex: 2; /* Prend 2 parts de l'espace disponible */
     min-width: 400px; /* Largeur minimale pour que le lecteur reste utilisable */
-    max-width: 900px; /* Limite la largeur max */
+    max-width: 1000px; /* Limite la largeur max */
 
     /* Hack pour maintenir l'aspect ratio 16:9 */
     padding-bottom: 56.25%; /* (9 / 16) * 100% */
@@ -172,20 +174,46 @@ h1 {
 #movie-list {
     /* Ajustement de la largeur pour le layout Flexbox */
     flex: 1; /* Prend 1 part de l'espace disponible */
-    min-width: 200px; /* Largeur minimale RÉDUITE pour la liste de films, pour accueillir plus de petites vignettes */
+    min-width: 180px; /* RÉDUIT encore la largeur minimale pour la liste de films */
     width: 100%; /* S'assure qu'il prend toute la largeur disponible dans sa colonne */
     padding-top: 0px;
 
     /* Spécifier l'ordre si nécessaire (Liste à droite) */
     order: 2;
+
+    /* NOUVEAU: Permet le défilement vertical si la liste est trop longue */
+    /* La hauteur maximale est définie pour être un peu plus petite que le conteneur principal */
+    max-height: 80vh; /* Ajuster selon le besoin, par exemple 80% de la hauteur de la vue */
+    overflow-y: auto; /* Active le défilement vertical */
+    padding-right: 10px; /* Espace pour la barre de défilement */
+
+    /* Style de la barre de défilement (Webkit - Chrome, Safari) */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: var(--bg-medium);
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--neon-blue-dark);
+        border-radius: 10px;
+        border: 2px solid var(--bg-medium);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--neon-blue);
+    }
 }
 
 /* MAINTENIR la grille POUR les items de la liste de films à l'intérieur de #movie-list */
 #movie-list {
     display: grid;
-    /* NOUVEAU: Largeur des vignettes beaucoup plus petites */
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Vignettes de 100px min */
-    gap: 15px; /* Réduction du gap pour une meilleure utilisation de l'espace avec de petites vignettes */
+    /* NOUVEAU: Largeur des vignettes encore plus petites */
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Vignettes de 80px min */
+    gap: 10px; /* Réduit le gap */
 }
 
 
@@ -211,8 +239,8 @@ h1 {
 
 .movie-item img {
     width: 100%;
-    /* NOUVEAU: Hauteur des images ajustée pour un ratio 2:3 (si largeur 100px, hauteur 150px) */
-    height: 150px; 
+    /* NOUVEAU: Hauteur des images ajustée pour un ratio 2:3 avec 80px de largeur -> 120px de hauteur */
+    height: 120px; 
     object-fit: cover;
     display: block;
     border-bottom: 1px solid var(--neon-blue-dark);
@@ -220,12 +248,12 @@ h1 {
 
 /* Movie Title Paragraph (adapté au VOD) */
 .movie-item p {
-    padding: 8px; /* Réduction du padding */
+    padding: 6px; /* Réduction du padding */
     margin: 0;
-    font-size: 0.85em; /* Réduction de la taille du texte pour correspondre aux petites vignettes */
+    font-size: 0.75em; /* Réduction de la taille du texte pour correspondre aux petites vignettes */
     font-weight: bold;
     color: var(--neon-blue-light);
-    text-shadow: 0 0 3px rgba(0, 255, 255, 0.5); /* Ombre textuelle néon plus subtile */
+    text-shadow: 0 0 2px rgba(0, 255, 255, 0.5); /* Ombre textuelle néon plus subtile */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -233,6 +261,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 30px; /* S'assure que le paragraphe a une hauteur minimale même avec peu de texte */
 }
 
 /* Loading Message (adapté au VOD) */
@@ -325,17 +354,18 @@ h1 {
         width: 100%;
         max-width: none;
         padding-top: 0;
+        max-height: 60vh; /* Réduit la hauteur maximale sur tablette pour laisser plus de place au lecteur */
         /* NOUVEAU: Ajustement de la grille pour les écrans de taille moyenne */
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Plus petites que sur grand écran, mais plus grandes que sur très petit */
-        gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Revert à 100px min */
+        gap: 10px;
     }
 
     .movie-item img {
-        height: 180px; /* Ajustement pour un ratio 2:3 avec 120px de largeur */
+        height: 150px; /* Ajustement pour un ratio 2:3 avec 100px de largeur */
     }
 
     .movie-item p {
-        font-size: 0.9em;
+        font-size: 0.85em;
     }
 }
 
@@ -354,18 +384,19 @@ h1 {
     }
 
     #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Revert à 100px min pour les plus petits écrans */
-        gap: 10px; /* Encore plus petit gap */
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Revert à 80px min pour les petits écrans */
+        gap: 8px; /* Encore plus petit gap */
         margin-top: 0;
+        max-height: 50vh; /* Encore moins de hauteur sur mobile */
     }
 
     .movie-item img {
-        height: 150px; /* 150px pour correspondre à la largeur de 100px */
+        height: 120px; /* 120px pour correspondre à la largeur de 80px */
     }
 
     .movie-item p {
-        font-size: 0.8em;
-        padding: 8px;
+        font-size: 0.75em;
+        padding: 6px;
     }
 
     #video-player-container {
@@ -384,15 +415,17 @@ h1 {
 
 @media (max-width: 480px) {
     #movie-list {
-        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); /* Encore plus petits sur les téléphones */
-        gap: 8px;
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); /* Encore plus petits sur les téléphones */
+        gap: 6px;
+        max-height: 45vh; /* Très peu de hauteur sur les plus petits écrans */
     }
 
     .movie-item img {
-        height: 135px; /* Ajustement pour 90px de largeur */
+        height: 105px; /* Ajustement pour 70px de largeur */
     }
 
     .movie-item p {
-        font-size: 0.75em;
+        font-size: 0.7em;
+        min-height: 25px; /* Min-height légèrement plus petite */
     }
 }
