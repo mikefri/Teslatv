@@ -601,7 +601,7 @@ h1 {
 #genre-select {
     padding: 10px 15px;
     border: 1px solid var(--neon-blue-light);
-    background-color: var(--bg-dark); /* Correction ici: utiliser une variable existante */
+    background-color: var(--bg-dark); 
     color: var(--neon-blue-light);
     border-radius: 8px;
     font-size: 1em;
@@ -615,19 +615,34 @@ h1 {
     background-size: 8px 10px;
     cursor: pointer;
     
-    /* NOUVEAU: Pour la gestion de la taille dans flexbox */
-    flex-grow: 1; /* Permet à l'élément de grandir pour prendre de l'espace */
-    flex-shrink: 1; /* Permet à l'élément de rétrécir si nécessaire */
-    flex-basis: auto; /* La taille de base est automatique */
-    min-width: 150px; /* Largeur minimale pour éviter qu'il ne devienne trop petit */
-    max-width: 300px; /* Largeur maximale pour la barre de recherche (ajuster selon le besoin) */
+    /* Ces propriétés communes définissent une base.
+       Nous allons les surcharger spécifiquement pour chaque élément ci-dessous. */
+    flex-grow: 1; 
+    flex-shrink: 1;
+    flex-basis: auto; 
+    min-width: 150px; 
+    max-width: 300px; 
+}
+
+/* NOUVEAU: Styles spécifiques pour la barre de recherche */
+#search-input {
+    flex-grow: 2; /* Permet à la barre de recherche de grandir deux fois plus que les autres éléments flex */
+    max-width: 400px; /* Limite la largeur maximale de la barre de recherche */
+    min-width: 180px; /* S'assurer qu'elle est suffisamment large pour la recherche */
+}
+
+/* NOUVEAU: Styles spécifiques pour le sélecteur de genre */
+#genre-select {
+    flex-grow: 1; /* Le sélecteur prendra moins d'espace relatif */
+    max-width: 200px; /* Limite la largeur maximale du sélecteur */
+    min-width: 120px; /* S'assurer qu'il est suffisamment large pour le texte */
 }
 
 #search-input::placeholder {
-    color: rgba(58, 207, 226, 0.7); /* Couleur du placeholder */
+    color: rgba(58, 207, 226, 0.7);
 }
 
 #genre-select option {
-    background-color: var(--bg-dark); /* Correction: Utilise une variable existante */
-    color: var(--neon-blue-light); /* Couleur du texte des options */
+    background-color: var(--bg-dark);
+    color: var(--neon-blue-light);
 }
