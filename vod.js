@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const m3uUrl = 'https://mikefri.github.io/Teslatv/vod.m3u';
     const proxyUrl = 'https://proxy-tesla-tv.vercel.app/api';
 
+    // --- CLÉS API ET URLS EXTERNES (POUR OMDb) ---
+    const OMDB_API_KEY = 'bbcb253b'; // <<< Votre clé API OMDb !
+    // OMDb ne nécessite pas de base URL d'image distincte, l'URL de l'affiche est directe dans la réponse.
+    // --- FIN CLÉS API ET URLS EXTERNES ---
+
     // Références aux éléments DOM
     const movieListDiv = document.getElementById('movie-list');
     const videoPlayer = document.getElementById('video-player');
@@ -81,7 +86,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Fin des écouteurs d'événements vidéo ---
 
-    // --- Fonctions de création et d'affichage des films (DÉPLACÉES ICI) ---
+    // --- Fonctions de création et d'affichage des films ---
+
+    /**
+     * Récupère l'URL de l'affiche d'un film depuis OMDb en utilisant son titre.
+     * @param {string} movieTitle Le titre du film à rechercher.
+     * @returns {Promise<string|null>} L'URL de l'affiche ou null si non trouvée/erreur.
+     */
+    async function getMoviePosterUrl(movieTitle) {
+        if (!OMDB_API_KEY) {
+            console.warn("Clé API OMDb manquante ou non valide. Impossible de récupérer les affiches.");
+            return null;
+        }
+
+        const encodedTitle = encodeURIComponent(movieTitle);
+        // OMDb utilise 't=' pour la recherche par titre exact, 's=' pour une recherche plus large.
+        // On utilise 't=' car c'est plus précis pour les jaquettes individuelles.
+        // 'type=movie' pour s'assurer qu'on cherche un film et non une série.
+        const searchUrl = `http://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodedTitle}&type=movie`;
+
+        try {
+            const response = await fetch(searchUrl);
+            if (!response.ok) {
+                console.error(`Erreur OMDb lors de la recherche pour "${movieTitle}": ${response.status} ${response.statusText}`);
+                return null;
+            }
+            const data = await response.json();
+
+            // OMDb renvoie "Response": "True" si un résultat est trouvé
+            if (data.Response === "True" && data.Poster && data.Poster !== "N/A") {
+                // 'N/A' signifie "Non Applicable" pour l'affiche
+                return data.Poster; // OMDb retourne directement l'URL complète de l'affiche
+            }
+            console.warn(`Aucune affiche trouvée sur OMDb pour le film: "${movieTitle}"`);
+            return null; // Aucune affiche trouvée ou le film n'est pas dans la base de données
+        } catch (error) {
+            console.error(`Erreur lors de la requête OMDb pour "${movieTitle}":`, error);
+            return null;
+        }
+    }
 
     // Fonction pour créer et ajouter un élément de film à la liste
     function createMovieItem(movie) {
@@ -89,13 +132,23 @@ document.addEventListener('DOMContentLoaded', () => {
         movieItem.classList.add('movie-item');
 
         const img = document.createElement('img');
-        const defaultImageUrl = 'https://mikefri.github.io/Teslatv/image.jpg';
-        img.src = movie.logo || defaultImageUrl;
+        const defaultImageUrl = 'https://mikefri.github.io/Teslatv/image.jpg'; // Votre image par défaut existante
         img.alt = movie.title;
-        img.onerror = () => {
-            img.src = defaultImageUrl;
-            console.warn(`Impossible de charger l'image pour: "${movie.title}" depuis "${movie.logo}". Affichage de l'image par défaut.`);
-        };
+
+        // Utilisation de la nouvelle fonction pour obtenir l'affiche de OMDb
+        getMoviePosterUrl(movie.title)
+            .then(posterUrl => {
+                img.src = posterUrl || defaultImageUrl; // Utilise l'affiche OMDb ou l'image par défaut
+                img.onerror = () => { // Fallback si l'image OMDb ne se charge pas
+                    img.src = defaultImageUrl;
+                    console.warn(`Impossible de charger l'affiche OMDb pour "${movie.title}". Affichage de l'image par défaut.`);
+                };
+            })
+            .catch(error => {
+                console.error(`Erreur lors de la récupération de l'affiche pour "${movie.title}":`, error);
+                img.src = defaultImageUrl; // En cas d'erreur de la requête API, utilisez l'image par défaut
+            });
+
 
         const titleP = document.createElement('p');
         titleP.textContent = movie.title;
@@ -195,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Fin des fonctions de création et d'affichage des films ---
 
-    // --- Fonction pour charger et parser le fichier M3U (maintenant après les définitions des fonctions) ---
+    // --- Fonction pour charger et parser le fichier M3U ---
     fetch(m3uUrl)
         .then(response => {
             if (!response.ok) {
@@ -212,17 +265,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 line = line.trim();
                 if (line.startsWith('#EXTINF:')) {
                     const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
-                    const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
+                    // const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/); // Cette ligne peut être commentée, car on n'utilise plus le logo du M3U
 
                     let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
-                    const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
 
-                    // Nettoyage du titre
+                    // Nettoyage du titre (pour l'affichage et la recherche OMDb)
                     let cleanedTitle = rawTitle.replace(/^FR:#?\s*/i, '').trim(); 
 
                     currentMovie = {
-                        title: cleanedTitle, // UTILISEZ cleanedTitle ICI
-                        logo: logo,
+                        title: cleanedTitle,
                         url: ''
                     };
                 } else if (line.startsWith('http')) {
@@ -235,14 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Affiche tous les films au premier chargement
-            // displayMovies(allMovies); // L'appel est ici, maintenant que displayMovies est défini
-
-            // J'ai vu dans votre image que "FR: " est toujours là pour "FR: 10 Minutes Gone - 2019" et "FR:13 Hours"
-            // Cela indique que ma dernière regex de nettoyage pourrait être légèrement différente.
-            // Reprenons la regex pour être sûr.
-            // Après l'image, on voit que "FR:" est là sans '#' après le deux-points.
-            // Essayons une regex plus simple pour couvrir "FR: " et "FR:# "
-            displayMovies(allMovies); // L'appel est ici, maintenant que displayMovies est défini
+            displayMovies(allMovies);
         })
         .catch(error => {
             console.error('Erreur lors du traitement du fichier M3U:', error);
@@ -258,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const filteredMovies = allMovies.filter(movie => {
                 return movie.title.toLowerCase().includes(searchTerm);
             });
-            displayMovies(filteredMovies);
+            displayMovies(filteredMovies); // Redisplay filtered movies with their fetched posters
         });
     } else {
         console.warn('Le champ de recherche (#search-input) est manquant dans le HTML.');
