@@ -87,10 +87,10 @@ h1 {
     border: 1px solid var(--neon-blue-dark);
     position: relative;
     
-    /* MODIFICATION ICI POUR RÉDUIRE LE PLAYER */
-    flex: 1.5; /* Prend moins de parts (réduit de 2 à 1.5) */
-    min-width: 300px; /* Largeur minimale un peu plus petite */
-    max-width: 700px; /* Réduit la largeur maximale du player */
+    /* MODIFICATIONS ICI POUR RÉDUIRE ENCORE LE PLAYER */
+    flex: 1; /* Prend désormais la même proportion que la liste (1 part) */
+    min-width: 250px; /* Réduit la largeur minimale */
+    max-width: 600px; /* Réduit encore la largeur maximale du player */
 
     /* Hack pour maintenir l'aspect ratio 16:9 */
     padding-bottom: 56.25%; /* (9 / 16) * 100% - Garde le ratio */
