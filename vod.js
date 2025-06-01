@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
                     const title = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
                     const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
-                    
+
                     currentMovie = {
                         title: title,
                         logo: logo,
