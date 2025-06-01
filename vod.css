@@ -594,3 +594,42 @@ h1 {
     font-size: 0.8em; /* Ajuste la taille de l'étoile */
     vertical-align: middle; /* Aligne l'étoile au milieu du texte */
 }
+
+
+/* Styles pour le conteneur des contrôles (recherche et genre) */
+.controls-container {
+    display: flex; /* Utilise flexbox pour aligner les éléments */
+    gap: 10px; /* Espace entre les éléments */
+    margin: 20px auto; /* Centre le conteneur et ajoute de la marge */
+    max-width: 900px; /* Largeur maximale pour le conteneur */
+    justify-content: center; /* Centre les éléments horizontalement */
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur de petits écrans */
+}
+
+#search-input,
+#genre-select {
+    padding: 10px 15px;
+    border: 1px solid var(--neon-blue-light);
+    background-color: var(--dark-grey-bg);
+    color: var(--neon-blue-light);
+    border-radius: 8px;
+    font-size: 1em;
+    outline: none; /* Supprime le contour bleu/noir au focus */
+    appearance: none; /* Supprime le style par défaut du select sur certains navigateurs */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%237DFFFF%22%20d%3D%22M2%200L0%202h4zM2%205L0%203h4z%22%2F%3E%3C%2Fsvg%3E'); /* Icône de flèche personnalisée */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 8px 10px;
+    cursor: pointer;
+}
+
+#search-input::placeholder {
+    color: rgba(125, 255, 255, 0.7); /* Couleur du placeholder */
+}
+
+#genre-select option {
+    background-color: var(--dark-grey-bg); /* Couleur de fond des options */
+    color: var(--neon-blue-light); /* Couleur du texte des options */
+}

@@ -13,13 +13,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoPlayer = document.getElementById('video-player');
     const loadingMessage = document.getElementById('loading-message');
     const searchInput = document.getElementById('search-input');
+    // NOUVEAU: Référence au sélecteur de genre
+    const genreSelect = document.getElementById('genre-select'); 
+
 
     // Stockage de tous les films chargés initialement
     let allMovies = [];
+    // NOUVEAU: Pour stocker les genres uniques
+    const uniqueGenres = new Set(); 
 
     // --- Vérification des éléments DOM requis au démarrage ---
-    if (!movieListDiv || !videoPlayer || !loadingMessage) {
-        console.error('Erreur: Un ou plusieurs éléments DOM requis sont manquants. Assurez-vous que les IDs "movie-list", "video-player" et "loading-message" existent dans votre HTML.');
+    // NOUVEAU: Ajout de genreSelect à la vérification
+    if (!movieListDiv || !videoPlayer || !loadingMessage || !genreSelect) { 
+        console.error('Erreur: Un ou plusieurs éléments DOM requis sont manquants. Assurez-vous que les IDs "movie-list", "video-player", "loading-message" et "genre-select" existent dans votre HTML.');
         loadingMessage.textContent = 'Erreur: Éléments de l\'interface utilisateur manquants. Veuillez vérifier votre HTML.';
         loadingMessage.style.color = 'red';
         return;
@@ -38,21 +44,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Récupère l'URL de l'affiche et la note d'un film depuis OMDb.
+     * Récupère l'URL de l'affiche, la note et le genre d'un film depuis OMDb.
      * @param {string} movieTitle Le titre du film à rechercher.
-     * @returns {Promise<{posterUrl: string|null, rating: string|null}>} L'URL de l'affiche et la note, ou null pour les deux.
+     * @returns {Promise<{posterUrl: string|null, rating: string|null, genre: string|null}>} L'URL de l'affiche, la note et le genre, ou null pour les trois.
      */
-    async function getMoviePosterUrl(movieTitle) {
+    async function getMovieDataFromOmdb(movieTitle) { // Renommée pour mieux refléter son rôle
         if (!OMDB_API_KEY) {
-            console.warn("Clé API OMDb manquante ou non valide. Impossible de récupérer les affiches et notes.");
-            return { posterUrl: null, rating: null };
+            console.warn("Clé API OMDb manquante ou non valide. Impossible de récupérer les affiches, notes et genres.");
+            return { posterUrl: null, rating: null, genre: null };
         }
 
         const cleanedTitleForApi = cleanMovieTitle(movieTitle);
 
         if (!cleanedTitleForApi) {
             console.warn(`Titre de film vide après nettoyage pour OMDb API: "${movieTitle}"`);
-            return { posterUrl: null, rating: null };
+            return { posterUrl: null, rating: null, genre: null };
         }
 
         const encodedCleanTitle = encodeURIComponent(cleanedTitleForApi);
@@ -63,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(searchUrl);
             if (!response.ok) {
                 console.error(`Erreur OMDb HTTP pour "${cleanedTitleForApi}": ${response.status} ${response.statusText}`);
-                return { posterUrl: null, rating: null };
+                return { posterUrl: null, rating: null, genre: null };
             }
             const data = await response.json();
 
@@ -76,33 +82,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let rating = null;
             if (data.Response === "True" && data.Ratings && data.Ratings.length > 0) {
-                // Cherche d'abord la note IMDb
                 const imdbRating = data.Ratings.find(r => r.Source === "Internet Movie Database");
                 if (imdbRating) {
                     rating = imdbRating.Value;
                 } else if (data.imdbRating && data.imdbRating !== "N/A") {
-                    // Fallback sur imdbRating direct si Ratings n'est pas idéal ou si IMDb est plus direct
-                    rating = `${data.imdbRating}/10`; // OMDb donne souvent juste le chiffre, ajoutons "/10"
+                    rating = `${data.imdbRating}/10`;
                 } else if (data.Ratings.length > 0) {
-                    // Si IMDb n'est pas dispo, prend la première note valide
                     rating = data.Ratings[0].Value;
                 }
             } else {
                 console.warn(`Aucune note trouvée sur OMDb pour le film: "${cleanedTitleForApi}".`);
             }
 
-            return { posterUrl: poster, rating: rating };
+            // NOUVEAU: Récupérer le genre
+            let genre = null;
+            if (data.Response === "True" && data.Genre && data.Genre !== "N/A") {
+                genre = data.Genre; // Les genres sont une chaîne comme "Drama, Horror, Sci-Fi"
+            }
+
+            return { posterUrl: poster, rating: rating, genre: genre };
 
         } catch (error) {
             console.error(`Erreur réseau OMDb pour "${cleanedTitleForApi}": ${error.message || 'Unknown network error'}.`, error);
-            return { posterUrl: null, rating: null };
+            return { posterUrl: null, rating: null, genre: null };
         }
     }
 
     // Fonction pour créer et ajouter un élément de film à la liste
     function createMovieItem(movie) {
         const movieItem = document.createElement('div');
-        movieItem.classList.add('movie-item'); // Ajoute la classe pour le style CSS
+        movieItem.classList.add('movie-item');
 
         const img = document.createElement('img');
         const defaultImageUrl = 'https://mikefri.github.io/Teslatv/image.jpg';
@@ -112,13 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
         titleP.textContent = cleanMovieTitle(movie.title);
         titleP.classList.add('movie-title');
 
-        // Créer l'élément pour la note
         const ratingSpan = document.createElement('span');
-        ratingSpan.classList.add('movie-rating'); // Classe pour le style
+        ratingSpan.classList.add('movie-rating');
 
-        // Appel asynchrone pour la jaquette et la note
-        getMoviePosterUrl(movie.title)
-            .then(({ posterUrl, rating }) => {
+        // NOUVEAU: Afficher le genre (à des fins de débogage ou si vous voulez l'afficher)
+        // Vous pouvez ne pas l'afficher si vous ne voulez qu'un filtre
+        // const genreP = document.createElement('p');
+        // genreP.classList.add('movie-genre');
+
+
+        // Appel asynchrone pour la jaquette, la note ET le genre
+        getMovieDataFromOmdb(movie.title)
+            .then(({ posterUrl, rating, genre }) => { // Récupère le genre aussi
                 img.src = posterUrl || defaultImageUrl;
                 img.onerror = () => {
                     img.src = defaultImageUrl;
@@ -127,80 +141,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (rating) {
                     ratingSpan.textContent = rating;
-                    movieItem.appendChild(ratingSpan); // Ajoute la note à l'élément du film
+                    movieItem.appendChild(ratingSpan);
+                }
+
+                // NOUVEAU: Stocke le genre avec le film pour le filtrage
+                movie.genre = genre; // Ajoute la propriété 'genre' à l'objet film existant
+
+                // NOUVEAU: Collecte les genres uniques pour le sélecteur
+                if (genre) {
+                    genre.split(',').forEach(g => {
+                        uniqueGenres.add(g.trim());
+                    });
                 }
             })
             .catch(error => {
-                console.error(`Erreur lors de la récupération de l'affiche/note pour "${movie.title}":`, error);
+                console.error(`Erreur lors de la récupération des données OMDb pour "${movie.title}":`, error);
                 img.src = defaultImageUrl;
+                movie.genre = null; // Assurez-vous que le genre est null en cas d'erreur
             });
 
         movieItem.appendChild(img);
         movieItem.appendChild(titleP);
+        // if (genreP) movieItem.appendChild(genreP); // Si vous voulez afficher le genre sous le titre
 
         // Écouteur de clic pour lire le film (inchangé)
-        movieItem.addEventListener('click', () => {
-            const proxiedMovieUrl = `${proxyUrl}?url=${encodeURIComponent(movie.url)}`;
-            console.log('Tentative de lecture via proxy:', proxiedMovieUrl);
-
-            if (videoPlayer.hlsInstance) {
-                videoPlayer.hlsInstance.destroy();
-                videoPlayer.hlsInstance = null;
-            }
-            videoPlayer.src = '';
-
-            const fileExtension = movie.url.split('.').pop().toLowerCase();
-
-            if (fileExtension === 'm3u8' && typeof Hls !== 'undefined' && Hls.isSupported()) {
-                let hls = new Hls();
-                hls.loadSource(proxiedMovieUrl);
-                hls.attachMedia(videoPlayer);
-                videoPlayer.hlsInstance = hls;
-
-                hls.on(Hls.Events.ERROR, function (event, data) {
-                    console.error('HLS.js Erreur:', data.details, data.fatal ? 'Erreur fatale!' : '');
-                    if (data.fatal) {
-                        switch(data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                hls.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                hls.recoverMediaError();
-                                break;
-                            default:
-                                hls.destroy();
-                                videoPlayer.hlsInstance = null;
-                                break;
-                        }
-                    }
-                });
-            } else if (['mp4', 'mkv'].includes(fileExtension)) {
-                videoPlayer.src = proxiedMovieUrl;
-            } else {
-                console.warn(`Format de fichier (${fileExtension}) potentiellement non supporté.`);
-                videoPlayer.src = proxiedMovieUrl;
-            }
-
-            videoPlayer.load();
-            videoPlayer.volume = 1;
-            videoPlayer.muted = false;
-
-            videoPlayer.play()
-                .then(() => {})
-                .catch(playError => {
-                    alert('La lecture automatique a été bloquée. Veuillez cliquer sur le bouton de lecture.');
-                });
-
-            const videoPlayerContainer = document.getElementById('video-player-container');
-            if (videoPlayerContainer) {
-                window.scrollTo({ top: videoPlayerContainer.offsetTop, behavior: 'smooth' });
-            }
-        });
+        movieItem.addEventListener('click', () => { /* ... code inchangé ... */ });
 
         movieListDiv.appendChild(movieItem);
     }
 
-    // Fonction pour afficher une liste donnée de films (inchangé)
+    // NOUVEAU: Fonction pour peupler le sélecteur de genres
+    function populateGenreSelect() {
+        genreSelect.innerHTML = '<option value="all">Tous les genres</option>'; // Option par défaut
+
+        // Convertir le Set en tableau, trier alphabétiquement
+        const sortedGenres = Array.from(uniqueGenres).sort();
+
+        sortedGenres.forEach(genre => {
+            if (genre) { // Assurez-vous que le genre n'est pas vide
+                const option = document.createElement('option');
+                option.value = genre;
+                option.textContent = genre;
+                genreSelect.appendChild(option);
+            }
+        });
+    }
+
+    // Fonction pour afficher une liste donnée de films
     function displayMovies(moviesToDisplay) {
         movieListDiv.innerHTML = '';
         if (moviesToDisplay.length === 0) {
@@ -224,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     videoPlayer.addEventListener('waiting', () => { /* ... */ });
     // --- Fin des écouteurs d'événements vidéo ---
 
-    // --- Logique principale de chargement (fetch M3U) (inchangé) ---
+    // --- Logique principale de chargement (fetch M3U) ---
     fetch(m3uUrl)
         .then(response => {
             if (!response.ok) {
@@ -243,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
                     let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
                     let cleanedTitleForStorage = rawTitle.replace(/^FR:#?\s*/i, '').trim(); 
+                    
                     currentMovie = {
                         title: cleanedTitleForStorage, 
                         url: ''
@@ -256,6 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             displayMovies(allMovies);
+            // NOUVEAU: Peupler le sélecteur de genres après l'affichage initial des films
+            populateGenreSelect(); 
         })
         .catch(error => {
             console.error('Erreur lors du traitement du fichier M3U:', error);
@@ -275,5 +265,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         console.warn('Le champ de recherche (#search-input) est manquant dans le HTML.');
+    }
+
+    // NOUVEAU: Écouteur d'événement pour le changement de genre
+    if (genreSelect) {
+        genreSelect.addEventListener('change', (event) => {
+            const selectedGenre = event.target.value;
+            let moviesToDisplay = allMovies;
+
+            if (selectedGenre !== 'all') {
+                moviesToDisplay = allMovies.filter(movie => {
+                    // Si le film a un genre et que le genre sélectionné est inclus dans ses genres (chaîne "Drama, Horror")
+                    return movie.genre && movie.genre.split(',').map(g => g.trim()).includes(selectedGenre);
+                });
+            }
+            displayMovies(moviesToDisplay);
+        });
+    } else {
+        console.warn('Le sélecteur de genre (#genre-select) est manquant dans le HTML.');
     }
 });

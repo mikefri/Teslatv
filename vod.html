@@ -18,9 +18,10 @@
     </div>
     <div class="container">
         <div class="list-section-container">
-            <div class="search-bar-container">
-                <input type="text" id="search-input" placeholder="Rechercher un film..." aria-label="Rechercher un film">
-            </div>
+            <input type="text" id="search-input" placeholder="Rechercher un film..." />
+                <select id="genre-select">
+                     <option value="all">Chargement des genres...</option>
+                </select>
             
             <div id="movie-list">
                 <div class="loading" id="loading-message">Chargement des films...</div>
