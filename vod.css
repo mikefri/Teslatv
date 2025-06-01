@@ -77,7 +77,6 @@ h1 {
 
 /* Section du lecteur vidéo (adaptée au VOD) */
 #video-player-container {
-    /* margin-top: 50px; */ /* Supprimé car le gap gère l'espacement */
     text-align: center;
     background-color: var(--bg-medium);
     padding: 20px;
@@ -86,17 +85,18 @@ h1 {
     border: 1px solid var(--neon-blue-dark);
     position: relative;
     
-    /* NOUVEAU: Ajustement de la largeur pour le layout Flexbox */
+    /* Ajustement de la largeur pour le layout Flexbox */
     flex: 2; /* Prend 2 parts de l'espace disponible */
     min-width: 400px; /* Largeur minimale pour que le lecteur reste utilisable */
     max-width: 900px; /* Limite la largeur max */
-    /* margin-left: auto; */ /* Supprimé car flexbox gère la répartition */
-    /* margin-right: auto; */ /* Supprimé car flexbox gère la répartition */
 
     /* Hack pour maintenir l'aspect ratio 16:9 */
     padding-bottom: 56.25%; /* (9 / 16) * 100% */
     height: 0;
     overflow: hidden;
+
+    /* Spécifier l'ordre si nécessaire (Player à gauche) */
+    order: 1; 
 }
 
 /* L'élément <video> lui-même */
@@ -170,16 +170,17 @@ h1 {
 
 /* Movie List Grid (adapté au VOD) */
 #movie-list {
-    /* display: grid; */ /* Supprimé car le parent .container est flex */
-    /* grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); */ /* Sera re-défini pour la grille interne */
     gap: 30px; /* Sera re-défini pour la grille interne */
     margin-top: 0; /* Géré par le gap du conteneur parent */
     
-    /* NOUVEAU: Ajustement de la largeur pour le layout Flexbox */
+    /* Ajustement de la largeur pour le layout Flexbox */
     flex: 1; /* Prend 1 part de l'espace disponible */
     min-width: 250px; /* Largeur minimale pour la liste de films */
     width: 100%; /* S'assure qu'il prend toute la largeur disponible dans sa colonne */
-    padding-top: 20px; /* Ajout d'un peu de padding si le player est plus haut */
+    padding-top: 0px; /* N'a plus besoin d'un padding pour aligner, le joueur et la liste commenceront en haut */
+
+    /* Spécifier l'ordre si nécessaire (Liste à droite) */
+    order: 2;
 }
 
 /* MAINTENIR la grille POUR les items de la liste de films à l'intérieur de #movie-list */
@@ -305,29 +306,27 @@ h1 {
 
 
 /* Media Queries for responsive design */
-@media (max-width: 1024px) { /* Nouveau breakpoint pour le layout side-by-side */
+@media (max-width: 1024px) {
     .container {
         flex-direction: column; /* Les colonnes passent en ligne sur les petits écrans */
-        gap: 20px; /* Réduit l'espace entre les éléments empilés */
+        gap: 20px;
     }
 
     #video-player-container {
-        flex: none; /* Désactive la flex-grow sur les petits écrans */
-        width: 100%; /* Prend toute la largeur */
-        max-width: none; /* Supprime la max-width pour remplir l'écran */
-        margin-top: 0; /* Réinitialise la marge, le gap du container gère l'espacement */
-        padding: 15px; /* Ajuste le padding */
+        order: 1; /* S'assure que le player reste en haut/premier */
+        flex: none;
+        width: 100%;
+        max-width: none;
+        padding: 15px;
     }
 
     #movie-list {
-        flex: none; /* Désactive la flex-grow sur les petits écrans */
-        width: 100%; /* Prend toute la largeur */
-        max-width: none; /* Supprime la max-width */
-        margin-top: 0; /* Réinitialise la marge */
-        padding-top: 0; /* Réinitialise le padding */
+        order: 2; /* S'assure que la liste est en bas/deuxième */
+        flex: none;
+        width: 100%;
+        max-width: none;
+        padding-top: 0;
     }
-
-    /* Le reste des media queries existantes reste pertinent pour les tailles d'items */
 }
 
 @media (max-width: 768px) {
@@ -347,7 +346,7 @@ h1 {
     #movie-list {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 15px;
-        margin-top: 0; /* Géré par le gap du conteneur parent */
+        margin-top: 0;
     }
 
     .movie-item img {
@@ -360,7 +359,6 @@ h1 {
     }
 
     #video-player-container {
-        /* margin-top: 30px; */ /* Géré par le gap du conteneur parent */
         padding: 15px;
     }
 
