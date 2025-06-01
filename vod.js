@@ -2,28 +2,52 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Définition des constantes (URL, clés API, etc.)
     const m3uUrl = 'https://mikefri.github.io/Teslatv/vod.m3u';
     const proxyUrl = 'https://proxy-tesla-tv.vercel.app/api';
-    const OMDB_API_KEY = 'bbcb253b'; // Votre clé OMDb
-    const defaultImageUrl = 'https://mikefri.github.io/Teslatv/image.jpg';
 
-    // 2. Références aux éléments DOM
+    // --- CLÉS API ET URLS EXTERNES (POUR OMDb) ---
+    const OMDB_API_KEY = 'bbcb253b'; // Votre clé API OMDb !
+    // Force l'utilisation de HTTPS pour OMDb pour éviter les problèmes de contenu mixte
+    const OMDB_BASE_URL = 'https://www.omdbapi.com/';
+    // --- FIN CLÉS API ET URLS EXTERNES ---
+
+    // Références aux éléments DOM
     const movieListDiv = document.getElementById('movie-list');
     const videoPlayer = document.getElementById('video-player');
     const loadingMessage = document.getElementById('loading-message');
     const searchInput = document.getElementById('search-input');
 
-    // 3. Variables d'état (ex: allMovies)
+    // Stockage de tous les films chargés initialement
     let allMovies = [];
 
-    // 4. Vérifications DOM initiales
+    // --- Vérification des éléments DOM requis au démarrage ---
     if (!movieListDiv || !videoPlayer || !loadingMessage) {
-        console.error('Erreur: Un ou plusieurs éléments DOM requis sont manquants.');
-        loadingMessage.textContent = 'Erreur: Éléments de l\'interface utilisateur manquants.';
+        console.error('Erreur: Un ou plusieurs éléments DOM requis sont manquants. Assurez-vous que les IDs "movie-list", "video-player" et "loading-message" existent dans votre HTML.');
+        loadingMessage.textContent = 'Erreur: Éléments de l\'interface utilisateur manquants. Veuillez vérifier votre HTML.';
         loadingMessage.style.color = 'red';
         return;
     }
 
-    // 5. Fonctions utilitaires (getMoviePosterUrl, createMovieItem, displayMovies)
-    //    C'est ici que getMoviePosterUrl, createMovieItem et displayMovies DOIVENT être définies.
+    // --- Fonctions utilitaires (Définition de toutes les fonctions avant leur utilisation) ---
+
+    /**
+     * Nettoie une chaîne de caractères pour une meilleure correspondance avec les API de films.
+     * @param {string} title Le titre original du film.
+     * @returns {string} Le titre nettoyé.
+     */
+    function cleanMovieTitle(title) {
+        let cleaned = title;
+        // Supprime les préfixes courants et les espaces superflus
+        // Ex: "FR: # Film Title (2020) - HD" -> "Film Title (2020) - HD"
+        cleaned = cleaned.replace(/^(FR:\s*|FR:|\s*#\s*)/i, '').trim();
+        // Supprime les années entre parenthèses à la fin (ex: "Film Title (2019)")
+        cleaned = cleaned.replace(/\s*\(\d{4}\)$/, '').trim();
+        // Supprime tout ce qui se trouve après un trait d'union si c'est un mot clé technique
+        // Ex: "Film Title - Part 1 VOSTFR" -> "Film Title - Part 1"
+        cleaned = cleaned.split(/ - (FHD|HD|VOSTFR|VF|MULTI|FR|SUB|2160P|1080P|720P)\b/i)[0].trim();
+        // Gère le cas des numéros dans les titres comme "10 Cloverfield Lane" pour ne pas les enlever
+        // S'assure que les caractères comme les deux-points sont acceptés par OMDb ou nettoyés si inutiles.
+        // On ne fait pas trop de nettoyage ici, OMDb est relativement intelligent sur la ponctuation si le reste est bon.
+        return cleaned;
+    }
 
     /**
      * Récupère l'URL de l'affiche d'un film depuis OMDb en utilisant son titre.
@@ -35,14 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn("Clé API OMDb manquante ou non valide. Impossible de récupérer les affiches.");
             return null;
         }
-        const encodedTitle = encodeURIComponent(movieTitle);
-        const searchUrl = `http://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodedTitle}&type=movie`;
+
+        const cleanedTitleForApi = cleanMovieTitle(movieTitle); // Applique le nettoyage
+
+        if (!cleanedTitleForApi) {
+            console.warn(`Titre de film vide après nettoyage pour OMDb API: "${movieTitle}"`);
+            return null;
+        }
+
+        const encodedCleanTitle = encodeURIComponent(cleanedTitleForApi);
+        const searchUrl = `${OMDB_BASE_URL}?apikey=${OMDB_API_KEY}&t=${encodedCleanTitle}&type=movie`;
+        console.log(`Requête OMDb pour: "${cleanedTitleForApi}" - URL: ${searchUrl}`); // Pour débogage
 
         try {
             const response = await fetch(searchUrl);
             if (!response.ok) {
-                // Gérer les erreurs HTTP (4xx, 5xx)
-                console.error(`Erreur OMDb lors de la recherche pour "${movieTitle}": ${response.status} ${response.statusText}`);
+                console.error(`Erreur OMDb HTTP pour "${cleanedTitleForApi}": ${response.status} ${response.statusText}`);
                 return null;
             }
             const data = await response.json();
@@ -50,12 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.Response === "True" && data.Poster && data.Poster !== "N/A") {
                 return data.Poster;
             }
-            console.warn(`Aucune affiche trouvée sur OMDb pour le film: "${movieTitle}"`);
+            console.warn(`Aucune affiche trouvée sur OMDb pour le film: "${cleanedTitleForApi}" (OMDb Error: ${data.Error || 'Non trouvé'}).`);
             return null;
         } catch (error) {
-            // Gérer les erreurs réseau (Failed to fetch)
-            console.error(`Erreur réseau OMDb pour "${movieTitle}":`, error);
-            // Si c'est un 'Failed to fetch', c'est ici qu'on le capte.
+            // C'est ici que le TypeError: Failed to fetch est capturé
+            console.error(`Erreur réseau OMDb pour "${cleanedTitleForApi}": ${error.message || 'Unknown network error'}.`, error);
             return null;
         }
     }
@@ -66,13 +97,14 @@ document.addEventListener('DOMContentLoaded', () => {
         movieItem.classList.add('movie-item');
 
         const img = document.createElement('img');
+        const defaultImageUrl = 'https://mikefri.github.io/Teslatv/image.jpg'; // Votre image par défaut
         img.alt = movie.title;
 
         // Appel asynchrone pour la jaquette
-        getMoviePosterUrl(movie.title)
+        getMoviePosterUrl(movie.title) // On passe le titre original, le nettoyage se fait dans getMoviePosterUrl
             .then(posterUrl => {
                 img.src = posterUrl || defaultImageUrl;
-                img.onerror = () => {
+                img.onerror = () => { // Fallback si l'image OMDb ne se charge pas
                     img.src = defaultImageUrl;
                     console.warn(`Impossible de charger l'affiche OMDb pour "${movie.title}". Affichage de l'image par défaut.`);
                 };
@@ -83,17 +115,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         const titleP = document.createElement('p');
-        titleP.textContent = movie.title;
+        // Affiche le titre après un nettoyage minimal pour l'affichage à l'utilisateur
+        titleP.textContent = cleanMovieTitle(movie.title);
         titleP.classList.add('movie-title');
 
         movieItem.appendChild(img);
         movieItem.appendChild(titleP);
 
-        // Écouteur de clic pour lire le film (reste inchangé)
+        // Écouteur de clic pour lire le film (pas de changement ici)
         movieItem.addEventListener('click', () => {
             const proxiedMovieUrl = `${proxyUrl}?url=${encodeURIComponent(movie.url)}`;
             console.log('Tentative de lecture via proxy:', proxiedMovieUrl);
 
+            // 1. Arrêter toute lecture et détruire HLS.js si une instance existe
             if (videoPlayer.hlsInstance) {
                 videoPlayer.hlsInstance.destroy();
                 videoPlayer.hlsInstance = null;
@@ -101,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             videoPlayer.src = '';
 
+            // 2. Déterminer le type de fichier source original
             const fileExtension = movie.url.split('.').pop().toLowerCase();
             console.log(`Extension de fichier détectée: ${fileExtension}`);
 
@@ -139,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videoPlayer.src = proxiedMovieUrl;
             }
 
+            // 3. Charger la nouvelle source et tenter la lecture
             videoPlayer.load();
             videoPlayer.volume = 1;
             videoPlayer.muted = false;
@@ -152,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('La lecture automatique a été bloquée par le navigateur. Veuillez cliquer sur le bouton de lecture du lecteur vidéo.');
                 });
 
+            // Défilement vers le lecteur vidéo
             const videoPlayerContainer = document.getElementById('video-player-container');
             if (videoPlayerContainer) {
                 window.scrollTo({ top: videoPlayerContainer.offsetTop, behavior: 'smooth' });
@@ -174,13 +211,68 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. Écouteurs d'événements vidéo (comme vous les aviez)
-    videoPlayer.addEventListener('loadedmetadata', () => { /* ... */ });
-    videoPlayer.addEventListener('play', () => { /* ... */ });
-    videoPlayer.addEventListener('error', (event) => { /* ... */ });
-    // ... et les autres ...
+    // --- Fin des fonctions utilitaires ---
 
-    // 7. Logique principale de chargement (fetch M3U)
+    // --- Écouteurs d'événements vidéo (pas de changement ici) ---
+    videoPlayer.addEventListener('loadedmetadata', () => {
+        console.log('--- Événement Vidéo: loadedmetadata ---');
+        console.log(`Dimensions de la vidéo: ${videoPlayer.videoWidth}x${videoPlayer.videoHeight}`);
+        console.log(`Durée de la vidéo: ${videoPlayer.duration} secondes`);
+        if (videoPlayer.videoWidth === 0 && videoPlayer.videoHeight === 0) {
+            console.warn('ATTENTION: Les dimensions de la vidéo sont 0x0. La vidéo pourrait ne pas être rendue ou décodée correctement.');
+        }
+    });
+
+    videoPlayer.addEventListener('play', () => {
+        console.log('--- Événement Vidéo: play --- La lecture a démarré ou a repris.');
+    });
+
+    videoPlayer.addEventListener('playing', () => {
+        console.log('--- Événement Vidéo: playing --- La vidéo est en cours de lecture.');
+    });
+
+    videoPlayer.addEventListener('pause', () => {
+        console.log('--- Événement Vidéo: pause --- La vidéo est en pause.');
+    });
+
+    videoPlayer.addEventListener('ended', () => {
+        console.log('--- Événement Vidéo: ended --- La vidéo est terminée.');
+    });
+
+    videoPlayer.addEventListener('error', (event) => {
+        console.error('--- Événement Vidéo: ERROR ---');
+        const error = event.target.error;
+        let errorMessage = 'Erreur vidéo inconnue.';
+        switch (error.code) {
+            case error.MEDIA_ERR_ABORTED:
+                errorMessage = 'La lecture vidéo a été interrompue.';
+                break;
+            case error.MEDIA_ERR_NETWORK:
+                errorMessage = 'Une erreur réseau a empêché le téléchargement de la vidéo.';
+                break;
+            case error.MEDIA_ERR_DECODE:
+                errorMessage = 'Une erreur de décodage a empêché la lecture de la vidéo. Codec non supporté ?';
+                break;
+            case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                errorMessage = 'Le format vidéo ou la source n\'est pas supportée par le navigateur.';
+                break;
+            default:
+                errorMessage = `Erreur vidéo inattendue (Code: ${error.code}).`;
+                break;
+        }
+        console.error(`Message d'erreur vidéo: ${errorMessage} - Détails: ${error.message || 'Aucun message spécifique.'}`);
+        alert(`Erreur de lecture vidéo: ${errorMessage}\nVeuillez consulter la console du navigateur pour plus de détails.`);
+    });
+
+    videoPlayer.addEventListener('stalled', () => {
+        console.warn('--- Événement Vidéo: stalled --- Le téléchargement des données vidéo est interrompu.');
+    });
+
+    videoPlayer.addEventListener('waiting', () => {
+        console.log('--- Événement Vidéo: waiting --- Le lecteur attend des données pour continuer la lecture.');
+    });
+
+    // --- Logique principale de chargement (fetch M3U) ---
     fetch(m3uUrl)
         .then(response => {
             if (!response.ok) {
@@ -198,9 +290,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (line.startsWith('#EXTINF:')) {
                     const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
                     let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
-                    let cleanedTitle = rawTitle.replace(/^FR:#?\s*/i, '').trim(); 
+
+                    // Nettoyage initial du titre pour le stockage dans allMovies
+                    let cleanedTitleForStorage = rawTitle.replace(/^FR:#?\s*/i, '').trim(); 
+                    
                     currentMovie = {
-                        title: cleanedTitle,
+                        title: cleanedTitleForStorage, // Ce titre est stocké et sera utilisé pour l'affichage et la recherche OMDb
                         url: ''
                     };
                 } else if (line.startsWith('http')) {
@@ -211,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-            displayMovies(allMovies); // L'appel est maintenant sûr ici
+            displayMovies(allMovies); // L'appel est maintenant sûr car displayMovies est défini plus haut
         })
         .catch(error => {
             console.error('Erreur lors du traitement du fichier M3U:', error);
@@ -220,12 +315,13 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingMessage.style.color = 'red';
         });
 
-    // 8. Écouteur d'événement pour la recherche
+    // --- Écouteur d'événement pour la recherche ---
     if (searchInput) {
         searchInput.addEventListener('input', (event) => {
             const searchTerm = event.target.value.toLowerCase();
             const filteredMovies = allMovies.filter(movie => {
-                return movie.title.toLowerCase().includes(searchTerm);
+                // Utiliser le titre nettoyé pour la recherche interne
+                return cleanMovieTitle(movie.title).toLowerCase().includes(searchTerm);
             });
             displayMovies(filteredMovies);
         });
