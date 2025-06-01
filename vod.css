@@ -13,7 +13,6 @@
 /* Styles généraux du corps de la page */
 html, body {
     height: 100%;
-    /* box-sizing: border-box; */ /* Supprimé car *::before, *::after, * suffit */
 }
 
 body {
@@ -59,50 +58,59 @@ h1 {
 
 /* Conteneur principal pour le contenu VOD */
 .container {
-    max-width: 1200px;
-    width: 100%; /* Assure qu'il prend la largeur disponible jusqu'à max-width */
+    max-width: 1400px; /* Augmenté la largeur maximale pour un layout side-by-side */
+    width: 100%;
     margin: 20px auto;
     padding: 25px;
     background-color: var(--bg-medium);
     border-radius: 12px;
     box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 20px rgba(0, 255, 255, 0.2);
     border: 1px solid var(--neon-blue-dark);
-    position: relative; /* Pour le positionnement des messages si besoin */
+    position: relative;
+
+    /* NOUVEAU: Flexbox pour organiser les sections Player et Liste */
+    display: flex;
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur petits écrans */
+    gap: 30px; /* Espace entre le player et la liste */
+    justify-content: center; /* Centre le contenu horizontalement si l'espace est suffisant */
 }
 
 /* Section du lecteur vidéo (adaptée au VOD) */
 #video-player-container {
-    margin-top: 50px;
+    /* margin-top: 50px; */ /* Supprimé car le gap gère l'espacement */
     text-align: center;
     background-color: var(--bg-medium);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), 0 0 10px rgba(0, 255, 255, 0.1);
     border: 1px solid var(--neon-blue-dark);
-    position: relative; /* Important pour positionner la vidéo et le placeholder */
-    width: 100%; /* S'assure qu'il prend toute la largeur disponible */
-    max-width: 900px; /* Limite la largeur max comme prévu */
-    margin-left: auto; /* Centre le conteneur */
-    margin-right: auto; /* Centre le conteneur */
+    position: relative;
+    
+    /* NOUVEAU: Ajustement de la largeur pour le layout Flexbox */
+    flex: 2; /* Prend 2 parts de l'espace disponible */
+    min-width: 400px; /* Largeur minimale pour que le lecteur reste utilisable */
+    max-width: 900px; /* Limite la largeur max */
+    /* margin-left: auto; */ /* Supprimé car flexbox gère la répartition */
+    /* margin-right: auto; */ /* Supprimé car flexbox gère la répartition */
 
     /* Hack pour maintenir l'aspect ratio 16:9 */
     padding-bottom: 56.25%; /* (9 / 16) * 100% */
     height: 0;
-    overflow: hidden; /* Cache tout ce qui dépasse, important pour les coins arrondis */
+    overflow: hidden;
 }
 
 /* L'élément <video> lui-même */
 #video-player {
-    position: absolute; /* Place la vidéo à l'intérieur du conteneur #video-player-container */
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* La fait remplir le conteneur */
-    height: 100%; /* La fait remplir le conteneur */
-    object-fit: contain; /* Ou 'cover' si vous préférez qu'elle remplisse toujours, quitte à couper */
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     background-color: #000;
-    border-radius: 8px; /* Applique les coins arrondis */
-    display: block; /* S'assure qu'elle est traitée comme un bloc */
-    border: 1px solid var(--neon-blue-light); /* Bordure néon subtile */
+    border-radius: 8px;
+    display: block;
+    border: 1px solid var(--neon-blue-light);
 }
 
 
@@ -116,18 +124,17 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--bg-dark); /* Utilise la couleur de fond néon */
+    background-color: var(--bg-dark);
     cursor: pointer;
-    z-index: 2; /* S'assure qu'il est au-dessus de la vidéo au début */
+    z-index: 2;
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
-    border-radius: 8px; /* Assure les coins arrondis pour le placeholder aussi */
+    border-radius: 8px;
 }
 
 #videoPlaceholder.hidden {
     opacity: 0;
-    pointer-events: none; /* Permet les clics à travers quand il est caché */
-    /* z-index: 0; */ /* Pas besoin de changer z-index si pointer-events: none est suffisant */
+    pointer-events: none;
 }
 
 #videoPlaceholder img {
@@ -135,7 +142,7 @@ h1 {
     height: 100%;
     object-fit: cover;
     display: block;
-    border-radius: 8px; /* Applique les coins arrondis à l'image du placeholder */
+    border-radius: 8px;
 }
 
 .play-overlay {
@@ -147,28 +154,41 @@ h1 {
     flex-direction: column;
     align-items: center;
     color: var(--neon-blue-light);
-    text-shadow: 0 0 8px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.5); /* Ombre néon plus prononcée */
-    font-size: 1.8em; /* Plus grande */
+    text-shadow: 0 0 8px var(--neon-blue), 0 0 15px rgba(0, 255, 255, 0.5);
+    font-size: 1.8em;
     font-weight: bold;
-    pointer-events: none; /* Important pour que le clic passe à l'élément parent */
+    pointer-events: none;
     opacity: 0.9;
 }
 
 .play-overlay svg {
-    margin-bottom: 15px; /* Plus d'espace */
-    filter: drop-shadow(0 0 10px var(--neon-blue)); /* Ombre néon plus intense */
-    width: 60px; /* Plus grande icône */
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px var(--neon-blue));
+    width: 60px;
     height: 60px;
 }
 
 /* Movie List Grid (adapté au VOD) */
 #movie-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 30px; /* Plus d'espace entre les films */
-    margin-top: 40px; /* Plus d'espace au-dessus de la liste */
-    width: 100%; /* S'assure qu'il utilise toute la largeur disponible */
+    /* display: grid; */ /* Supprimé car le parent .container est flex */
+    /* grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); */ /* Sera re-défini pour la grille interne */
+    gap: 30px; /* Sera re-défini pour la grille interne */
+    margin-top: 0; /* Géré par le gap du conteneur parent */
+    
+    /* NOUVEAU: Ajustement de la largeur pour le layout Flexbox */
+    flex: 1; /* Prend 1 part de l'espace disponible */
+    min-width: 250px; /* Largeur minimale pour la liste de films */
+    width: 100%; /* S'assure qu'il prend toute la largeur disponible dans sa colonne */
+    padding-top: 20px; /* Ajout d'un peu de padding si le player est plus haut */
 }
+
+/* MAINTENIR la grille POUR les items de la liste de films à l'intérieur de #movie-list */
+#movie-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Les vignettes peuvent être un peu plus petites ici */
+    gap: 20px; /* Réduction du gap pour une meilleure utilisation de l'espace */
+}
+
 
 /* Individual Movie Item (adapté au VOD) */
 .movie-item {
@@ -181,7 +201,7 @@ h1 {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
     display: flex;
     flex-direction: column;
-    position: relative; /* Pour les futurs ajouts (overlay de lecture, etc.) */
+    position: relative;
 }
 
 .movie-item:hover {
@@ -285,6 +305,31 @@ h1 {
 
 
 /* Media Queries for responsive design */
+@media (max-width: 1024px) { /* Nouveau breakpoint pour le layout side-by-side */
+    .container {
+        flex-direction: column; /* Les colonnes passent en ligne sur les petits écrans */
+        gap: 20px; /* Réduit l'espace entre les éléments empilés */
+    }
+
+    #video-player-container {
+        flex: none; /* Désactive la flex-grow sur les petits écrans */
+        width: 100%; /* Prend toute la largeur */
+        max-width: none; /* Supprime la max-width pour remplir l'écran */
+        margin-top: 0; /* Réinitialise la marge, le gap du container gère l'espacement */
+        padding: 15px; /* Ajuste le padding */
+    }
+
+    #movie-list {
+        flex: none; /* Désactive la flex-grow sur les petits écrans */
+        width: 100%; /* Prend toute la largeur */
+        max-width: none; /* Supprime la max-width */
+        margin-top: 0; /* Réinitialise la marge */
+        padding-top: 0; /* Réinitialise le padding */
+    }
+
+    /* Le reste des media queries existantes reste pertinent pour les tailles d'items */
+}
+
 @media (max-width: 768px) {
     body {
         padding: 10px;
@@ -302,7 +347,7 @@ h1 {
     #movie-list {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 15px;
-        margin-top: 25px;
+        margin-top: 0; /* Géré par le gap du conteneur parent */
     }
 
     .movie-item img {
@@ -315,7 +360,7 @@ h1 {
     }
 
     #video-player-container {
-        margin-top: 30px;
+        /* margin-top: 30px; */ /* Géré par le gap du conteneur parent */
         padding: 15px;
     }
 
