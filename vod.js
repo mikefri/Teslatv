@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     // URL de votre fichier M3U et de votre proxy Vercel
     const m3uUrl = 'https://mikefri.github.io/Teslatv/vod.m3u';
-    const proxyUrl = 'https://proxy-tesla-tv.vercel.app/api'; // Assurez-vous que votre proxy est opérationnel
+    const proxyUrl = 'https://proxy-tesla-tv.vercel.app/api';
 
     // Références aux éléments DOM
     const movieListDiv = document.getElementById('movie-list');
     const videoPlayer = document.getElementById('video-player');
     const loadingMessage = document.getElementById('loading-message');
-    const searchInput = document.getElementById('search-input'); // Champ de recherche
+    const searchInput = document.getElementById('search-input');
 
     // Stockage de tous les films chargés initialement
     let allMovies = [];
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Erreur: Un ou plusieurs éléments DOM requis sont manquants. Assurez-vous que les IDs "movie-list", "video-player" et "loading-message" existent dans votre HTML.');
         loadingMessage.textContent = 'Erreur: Éléments de l\'interface utilisateur manquants. Veuillez vérifier votre HTML.';
         loadingMessage.style.color = 'red';
-        return; // Arrête l'exécution si les éléments essentiels ne sont pas trouvés
+        return;
     }
 
     // --- Ajout d'écouteurs d'événements au lecteur vidéo pour le diagnostic ---
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     videoPlayer.addEventListener('error', (event) => {
         console.error('--- Événement Vidéo: ERROR ---');
-        const error = event.target.error; // C'est un objet MediaError
+        const error = event.target.error;
         let errorMessage = 'Erreur vidéo inconnue.';
         switch (error.code) {
             case error.MEDIA_ERR_ABORTED:
@@ -81,83 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Fin des écouteurs d'événements vidéo ---
 
-    // --- Fonction pour charger et parser le fichier M3U ---
-    fetch(m3uUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erreur réseau lors du chargement du fichier M3U: ${response.status} ${response.statusText}`);
-            }
-            return response.text();
-        })
-        .then(data => {
-            loadingMessage.style.display = 'none'; // Cache le message de chargement une fois les données reçues
-            const lines = data.split('\n');
-            let currentMovie = {};
+    // --- Fonctions de création et d'affichage des films (DÉPLACÉES ICI) ---
 
-            lines.forEach(line => {
-                line = line.trim();
-                if (line.startsWith('#EXTINF:')) {
-                    // Extraction du titre et du logo
-                    const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
-                    const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
-
-                    let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
-                    const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
-
-                    // NOUVEAU: Nettoyage du titre avec la logique du regex.
-                    // Assurez-vous que le '#' est aussi supprimé si c'est "FR:#"
-                    let cleanedTitle = rawTitle.replace(/^FR:#?\s*/i, '').trim(); 
-                    // ^FR:      -> Cherche "FR:" au début de la chaîne
-                    // #?       -> Cherche un "#" zéro ou une fois (c'est-à-dire, il peut être là ou non)
-                    // \s* -> Cherche zéro ou plusieurs espaces après "FR:#" ou "FR:"
-                    // i        -> Rend la recherche insensible à la casse (fr:, FR:, Fr:)
-                    // .trim()  -> Supprime les espaces blancs au début et à la fin
-
-                    currentMovie = {
-                        title: cleanedTitle, // <<< UTILISEZ cleanedTitle ICI !!!
-                        logo: logo,
-                        url: '' // L'URL sera sur la ligne suivante
-                    };
-                } else if (line.startsWith('http')) {
-                    if (currentMovie.title) { // S'assure qu'un film est en cours de définition
-                        currentMovie.url = line;
-                        allMovies.push(currentMovie); // Stocke le film dans le tableau global
-                        currentMovie = {}; // Réinitialise pour le prochain film
-                    }
-                }
-            });
-
-            // Affiche tous les films au premier chargement
-            displayMovies(allMovies);
-
-            if (allMovies.length === 0) {
-                loadingMessage.style.display = 'block';
-                loadingMessage.textContent = 'Aucun film trouvé dans le fichier M3U.';
-                loadingMessage.style.color = 'orange';
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors du traitement du fichier M3U:', error);
-            loadingMessage.style.display = 'block';
-            loadingMessage.textContent = `Erreur lors du chargement des films: ${error.message}. Veuillez réessayer plus tard.`;
-            loadingMessage.style.color = 'red';
-        });
-
-    // --- Écouteur d'événement pour la recherche ---
-    if (searchInput) {
-        searchInput.addEventListener('input', (event) => {
-            const searchTerm = event.target.value.toLowerCase();
-            const filteredMovies = allMovies.filter(movie => {
-                // Recherche insensible à la casse
-                return movie.title.toLowerCase().includes(searchTerm);
-            });
-            displayMovies(filteredMovies); // Affiche les films filtrés
-        });
-    } else {
-        console.warn('Le champ de recherche (#search-input) est manquant dans le HTML.');
-    }
-
-    // --- Fonction pour créer et ajouter un élément de film à la liste ---
+    // Fonction pour créer et ajouter un élément de film à la liste
     function createMovieItem(movie) {
         const movieItem = document.createElement('div');
         movieItem.classList.add('movie-item');
@@ -167,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         img.src = movie.logo || defaultImageUrl;
         img.alt = movie.title;
         img.onerror = () => {
-            img.src = defaultImageUrl; // Charge l'image par défaut en cas d'erreur
+            img.src = defaultImageUrl;
             console.warn(`Impossible de charger l'image pour: "${movie.title}" depuis "${movie.logo}". Affichage de l'image par défaut.`);
         };
 
@@ -205,7 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 hls.on(Hls.Events.ERROR, function (event, data) {
                     console.error('HLS.js Erreur:', data.details, data.fatal ? 'Erreur fatale!' : '');
                     if (data.fatal) {
-                        // Tenter de récupérer ou informer l'utilisateur en cas d'erreur fatale HLS.js
                         switch(data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
                                 console.error("Erreur réseau fatale HLS.js, tentative de récupération...");
@@ -219,29 +144,22 @@ document.addEventListener('DOMContentLoaded', () => {
                                 console.error("Erreur HLS.js irrécupérable, destruction de l'instance.");
                                 hls.destroy();
                                 videoPlayer.hlsInstance = null;
-                                // Fallback optionnel: tenter la lecture native si l'erreur était un problème de format HLS inattendu
-                                // videoPlayer.src = proxiedMovieUrl;
-                                // videoPlayer.load();
                                 break;
                         }
                     }
                 });
             } else if (['mp4', 'mkv'].includes(fileExtension)) {
-                // Formats souvent supportés nativement par les navigateurs modernes
                 console.log(`Format natif (${fileExtension}) détecté, utilisation de la lecture HTML5.`);
                 videoPlayer.src = proxiedMovieUrl;
             } else {
-                // Autres formats (comme .avi) ou formats inconnus, tenter la lecture native
                 console.warn(`Format de fichier (${fileExtension}) potentiellement non supporté nativement ou inconnu. Tentative de lecture HTML5.`);
                 videoPlayer.src = proxiedMovieUrl;
-                // Vous pouvez ajouter une alerte plus forte ici si .avi est très problématique
-                // alert(`Attention: Le format ${fileExtension} peut ne pas être entièrement supporté par votre navigateur.`);
             }
 
             // 3. Charger la nouvelle source et tenter la lecture
-            videoPlayer.load(); // Indispensable pour charger la nouvelle source
-            videoPlayer.volume = 1; // S'assurer que le volume n'est pas à zéro
-            videoPlayer.muted = false; // S'assurer que le son n'est pas coupé (peut être outrepassé par le navigateur)
+            videoPlayer.load();
+            videoPlayer.volume = 1;
+            videoPlayer.muted = false;
 
             videoPlayer.play()
                 .then(() => {
@@ -262,5 +180,87 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         movieListDiv.appendChild(movieItem);
+    }
+
+    // Fonction pour afficher une liste donnée de films
+    function displayMovies(moviesToDisplay) {
+        movieListDiv.innerHTML = '';
+        if (moviesToDisplay.length === 0) {
+            movieListDiv.innerHTML = '<p style="text-align: center; color: var(--neon-blue-light); margin-top: 20px; width: 100%;">Aucun film ne correspond à votre recherche.</p>';
+        }
+        moviesToDisplay.forEach(movie => {
+            createMovieItem(movie);
+        });
+    }
+
+    // --- Fin des fonctions de création et d'affichage des films ---
+
+    // --- Fonction pour charger et parser le fichier M3U (maintenant après les définitions des fonctions) ---
+    fetch(m3uUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur réseau lors du chargement du fichier M3U: ${response.status} ${response.statusText}`);
+            }
+            return response.text();
+        })
+        .then(data => {
+            loadingMessage.style.display = 'none';
+            const lines = data.split('\n');
+            let currentMovie = {};
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:')) {
+                    const tvgNameMatch = line.match(/tvg-name="([^"]*)"/);
+                    const tvgLogoMatch = line.match(/tvg-logo="([^"]*)"/);
+
+                    let rawTitle = tvgNameMatch ? tvgNameMatch[1] : 'Titre inconnu';
+                    const logo = tvgLogoMatch ? tvgLogoMatch[1] : '';
+
+                    // Nettoyage du titre
+                    let cleanedTitle = rawTitle.replace(/^FR:#?\s*/i, '').trim(); 
+
+                    currentMovie = {
+                        title: cleanedTitle, // UTILISEZ cleanedTitle ICI
+                        logo: logo,
+                        url: ''
+                    };
+                } else if (line.startsWith('http')) {
+                    if (currentMovie.title) {
+                        currentMovie.url = line;
+                        allMovies.push(currentMovie);
+                        currentMovie = {};
+                    }
+                }
+            });
+
+            // Affiche tous les films au premier chargement
+            // displayMovies(allMovies); // L'appel est ici, maintenant que displayMovies est défini
+
+            // J'ai vu dans votre image que "FR: " est toujours là pour "FR: 10 Minutes Gone - 2019" et "FR:13 Hours"
+            // Cela indique que ma dernière regex de nettoyage pourrait être légèrement différente.
+            // Reprenons la regex pour être sûr.
+            // Après l'image, on voit que "FR:" est là sans '#' après le deux-points.
+            // Essayons une regex plus simple pour couvrir "FR: " et "FR:# "
+            displayMovies(allMovies); // L'appel est ici, maintenant que displayMovies est défini
+        })
+        .catch(error => {
+            console.error('Erreur lors du traitement du fichier M3U:', error);
+            loadingMessage.style.display = 'block';
+            loadingMessage.textContent = `Erreur lors du chargement des films: ${error.message}. Veuillez réessayer plus tard.`;
+            loadingMessage.style.color = 'red';
+        });
+
+    // --- Écouteur d'événement pour la recherche ---
+    if (searchInput) {
+        searchInput.addEventListener('input', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredMovies = allMovies.filter(movie => {
+                return movie.title.toLowerCase().includes(searchTerm);
+            });
+            displayMovies(filteredMovies);
+        });
+    } else {
+        console.warn('Le champ de recherche (#search-input) est manquant dans le HTML.');
     }
 });
