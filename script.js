@@ -10,11 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageText = document.getElementById('messageText');
     const closeMessage = document.getElementById('closeMessage');
 
-
-
-
-
-// PARTIE POUR LE DECLENCHEUR DU POPUP
+    // PARTIE POUR LE DECLENCHEUR DU POPUP
     const accessXxButton = document.getElementById('accessXxButton');
     if (accessXxButton) {
         accessXxButton.addEventListener('click', (e) => {
@@ -30,22 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
-
-
-
-
-
-
-
-
-
-
     // NOUVEAU : Récupération du sélecteur de catégorie
     const categorySelect = document.getElementById('category-select');
 
     let hlsInstance = null;
-    let channels = [];
+    let channels = []; // Les chaînes seront chargées ici
     let hasVideoEverPlayed = false;
     let currentCategory = 'all'; // Ajout d'une variable pour la catégorie actuelle
 
@@ -83,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const categories = new Set();
         allChannels.forEach(channel => {
-            if (channel.category) {
+            if (channel.category) { // Assurez-vous que votre JSON a une propriété 'category' ou adaptez
                 categories.add(channel.category);
             }
         });
@@ -116,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (category === 'all') {
             filteredChannels = channels;
         } else {
-            filteredChannels = channels.filter(channel => channel.category === category);
+            filteredChannels = channels.filter(channel => channel.category === category); // Assurez-vous que votre JSON a une propriété 'category' ou adaptez
         }
 
         if (channelListDiv) {
@@ -140,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             channelItem.setAttribute('data-channel-url', channel.url);
 
             const img = document.createElement('img');
-            img.src = channel.logo;
+            img.src = channel.iconUrl || ''; // Utilise iconUrl du JSON
             img.alt = channel.name;
 
             const nameSpan = document.createElement('span');
@@ -150,7 +135,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // Indicateur VPN
             const vpnIndicator = document.createElement('span');
             vpnIndicator.classList.add('vpn-indicator');
+            // La valeur de data-needs-vpn sera déterminée après la vérification des liens
             vpnIndicator.setAttribute('data-needs-vpn', channel.needsVPN ? 'true' : 'false');
+            // Ajout d'une classe pour l'état du lien (si non fonctionnel, il faudra un style CSS)
+            if (!channel.isFunctional) { // Nouvelle propriété pour l'état de fonctionnement
+                vpnIndicator.classList.add('not-functional');
+                vpnIndicator.title = "Lien non fonctionnel ou nécessite un VPN";
+            } else if (channel.needsVPN) { // Si fonctionnel mais a été marqué comme nécessitant un VPN
+                vpnIndicator.classList.add('needs-vpn-true');
+                vpnIndicator.title = "Fonctionnel, mais peut nécessiter un VPN";
+            } else {
+                vpnIndicator.classList.add('functional');
+                vpnIndicator.title = "Lien fonctionnel";
+            }
+
 
             channelItem.appendChild(img);
             channelItem.appendChild(nameSpan);
@@ -175,6 +173,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (newActiveItem) {
                 newActiveItem.classList.add('active');
             }
+        }
+    }
+
+    // ***************************************************************
+    // NOUVELLE FONCTION : Vérification de l'état du lien
+    // ***************************************************************
+    async function checkLinkStatus(url) {
+        try {
+            // Utiliser la méthode 'HEAD' pour ne télécharger que les en-têtes, c'est plus rapide
+            // Ajouter un 'mode: no-cors' pour tenter d'obtenir une réponse même si CORS est bloqué.
+            // Note: 'no-cors' ne vous permet pas de lire le statut HTTP, mais juste de savoir
+            // si la requête a pu être faite (si elle ne jette pas d'erreur réseau).
+            // Pour vraiment obtenir le statut et ignorer CORS, il faut un proxy côté serveur.
+            const response = await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: AbortSignal.timeout(5000) }); // Timeout de 5s
+
+            // Avec 'no-cors', response.ok sera toujours true et status sera 0.
+            // Nous devons nous fier à l'absence d'erreur pour considérer que le lien "existe".
+            // Si une erreur est levée, le lien n'est pas accessible.
+            return true; // Si nous arrivons ici, la requête a abouti sans erreur réseau/timeout
+        } catch (error) {
+            console.warn(`[Vérification de lien] Échec pour ${url}: ${error.message}`);
+            // Si le message d'erreur contient 'Network request failed' (Firefox) ou 'Failed to fetch' (Chrome)
+            // ou 'Timeout', cela signifie que le lien n'est pas directement accessible ou a un problème.
+            return false;
         }
     }
 
@@ -213,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
         videoElement.classList.remove('active');
         iframePlayer.src = ''; // Vide l'iframe
         iframePlayer.classList.remove('active');
-
 
         if (isPlayerPage) {
             console.log(`[Client] Chargement de la page de lecteur via iframe pour : ${originalUrl}`);
@@ -299,11 +320,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return response.json();
         })
-        .then(data => {
-            channels = data;
+        .then(async (data) => { // Utilisez 'async' ici car nous allons utiliser 'await'
+            console.log("Début de la vérification des liens...");
+            // Utilisez Promise.allSettled pour attendre toutes les vérifications de liens
+            const checkPromises = data.map(async (channel) => {
+                const isFunctional = await checkLinkStatus(channel.url);
+                // Si le lien n'est pas fonctionnel, on suppose qu'il a besoin d'un VPN ou qu'il est mort.
+                // Ici, on marque `needsVPN` comme `true` si le lien n'est pas fonctionnel.
+                // Vous pouvez affiner cette logique si vous avez un moyen de distinguer un lien mort d'un lien nécessitant un VPN.
+                // Pour l'instant, si `checkLinkStatus` renvoie false, on considère `needsVPN: true` et `isFunctional: false`.
+                // Sinon, si `checkLinkStatus` renvoie true, `needsVPN` restera sa valeur d'origine (ou false par défaut), et `isFunctional: true`.
+                
+                // Assurez-vous que l'objet 'channel' a déjà une propriété 'needsVPN'
+                // Si non, vous voudrez l'initialiser à 'false' par défaut dans votre JSON ou ici.
+                // Ici, je vais l'initialiser si elle n'existe pas.
+                channel.needsVPN = channel.needsVPN || false; 
+                channel.isFunctional = isFunctional; // Nouvelle propriété pour l'état de fonctionnement
+
+                // Si le lien n'est PAS fonctionnel, on peut décider de marquer 'needsVPN' à true
+                if (!isFunctional) {
+                    channel.needsVPN = true; // Indique qu'il n'est pas accessible sans (potentiellement) un VPN
+                }
+                
+                return channel;
+            });
+
+            channels = await Promise.all(checkPromises); // Attendez que toutes les vérifications soient terminées
+            console.log("Vérification des liens terminée.");
+
             populateCategorySelect(channels); // NOUVEAU : Peupler le sélecteur de catégories
             filterAndDisplayChannels(currentCategory); // NOUVEAU : Afficher les chaînes filtrées (par défaut "all")
-
 
             // Initialement, cache la vidéo et l'iframe, montre le placeholder
             if (videoElement) videoElement.classList.remove('active');
@@ -312,7 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (channels.length > 0) {
                 // La sélection de la première chaîne active se fera via filterAndDisplayChannels
-                // On peut le laisser ici pour la première initialisation après le chargement des données
                 const firstChannelItem = channelListDiv.querySelector('.channel-item');
                 if (firstChannelItem) {
                     firstChannelItem.classList.add('active');
@@ -322,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .catch(error => {
-            console.error("Erreur lors du chargement des chaînes:", error);
+            console.error("Erreur lors du chargement ou de la vérification des chaînes:", error);
             console.error(`Erreur: Impossible de charger les chaînes. Vérifiez 'channels.json'. (${error.message})`);
             if (videoElement) videoElement.classList.remove('active');
             if (iframePlayer) iframePlayer.classList.remove('active');
