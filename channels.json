@@ -48,12 +48,17 @@
     "name": "6TER",
     "url": "https://shouurvki7jtfax.ngolpdkyoctjcddxshli469r.org/sunshine/s-CbV0IhUJVnWFVrtYOoVQKvvuNPxDxQKXxWEWTc9M_9y5U7b_ePy8BxFaWXnbWW2I1c0lpxhSrKq_3NaXvH-AkZPmmFsnJgbiCqJe4bw-7jCh2nxX58TXYtxYbY6wA-aUYxNfjeW5NZ1Cfo891bNvZiEQYTViExUQZLmAbgmCA/hls/index.m3u8",
     "logo": "https://i.imgur.com/2nd5Cox.png",
-    "needsVPN": false,
+    "needsVPN": true,
     "category": "Généraliste"
   },
 
-
-
+{
+    "name": "Canal J",
+    "url": "https://mjkskdvpfpb1fbv.ngolpdkyoctjcddxshli469r.org/sunshine/xRDhgvrfszextmZ6-qNAnF8ovDnrBWPuR7f34ZJ5xCZktdDPBWkBQxqfjMtwDJxxmU7Vf6NfqHbkVUQ9GFbLB4Gd02Gkc7qURqaqxEerEFn39E-6nTWDvqSO6DX5aBcrMbG1HMkuQaIyjd1Ep8AC127AUqCAK9rKHV95F1Xrb4c/hls/index.m3u8",
+    "logo": "https://i.imgur.com/2nd5Cox.png",
+    "needsVPN": true,
+    "category": "Jeunesse"
+  },
 
 
 
