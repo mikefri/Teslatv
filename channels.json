@@ -319,5 +319,21 @@
     "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/France.tv_-_logo_2022.svg/330px-France.tv_-_logo_2022.svg.png",
     "needsVPN": false,
     "category": "Sport"
+  },
+  {
+    "name": "Doctor Who",
+    "url": "https://amg00793-amg00793c18-rakuten-fr-5360.playouts.now.amagi.tv/playlist/amg00793-bbcstudios-drwhofrance-rakutenfr/playlist.m3u8",
+    "logo": "https://upload.wikimedia.org/wikipedia/en/d/d1/Doctor_Who_title_card.png",
+    "needsVPN": false,
+    "category": "Cinéma et Divertissement"
   }
+
+
+
+
+
+
+
+
+
 ]
