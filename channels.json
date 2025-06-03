@@ -4,7 +4,7 @@
     "name": "Top Sci-Fi",
     "url": "https://amg01796-amg01796c14-samsung-fr-5846.playouts.now.amagi.tv/playlist/amg01796-fastmediafast-topscifi-samsungfr/playlist.m3u8",
     "logo": "https://tvpdotcomdynamiclogopeu.samsungcloud.tv/resize?url=https://tvpnlogopeu.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/FR4600001FK_20250121T012945SQUARE.png",
-    "needsVPN": false,
+    "needsVPN": true,
     "category": "Cinéma et Divertissement"
   },
 
@@ -12,7 +12,7 @@
     "name": "TF1",
     "url": "https://raw.githubusercontent.com/Paradise-91/ParaTV/main/streams/tf1plus/tf1.m3u8",
     "logo": "https://i.imgur.com/QxHt9NC.png",
-    "needsVPN": false,
+    "needsVPN": true,
     "category": "Généraliste"
   },
   {
