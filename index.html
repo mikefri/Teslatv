@@ -3,16 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesla TV - Redirection...</title>
-
-    <!-- =========================== -->
-    <!-- LOGIQUE DE REDIRECTION      -->
-    <!-- =========================== -->
-    <meta http-equiv="refresh" content="0; url=https://moonlit-hotteok-34b5d9.netlify.app/">
-    <script type="text/javascript">
-        window.location.href = "https://moonlit-hotteok-34b5d9.netlify.app/";
-    </script>
-    <link rel="canonical" href="https://moonlit-hotteok-34b5d9.netlify.app/">
+    <title>Tesla TV - Vérification et Redirection...</title>
 
     <!-- =========================== -->
     <!-- SEO & PARTAGE SOCIAL        -->
@@ -35,36 +26,8 @@
     <!-- FAVICONS & ICONS            -->
     <!-- =========================== -->
     <link rel="icon" type="image/png" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="icons/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="icons/favicon-16x16.png" sizes="16x16">
-    <link rel="apple-touch-icon" type="image/png" href="icons/apple-touch-icon-180x180.png" sizes="180x180">
-    <link rel="icon" type="image/png" href="icons/android-chrome-192x192.png" sizes="192x192">
-    <link rel="icon" type="image/png" href="icons/android-chrome-512x512.png" sizes="512x512">
-    <link rel="shortcut icon" href="icons/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="Teslatv">
-    <link rel="manifest" href="manifest.json">
-
-    <!-- =========================== -->
-    <!-- SCHEMA JSON-LD              -->
-    <!-- =========================== -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Tesla TV",
-      "operatingSystem": "Tesla In-Car Browser",
-      "applicationCategory": "MultimediaApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "EUR"
-      },
-      "description": "Application Web optimisée pour regarder la télévision en plein écran sur l'écran de votre Tesla."
-    }
-    </script>
-
-    <!-- Styles minimaux pour le message de redirection -->
+    
+    <!-- Styles -->
     <style>
         body {
             background-color: #0a0e17;
@@ -77,11 +40,77 @@
             height: 100vh;
             text-align: center;
         }
-        a { color: #00d9ff; }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #00d9ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        a { color: #00d9ff; text-decoration: none; border: 1px solid #00d9ff; padding: 10px 20px; border-radius: 5px; margin-top: 10px; display: inline-block;}
+        .status { margin-bottom: 20px; color: #aaa; font-size: 0.9em; }
     </style>
+
+    <!-- =========================== -->
+    <!-- LOGIQUE DE REDIRECTION      -->
+    <!-- =========================== -->
+    <script type="text/javascript">
+        // 1. Définir vos liens
+        const LIEN_PRINCIPAL = "https://moonlit-hotteok-34b5d9.netlify.app/";
+        // REMPLACEZ CECI PAR VOTRE LIEN DE SECOURS
+        const LIEN_SECOURS = "https://teslatv01.netlify.app/"; 
+        
+        // Fichier témoin à tester (doit exister sur le site principal)
+        // L'icône est idéale car si Netlify affiche "Site not available", il ne servira pas VOTRE icône.
+        const FICHIER_TEST = "favicon.ico"; 
+
+        function checkAndRedirect() {
+            var statusText = document.getElementById("status-text");
+            statusText.innerText = "Test de la connexion au serveur...";
+
+            var img = new Image();
+            
+            // On ajoute un timestamp pour éviter que le navigateur utilise le cache
+            img.src = LIEN_PRINCIPAL + FICHIER_TEST + "?t=" + new Date().getTime();
+
+            // CAS 1 : Le site principal fonctionne (l'image a chargé)
+            img.onload = function() {
+                statusText.innerText = "Connexion établie. Lancement...";
+                window.location.href = LIEN_PRINCIPAL;
+            };
+
+            // CAS 2 : Le site principal est HS (l'image n'a pas chargé)
+            img.onerror = function() {
+                console.log("Site principal indisponible, redirection vers secours.");
+                statusText.innerText = "Site principal indisponible. Redirection vers secours...";
+                window.location.href = LIEN_SECOURS;
+            };
+
+            // Sécurité : Si rien ne se passe après 3 secondes, on force le principal
+            setTimeout(function() {
+                if(!img.complete) {
+                    window.location.href = LIEN_PRINCIPAL;
+                }
+            }, 3000);
+        }
+
+        // Lancer la vérification au chargement
+        window.onload = checkAndRedirect;
+    </script>
 </head>
 <body>
-    <p>Redirection vers la nouvelle version de TeslaTV...</p>
-    <p>Si vous n'êtes pas redirigé automatiquement, <a href="https://moonlit-hotteok-34b5d9.netlify.app/">cliquez ici</a>.</p>
+    <div class="loader"></div>
+    <h2>Lancement de Tesla TV</h2>
+    <p id="status-text" class="status">Initialisation...</p>
+    
+    <div style="margin-top: 30px;">
+        <p>Si rien ne se passe :</p>
+        <a href="https://moonlit-hotteok-34b5d9.netlify.app/">Lien Principal</a>
+        <br><br>
+        <a href="https://teslatv01.netlify.app/S">Lien de Secours</a>
+    </div>
 </body>
 </html>
