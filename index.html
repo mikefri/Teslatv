@@ -61,101 +61,85 @@
         // 1. Définir vos 3 liens
         const LIEN_PRINCIPAL = "https://moonlit-hotteok-34b5d9.netlify.app/";
         const LIEN_SECOURS_1 = "https://teslatv01.netlify.app/"; 
-        const LIEN_SECOURS_2 = "https://votre-lien-secours-2.netlify.app/"; // REMPLACEZ PAR VOTRE 3ème LIEN
+        const LIEN_SECOURS_2 = "https://jade-pothos-995e5e.netlify.app/"; // REMPLACEZ PAR VOTRE 3ème LIEN
         
-        // Fichier témoin à tester (doit exister sur chaque site)
+        // Fichier témoin à tester (doit exister sur le site principal)
         const FICHIER_TEST = "favicon.ico"; 
-
-        // Fonction pour tester un lien avec gestion améliorée du timeout
-        function testLink(url, successCallback, failCallback) {
-            var completed = false;
-            var img = new Image();
-            var timestamp = new Date().getTime();
-            
-            img.onload = function() {
-                if (!completed) {
-                    completed = true;
-                    console.log("✓ " + url + " - Disponible");
-                    successCallback();
-                }
-            };
-            
-            img.onerror = function() {
-                if (!completed) {
-                    completed = true;
-                    console.log("✗ " + url + " - Indisponible");
-                    failCallback();
-                }
-            };
-            
-            // Timeout de sécurité (2 secondes)
-            setTimeout(function() {
-                if (!completed) {
-                    completed = true;
-                    console.log("⏱ " + url + " - Timeout");
-                    failCallback();
-                }
-            }, 2000);
-            
-            // Lancer le test
-            img.src = url + FICHIER_TEST + "?t=" + timestamp;
-        }
 
         function checkAndRedirect() {
             var statusText = document.getElementById("status-text");
+            statusText.innerText = "Test de la connexion au serveur principal...";
+
+            var img = new Image();
             
-            // ÉTAPE 1 : Tester le lien principal
-            statusText.innerText = "Test du serveur principal...";
-            console.log("=== Début des tests ===");
-            
-            testLink(
-                LIEN_PRINCIPAL,
-                // Si le principal fonctionne
-                function() {
-                    statusText.innerText = "✓ Serveur principal OK. Lancement...";
-                    setTimeout(function() {
-                        window.location.href = LIEN_PRINCIPAL;
-                    }, 500);
-                },
-                // Si le principal échoue, tester le secours 1
-                function() {
-                    statusText.innerText = "✗ Principal indisponible. Test du serveur de secours 1...";
+            // On ajoute un timestamp pour éviter que le navigateur utilise le cache
+            img.src = LIEN_PRINCIPAL + FICHIER_TEST + "?t=" + new Date().getTime();
+
+            // CAS 1 : Le site principal fonctionne (l'image a chargé)
+            img.onload = function() {
+                statusText.innerText = "Connexion établie. Lancement...";
+                window.location.href = LIEN_PRINCIPAL;
+            };
+
+            // CAS 2 : Le site principal est HS (l'image n'a pas chargé)
+            img.onerror = function() {
+                console.log("Site principal indisponible, test du secours 1...");
+                statusText.innerText = "Principal indisponible. Test du secours 1...";
+                
+                // Tester le secours 1
+                var img2 = new Image();
+                img2.src = LIEN_SECOURS_1 + FICHIER_TEST + "?t=" + new Date().getTime();
+                
+                // Le secours 1 fonctionne
+                img2.onload = function() {
+                    statusText.innerText = "Secours 1 OK. Redirection...";
+                    window.location.href = LIEN_SECOURS_1;
+                };
+                
+                // Le secours 1 est HS aussi
+                img2.onerror = function() {
+                    console.log("Secours 1 indisponible, test du secours 2...");
+                    statusText.innerText = "Secours 1 indisponible. Test du secours 2...";
                     
-                    testLink(
-                        LIEN_SECOURS_1,
-                        // Si le secours 1 fonctionne
-                        function() {
-                            statusText.innerText = "✓ Serveur de secours 1 OK. Redirection...";
-                            setTimeout(function() {
-                                window.location.href = LIEN_SECOURS_1;
-                            }, 500);
-                        },
-                        // Si le secours 1 échoue, tester le secours 2
-                        function() {
-                            statusText.innerText = "✗ Secours 1 indisponible. Test du serveur de secours 2...";
-                            
-                            testLink(
-                                LIEN_SECOURS_2,
-                                // Si le secours 2 fonctionne
-                                function() {
-                                    statusText.innerText = "✓ Serveur de secours 2 OK. Redirection...";
-                                    setTimeout(function() {
-                                        window.location.href = LIEN_SECOURS_2;
-                                    }, 500);
-                                },
-                                // Si tous échouent, retour au principal par défaut
-                                function() {
-                                    console.log("=== Aucun serveur disponible ===");
-                                    statusText.innerText = "✗ Aucun serveur disponible. Tentative sur le principal...";
-                                    setTimeout(function() {
-                                        window.location.href = LIEN_PRINCIPAL;
-                                    }, 1000);
-                                }
-                            );
+                    // Tester le secours 2
+                    var img3 = new Image();
+                    img3.src = LIEN_SECOURS_2 + FICHIER_TEST + "?t=" + new Date().getTime();
+                    
+                    // Le secours 2 fonctionne
+                    img3.onload = function() {
+                        statusText.innerText = "Secours 2 OK. Redirection...";
+                        window.location.href = LIEN_SECOURS_2;
+                    };
+                    
+                    // Tous les sites sont HS
+                    img3.onerror = function() {
+                        console.log("Tous les serveurs indisponibles, tentative sur le principal...");
+                        statusText.innerText = "Tous indisponibles. Tentative sur le principal...";
+                        window.location.href = LIEN_PRINCIPAL;
+                    };
+                    
+                    // Sécurité pour img3 : Si rien après 3 secondes, forcer le secours 2
+                    setTimeout(function() {
+                        if(!img3.complete) {
+                            window.location.href = LIEN_SECOURS_2;
                         }
-                    );
+                    }, 3000);
+                };
+                
+                // Sécurité pour img2 : Si rien après 3 secondes, forcer le secours 1
+                setTimeout(function() {
+                    if(!img2.complete) {
+                        window.location.href = LIEN_SECOURS_1;
+                    }
+                }, 3000);
+            };
+
+            // Sécurité pour img1 : Si rien ne se passe après 3 secondes, on force le principal
+            setTimeout(function() {
+                if(!img.complete) {
+                    window.location.href = LIEN_PRINCIPAL;
                 }
-            );
+            }, 3000);
         }
 
         // Lancer la vérification au chargement
@@ -168,12 +152,12 @@
     <p id="status-text" class="status">Initialisation...</p>
     
     <div style="margin-top: 30px;">
-        <p>Si rien ne se passe, cliquez sur un lien :</p>
+        <p>Si rien ne se passe :</p>
         <a href="https://moonlit-hotteok-34b5d9.netlify.app/">Lien Principal</a>
         <br><br>
         <a href="https://teslatv01.netlify.app/">Lien de Secours 1</a>
         <br><br>
-        <a href="https://votre-lien-secours-2.netlify.app/">Lien de Secours 2</a>
+        <a href="https://jade-pothos-995e5e.netlify.app/">Lien de Secours 2</a>
     </div>
 </body>
 </html>
