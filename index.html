@@ -89,81 +89,63 @@
     </style>
 
     <script>
-        // Configuration des serveurs (sans slash à la fin pour la concaténation propre)
-        const SERVEURS = [
-            "https://moonlit-hotteok-34b5d9.netlify.app",
-            "https://teslatv01.netlify.app",
-            "https://jade-pothos-995e5e.netlify.app"
-        ];
+const TARGETS = [
+  "https://moonlit-hotteok-34b5d9.netlify.app/",
+  "https://teslatv01.netlify.app/",
+  "https://jade-pothos-995e5e.netlify.app/"
+];
 
-        const FICHIER_TEST = "favicon.ico"; // Doit exister sur les serveurs
-        const TEMPS_MAX = 3000; // ms
+// doit exister (et être une vraie image) sur CHACUN des 3 sites
+const FICHIER_TEST = "/health.png";
 
-        let indexServeur = 0;
+function probeImage(url, timeoutMs = 5000) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    let done = false;
 
-        function lancerTest(index) {
-            if (index >= SERVEURS.length) {
-                // Tous les serveurs ont échoué
-                afficherErreur();
-                return;
-            }
+    const finish = (ok) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      img.onload = img.onerror = null;
+      resolve(ok);
+    };
 
-            const serveur = SERVEURS[index];
-            const statusText = document.getElementById("status-text");
-            statusText.innerText = `Vérification du serveur ${index + 1}...`;
+    const timer = setTimeout(() => finish(false), timeoutMs);
 
-            const img = new Image();
-            // Ajout d'un timestamp pour éviter le cache
-            const urlTest = `${serveur}/${FICHIER_TEST}?t=${Date.now()}`;
-            
-            //计时器用于强制重定向
-            const timeoutId = setTimeout(() => {
-                console.log(`Timeout pour ${serveur}, tentative de redirection...`);
-                // 即使图片没有完成，我们也尝试跳转
-                window.location.href = serveur;
-            }, TEMPS_MAX);
+    img.onload = () => finish(true);
+    img.onerror = () => finish(false);
 
-            img.onload = function() {
-                clearTimeout(timeoutId);
-                statusText.innerText = "Connexion réussie ! Redirection...";
-                window.location.href = serveur;
-            };
+    img.src = url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
+  });
+}
 
-            img.onerror = function() {
-                clearTimeout(timeoutId);
-                console.log(`${serveur} indisponible.`);
-                // Essayer le suivant
-                lancerTest(index + 1);
-            };
+async function pickFirstAvailable() {
+  const statusText = document.getElementById("status-text");
 
-            img.src = urlTest;
-        }
+  for (let i = 0; i < TARGETS.length; i++) {
+    const base = TARGETS[i];
+    statusText.textContent = `Test du serveur ${i + 1}/${TARGETS.length}...`;
 
-        function afficherErreur() {
-            const statusText = document.getElementById("status-text");
-            const btnContainer = document.querySelector('.buttons-container');
-            
-            statusText.innerText = "Tous les serveurs semblent indisponibles.";
-            statusText.style.color = "#ffca28";
-            
-            // On cache le loader car on affiche les boutons manuels
-            document.querySelector('.loader').style.display = 'none';
-            
-            // On affiche les boutons manuels
-            btnContainer.style.display = 'flex';
-            
-            // On cache le texte "Si rien ne se passe" car les boutons sont déjà là
-            document.querySelector('.footer-text').style.display = 'none';
-        }
+    const ok = await probeImage(base.replace(/\/$/, "") + FICHIER_TEST, 6000);
+    if (ok) return base;
+  }
+  return null;
+}
 
-        // Démarrage
-        window.onload = function() {
-            // Une petite pause de 500ms pour l'UX (pour voir le loader)
-            setTimeout(() => {
-                lancerTest(0);
-            }, 500);
-        };
-    </script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const statusText = document.getElementById("status-text");
+  const url = await pickFirstAvailable();
+
+  if (url) {
+    statusText.textContent = "Serveur OK. Redirection...";
+    // replace évite de revenir en arrière sur la page de test
+    window.location.replace(url);
+  } else {
+    statusText.textContent = "Aucun serveur ne répond. Utilise les liens manuels ci-dessous.";
+  }
+});
+</script>
 </head>
 <body>
     <div class="loader-container">
