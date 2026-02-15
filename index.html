@@ -61,25 +61,44 @@
         // 1. Définir vos 3 liens
         const LIEN_PRINCIPAL = "https://moonlit-hotteok-34b5d9.netlify.app/";
         const LIEN_SECOURS_1 = "https://teslatv01.netlify.app/"; 
-        const LIEN_SECOURS_2 = "https://jade-pothos-995e5e.netlify.app//"; // REMPLACEZ PAR VOTRE 3ème LIEN
+        const LIEN_SECOURS_2 = "https://votre-lien-secours-2.netlify.app/"; // REMPLACEZ PAR VOTRE 3ème LIEN
         
         // Fichier témoin à tester (doit exister sur chaque site)
         const FICHIER_TEST = "favicon.ico"; 
 
-        // Fonction pour tester un lien
+        // Fonction pour tester un lien avec gestion améliorée du timeout
         function testLink(url, successCallback, failCallback) {
+            var completed = false;
             var img = new Image();
-            img.src = url + FICHIER_TEST + "?t=" + new Date().getTime();
+            var timestamp = new Date().getTime();
             
-            img.onload = successCallback;
-            img.onerror = failCallback;
+            img.onload = function() {
+                if (!completed) {
+                    completed = true;
+                    console.log("✓ " + url + " - Disponible");
+                    successCallback();
+                }
+            };
             
-            // Timeout de sécurité (3 secondes)
-            setTimeout(function() {
-                if(!img.complete) {
+            img.onerror = function() {
+                if (!completed) {
+                    completed = true;
+                    console.log("✗ " + url + " - Indisponible");
                     failCallback();
                 }
-            }, 3000);
+            };
+            
+            // Timeout de sécurité (2 secondes)
+            setTimeout(function() {
+                if (!completed) {
+                    completed = true;
+                    console.log("⏱ " + url + " - Timeout");
+                    failCallback();
+                }
+            }, 2000);
+            
+            // Lancer le test
+            img.src = url + FICHIER_TEST + "?t=" + timestamp;
         }
 
         function checkAndRedirect() {
@@ -87,43 +106,50 @@
             
             // ÉTAPE 1 : Tester le lien principal
             statusText.innerText = "Test du serveur principal...";
+            console.log("=== Début des tests ===");
             
             testLink(
                 LIEN_PRINCIPAL,
                 // Si le principal fonctionne
                 function() {
-                    statusText.innerText = "Serveur principal OK. Lancement...";
-                    window.location.href = LIEN_PRINCIPAL;
+                    statusText.innerText = "✓ Serveur principal OK. Lancement...";
+                    setTimeout(function() {
+                        window.location.href = LIEN_PRINCIPAL;
+                    }, 500);
                 },
                 // Si le principal échoue, tester le secours 1
                 function() {
-                    console.log("Site principal indisponible, test du secours 1...");
-                    statusText.innerText = "Principal indisponible. Test du serveur de secours 1...";
+                    statusText.innerText = "✗ Principal indisponible. Test du serveur de secours 1...";
                     
                     testLink(
                         LIEN_SECOURS_1,
                         // Si le secours 1 fonctionne
                         function() {
-                            statusText.innerText = "Serveur de secours 1 OK. Redirection...";
-                            window.location.href = LIEN_SECOURS_1;
+                            statusText.innerText = "✓ Serveur de secours 1 OK. Redirection...";
+                            setTimeout(function() {
+                                window.location.href = LIEN_SECOURS_1;
+                            }, 500);
                         },
                         // Si le secours 1 échoue, tester le secours 2
                         function() {
-                            console.log("Secours 1 indisponible, test du secours 2...");
-                            statusText.innerText = "Secours 1 indisponible. Test du serveur de secours 2...";
+                            statusText.innerText = "✗ Secours 1 indisponible. Test du serveur de secours 2...";
                             
                             testLink(
                                 LIEN_SECOURS_2,
                                 // Si le secours 2 fonctionne
                                 function() {
-                                    statusText.innerText = "Serveur de secours 2 OK. Redirection...";
-                                    window.location.href = LIEN_SECOURS_2;
+                                    statusText.innerText = "✓ Serveur de secours 2 OK. Redirection...";
+                                    setTimeout(function() {
+                                        window.location.href = LIEN_SECOURS_2;
+                                    }, 500);
                                 },
                                 // Si tous échouent, retour au principal par défaut
                                 function() {
-                                    console.log("Tous les serveurs semblent indisponibles. Tentative sur le principal...");
-                                    statusText.innerText = "Aucun serveur disponible. Tentative sur le principal...";
-                                    window.location.href = LIEN_PRINCIPAL;
+                                    console.log("=== Aucun serveur disponible ===");
+                                    statusText.innerText = "✗ Aucun serveur disponible. Tentative sur le principal...";
+                                    setTimeout(function() {
+                                        window.location.href = LIEN_PRINCIPAL;
+                                    }, 1000);
                                 }
                             );
                         }
@@ -147,7 +173,7 @@
         <br><br>
         <a href="https://teslatv01.netlify.app/">Lien de Secours 1</a>
         <br><br>
-        <a href="https://jade-pothos-995e5e.netlify.app//">Lien de Secours 2</a>
+        <a href="https://votre-lien-secours-2.netlify.app/">Lien de Secours 2</a>
     </div>
 </body>
 </html>
