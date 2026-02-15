@@ -3,473 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnostic Redirection Tesla TV</title>
+    <title>Tesla TV - Vérification et Redirection...</title>
+    <meta name="description" content="Tesla TV - Plein écran dans votre voiture.">
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
         body {
-            background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%);
+            background-color: #0a0e17;
             color: #ffffff;
-            min-height: 100vh;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: rgba(30, 35, 50, 0.8);
-            border-radius: 16px;
-            padding: 30px;
-            margin-top: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(0, 217, 255, 0.1);
-        }
-
-        header {
+            justify-content: center;
+            height: 100vh;
             text-align: center;
-            margin-bottom: 30px;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .loader-container {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 25px;
+        }
+        
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #00d9ff;
+            border-radius: 50%;
             width: 100%;
+            height: 100%;
+            animation: spin 1s linear infinite;
+            box-sizing: border-box;
         }
 
-        h1 {
-            color: #00d9ff;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #00d9ff, #00a8ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
         }
 
         h2 {
-            color: #00d9ff;
-            margin: 25px 0 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid rgba(0, 217, 255, 0.3);
+            margin: 0 0 15px 0;
+            font-weight: 400;
+            letter-spacing: 1px;
         }
 
-        h3 {
-            color: #4fc3f7;
-            margin: 20px 0 10px;
+        .status { 
+            color: #aaa; 
+            font-size: 1em; 
+            margin-bottom: 40px;
+            min-height: 20px;
         }
 
-        .status {
+        .buttons-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             gap: 15px;
-            margin: 20px 0;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .status-icon {
-            font-size: 2.5rem;
-        }
-
-        .status-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .problem-list {
-            list-style: none;
-            margin-left: 20px;
-            margin-bottom: 25px;
-        }
-
-        .problem-list li {
-            margin: 10px 0;
-            padding-left: 10px;
-            position: relative;
-        }
-
-        .problem-list li:before {
-            content: "⚠️";
-            position: absolute;
-            left: -25px;
-        }
-
-        .solution-box {
-            background: rgba(0, 217, 255, 0.1);
-            border-left: 4px solid #00d9ff;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .test-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .test-btn {
-            background: linear-gradient(135deg, #00d9ff 0%, #00a8ff 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            min-width: 200px;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .test-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
-        }
-
-        .test-btn.secondary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .test-btn.danger {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .url-box {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-family: monospace;
-            word-break: break-all;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .url-box a {
-            color: #00d9ff;
-            text-decoration: none;
-        }
-
-        .url-box a:hover {
-            text-decoration: underline;
-        }
-
-        .debug-info {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            font-size: 0.9rem;
-        }
-
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
+            max-width: 300px;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .test-buttons {
-                flex-direction: column;
-            }
-            
-            .test-btn {
-                min-width: 100%;
-            }
+        .manual-btn {
+            color: #00d9ff;
+            text-decoration: none;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            padding: 15px 20px;
+            border-radius: 8px;
+            background: rgba(0, 217, 255, 0.05);
+            transition: all 0.3s ease;
+            font-size: 1.1em;
         }
 
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #00d9ff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
+        .manual-btn:hover {
+            background: rgba(0, 217, 255, 0.2);
+            border-color: #00d9ff;
+            transform: translateY(-2px);
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .error-message {
+            color: #ff4d4d;
+            margin-top: 20px;
+            display: none;
         }
     </style>
-</head>
-<body>
-    <header>
-        <h1>🔍 Diagnostic Redirection Tesla TV</h1>
-        <p>Analyse des problèmes de redirection et solutions</p>
-    </header>
-
-    <div class="container">
-        <div class="status">
-            <div class="status-icon">🔄</div>
-            <div class="status-text">Redirection en échec - Diagnostic en cours</div>
-        </div>
-
-        <h2>Problèmes possibles identifiés :</h2>
-        <ul class="problem-list">
-            <li>Le fichier favicon.ico n'existe pas sur les serveurs de secours</li>
-            <li>Bloquage CORS (Cross-Origin Resource Sharing)</li>
-            <li>Timeouts trop courts (3 secondes)</li>
-            <li>Cache du navigateur qui persiste malgré le timestamp</li>
-            <li>JavaScript désactivé ou bloqué</li>
-            <li>Problèmes de réseau ou pare-feu</li>
-        </ul>
-
-        <h2>Solutions recommandées :</h2>
-        
-        <div class="solution-box">
-            <h3>Solution 1 : Tester les URLs manuellement</h3>
-            <p>Cliquez sur les liens ci-dessous pour vérifier s'ils fonctionnent :</p>
-            
-            <div class="test-buttons">
-                <button class="test-btn" onclick="testLink('principal')">
-                    <span class="spinner" id="spinner-principal"></span>
-                    Tester Lien Principal
-                </button>
-                <button class="test-btn secondary" onclick="testLink('secours1')">
-                    <span class="spinner" id="spinner-secours1"></span>
-                    Tester Secours 1
-                </button>
-                <button class="test-btn danger" onclick="testLink('secours2')">
-                    <span class="spinner" id="spinner-secours2"></span>
-                    Tester Secours 2
-                </button>
-            </div>
-            
-            <div id="test-results"></div>
-        </div>
-
-        <div class="solution-box">
-            <h3>Solution 2 : Modifier la logique de redirection</h3>
-            <p>Problème : Votre code teste l'existence de favicon.ico, mais ce fichier peut ne pas exister sur tous les sites.</p>
-            <p>Solution : Tester une ressource qui existe certainement, ou utiliser une approche différente.</p>
-            
-            <div class="debug-info">
-                <strong>Code actuel :</strong><br>
-                <code>const FICHIER_TEST = "favicon.ico";</code><br><br>
-                <strong>Suggestions :</strong><br>
-                1. Utiliser le chemin racine "/" comme test<br>
-                2. Ajouter des headers spécifiques pour éviter le cache<br>
-                3. Augmenter les timeouts à 5-10 secondes<br>
-                4. Utiliser fetch() avec mode 'no-cors' pour contourner CORS
-            </div>
-        </div>
-
-        <div class="solution-box">
-            <h3>Solution 3 : URLs actuelles</h3>
-            <p>Vérifiez que ces URLs sont correctes :</p>
-            
-            <div class="url-box">
-                <strong>Principal :</strong><br>
-                <a href="https://moonlit-hotteok-34b5d9.netlify.app/" target="_blank">
-                    https://moonlit-hotteok-34b5d9.netlify.app/
-                </a>
-            </div>
-            
-            <div class="url-box">
-                <strong>Secours 1 :</strong><br>
-                <a href="https://teslatv01.netlify.app/" target="_blank">
-                    https://teslatv01.netlify.app/
-                </a>
-            </div>
-            
-            <div class="url-box">
-                <strong>Secours 2 :</strong><br>
-                <a href="https://jade-pothos-995e5e.netlify.app/" target="_blank">
-                    https://jade-pothos-995e5e.netlify.app/
-                </a>
-            </div>
-        </div>
-
-        <h2>Test de redirection amélioré</h2>
-        <p>Testez cette nouvelle version de redirection :</p>
-        
-        <div class="test-buttons">
-            <button class="test-btn" onclick="testEnhancedRedirect()">
-                <span class="spinner" id="spinner-enhanced"></span>
-                Lancer le test amélioré
-            </button>
-        </div>
-        
-        <div id="enhanced-results" class="debug-info"></div>
-    </div>
-
-    <div class="footer">
-        <p>Diagnostic généré le 15/02/2026 | Tesla TV Redirection Helper</p>
-        <p>Si le problème persiste, vérifiez la console du navigateur (F12) pour les erreurs</p>
-    </div>
 
     <script>
-        const LIEN_PRINCIPAL = "https://moonlit-hotteok-34b5d9.netlify.app/";
-        const LIEN_SECOURS_1 = "https://teslatv01.netlify.app/";
-        const LIEN_SECOURS_2 = "https://jade-pothos-995e5e.netlify.app/";
+        // Configuration des serveurs (sans slash à la fin pour la concaténation propre)
+        const SERVEURS = [
+            "https://moonlit-hotteok-34b5d9.netlify.app",
+            "https://teslatv01.netlify.app",
+            "https://jade-pothos-995e5e.netlify.app"
+        ];
 
-        function showSpinner(id, show) {
-            const spinner = document.getElementById(id);
-            spinner.style.display = show ? 'inline-block' : 'none';
-        }
+        const FICHIER_TEST = "favicon.ico"; // Doit exister sur les serveurs
+        const TEMPS_MAX = 3000; // ms
 
-        async function testLink(type) {
-            let url;
-            const spinnerId = `spinner-${type}`;
-            
-            switch(type) {
-                case 'principal':
-                    url = LIEN_PRINCIPAL;
-                    break;
-                case 'secours1':
-                    url = LIEN_SECOURS_1;
-                    break;
-                case 'secours2':
-                    url = LIEN_SECOURS_2;
-                    break;
+        let indexServeur = 0;
+
+        function lancerTest(index) {
+            if (index >= SERVEURS.length) {
+                // Tous les serveurs ont échoué
+                afficherErreur();
+                return;
             }
+
+            const serveur = SERVEURS[index];
+            const statusText = document.getElementById("status-text");
+            statusText.innerText = `Vérification du serveur ${index + 1}...`;
+
+            const img = new Image();
+            // Ajout d'un timestamp pour éviter le cache
+            const urlTest = `${serveur}/${FICHIER_TEST}?t=${Date.now()}`;
             
-            showSpinner(spinnerId, true);
-            const resultsDiv = document.getElementById('test-results');
-            resultsDiv.innerHTML = `<div class="debug-info">Test de ${url} en cours...</div>`;
-            
-            try {
-                // Test avec une requête HEAD pour vérifier si le site répond
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
-                
-                const response = await fetch(url, {
-                    method: 'HEAD',
-                    mode: 'no-cors',
-                    signal: controller.signal
-                });
-                
+            //计时器用于强制重定向
+            const timeoutId = setTimeout(() => {
+                console.log(`Timeout pour ${serveur}, tentative de redirection...`);
+                // 即使图片没有完成，我们也尝试跳转
+                window.location.href = serveur;
+            }, TEMPS_MAX);
+
+            img.onload = function() {
                 clearTimeout(timeoutId);
-                
-                // En mode 'no-cors', response.type sera 'opaque'
-                resultsDiv.innerHTML = `
-                    <div class="debug-info" style="border-left-color: #4CAF50;">
-                        <strong>✅ SUCCÈS :</strong> ${url}<br>
-                        Le site répond aux requêtes.<br>
-                        <button onclick="window.open('${url}', '_blank')" class="test-btn" style="margin-top:10px; padding:8px 16px;">
-                            Ouvrir ${type}
-                        </button>
-                    </div>
-                `;
-                
-            } catch (error) {
-                resultsDiv.innerHTML = `
-                    <div class="debug-info" style="border-left-color: #f44336;">
-                        <strong>❌ ÉCHEC :</strong> ${url}<br>
-                        Erreur : ${error.message}<br>
-                        Le site ne répond pas ou est inaccessible.
-                    </div>
-                `;
-            } finally {
-                showSpinner(spinnerId, false);
-            }
+                statusText.innerText = "Connexion réussie ! Redirection...";
+                window.location.href = serveur;
+            };
+
+            img.onerror = function() {
+                clearTimeout(timeoutId);
+                console.log(`${serveur} indisponible.`);
+                // Essayer le suivant
+                lancerTest(index + 1);
+            };
+
+            img.src = urlTest;
         }
 
-        async function testEnhancedRedirect() {
-            showSpinner('spinner-enhanced', true);
-            const resultsDiv = document.getElementById('enhanced-results');
-            resultsDiv.innerHTML = `<div class="debug-info">Test de redirection amélioré en cours...</div>`;
+        function afficherErreur() {
+            const statusText = document.getElementById("status-text");
+            const btnContainer = document.querySelector('.buttons-container');
             
-            let log = [];
+            statusText.innerText = "Tous les serveurs semblent indisponibles.";
+            statusText.style.color = "#ffca28";
             
-            // Test amélioré avec différentes stratégies
-            const testStrategies = [
-                { name: 'Test HEAD (rapide)', method: 'HEAD' },
-                { name: 'Test GET (complet)', method: 'GET' },
-                { name: 'Test favicon.ico', path: 'favicon.ico' }
-            ];
+            // On cache le loader car on affiche les boutons manuels
+            document.querySelector('.loader').style.display = 'none';
             
-            const urls = [
-                { name: 'Principal', url: LIEN_PRINCIPAL },
-                { name: 'Secours 1', url: LIEN_SECOURS_1 },
-                { name: 'Secours 2', url: LIEN_SECOURS_2 }
-            ];
+            // On affiche les boutons manuels
+            btnContainer.style.display = 'flex';
             
-            for (const urlInfo of urls) {
-                log.push(`<strong>Test de ${urlInfo.name} :</strong>`);
-                
-                for (const strategy of testStrategies) {
-                    try {
-                        const testUrl = strategy.path ? 
-                            `${urlInfo.url}${strategy.path}?t=${Date.now()}` : 
-                            `${urlInfo.url}?t=${Date.now()}`;
-                        
-                        const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 5000);
-                        
-                        const startTime = Date.now();
-                        await fetch(testUrl, {
-                            method: strategy.method || 'GET',
-                            mode: 'no-cors',
-                            signal: controller.signal
-                        });
-                        const endTime = Date.now();
-                        
-                        clearTimeout(timeoutId);
-                        log.push(`  ✅ ${strategy.name} : ${endTime - startTime}ms`);
-                        
-                    } catch (error) {
-                        log.push(`  ❌ ${strategy.name} : ${error.name}`);
-                    }
-                }
-                log.push('<br>');
-            }
-            
-            // Déterminer la meilleure URL
-            log.push('<strong>Recommandation :</strong><br>');
-            
-            // Simuler un choix basé sur les tests
-            const recommendation = `
-                <div style="margin-top: 10px; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">
-                    <strong>🚀 Meilleure option :</strong> Utiliser ${LIEN_PRINCIPAL}<br>
-                    <button onclick="window.open('${LIEN_PRINCIPAL}', '_blank')" 
-                            class="test-btn" style="margin-top:10px;">
-                        Rediriger maintenant
-                    </button>
-                </div>
-            `;
-            
-            resultsDiv.innerHTML = `
-                <div class="debug-info">
-                    <strong>Résultats des tests :</strong><br>
-                    ${log.join('<br>')}
-                    ${recommendation}
-                </div>
-            `;
-            
-            showSpinner('spinner-enhanced', false);
+            // On cache le texte "Si rien ne se passe" car les boutons sont déjà là
+            document.querySelector('.footer-text').style.display = 'none';
         }
 
-        // Test automatique au chargement
-        window.addEventListener('DOMContentLoaded', () => {
+        // Démarrage
+        window.onload = function() {
+            // Une petite pause de 500ms pour l'UX (pour voir le loader)
             setTimeout(() => {
-                document.querySelector('.status-icon').textContent = '🔍';
-                document.querySelector('.status-text').textContent = 'Diagnostic complet - Voir les résultats ci-dessous';
-            }, 2000);
-        });
+                lancerTest(0);
+            }, 500);
+        };
     </script>
+</head>
+<body>
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
+    
+    <h2>Lancement de Tesla TV</h2>
+    <p id="status-text" class="status">Initialisation...</p>
+    
+    <div class="buttons-container" style="display: none;">
+        <p class="footer-text" style="margin-top:30px; color:#666; font-size:0.9em;">Si la redirection automatique échoue :</p>
+        
+        <a href="https://moonlit-hotteok-34b5d9.netlify.app/" class="manual-btn">Serveur Principal</a>
+        <a href="https://teslatv01.netlify.app/" class="manual-btn">Secours 1</a>
+        <a href="https://jade-pothos-995e5e.netlify.app/" class="manual-btn">Secours 2</a>
+    </div>
+
+    <div id="error-details" class="error-message">
+        Vérifiez votre connexion internet.
+    </div>
 </body>
 </html>
