@@ -58,43 +58,78 @@
     <!-- LOGIQUE DE REDIRECTION      -->
     <!-- =========================== -->
     <script type="text/javascript">
-        // 1. Définir vos liens
+        // 1. Définir vos 3 liens
         const LIEN_PRINCIPAL = "https://moonlit-hotteok-34b5d9.netlify.app/";
-        // REMPLACEZ CECI PAR VOTRE LIEN DE SECOURS
-        const LIEN_SECOURS = "https://teslatv01.netlify.app/"; 
+        const LIEN_SECOURS_1 = "https://teslatv01.netlify.app/"; 
+        const LIEN_SECOURS_2 = "https://jade-pothos-995e5e.netlify.app//"; // REMPLACEZ PAR VOTRE 3ème LIEN
         
-        // Fichier témoin à tester (doit exister sur le site principal)
-        // L'icône est idéale car si Netlify affiche "Site not available", il ne servira pas VOTRE icône.
+        // Fichier témoin à tester (doit exister sur chaque site)
         const FICHIER_TEST = "favicon.ico"; 
+
+        // Fonction pour tester un lien
+        function testLink(url, successCallback, failCallback) {
+            var img = new Image();
+            img.src = url + FICHIER_TEST + "?t=" + new Date().getTime();
+            
+            img.onload = successCallback;
+            img.onerror = failCallback;
+            
+            // Timeout de sécurité (3 secondes)
+            setTimeout(function() {
+                if(!img.complete) {
+                    failCallback();
+                }
+            }, 3000);
+        }
 
         function checkAndRedirect() {
             var statusText = document.getElementById("status-text");
-            statusText.innerText = "Test de la connexion au serveur...";
-
-            var img = new Image();
             
-            // On ajoute un timestamp pour éviter que le navigateur utilise le cache
-            img.src = LIEN_PRINCIPAL + FICHIER_TEST + "?t=" + new Date().getTime();
-
-            // CAS 1 : Le site principal fonctionne (l'image a chargé)
-            img.onload = function() {
-                statusText.innerText = "Connexion établie. Lancement...";
-                window.location.href = LIEN_PRINCIPAL;
-            };
-
-            // CAS 2 : Le site principal est HS (l'image n'a pas chargé)
-            img.onerror = function() {
-                console.log("Site principal indisponible, redirection vers secours.");
-                statusText.innerText = "Site principal indisponible. Redirection vers secours...";
-                window.location.href = LIEN_SECOURS;
-            };
-
-            // Sécurité : Si rien ne se passe après 3 secondes, on force le principal
-            setTimeout(function() {
-                if(!img.complete) {
+            // ÉTAPE 1 : Tester le lien principal
+            statusText.innerText = "Test du serveur principal...";
+            
+            testLink(
+                LIEN_PRINCIPAL,
+                // Si le principal fonctionne
+                function() {
+                    statusText.innerText = "Serveur principal OK. Lancement...";
                     window.location.href = LIEN_PRINCIPAL;
+                },
+                // Si le principal échoue, tester le secours 1
+                function() {
+                    console.log("Site principal indisponible, test du secours 1...");
+                    statusText.innerText = "Principal indisponible. Test du serveur de secours 1...";
+                    
+                    testLink(
+                        LIEN_SECOURS_1,
+                        // Si le secours 1 fonctionne
+                        function() {
+                            statusText.innerText = "Serveur de secours 1 OK. Redirection...";
+                            window.location.href = LIEN_SECOURS_1;
+                        },
+                        // Si le secours 1 échoue, tester le secours 2
+                        function() {
+                            console.log("Secours 1 indisponible, test du secours 2...");
+                            statusText.innerText = "Secours 1 indisponible. Test du serveur de secours 2...";
+                            
+                            testLink(
+                                LIEN_SECOURS_2,
+                                // Si le secours 2 fonctionne
+                                function() {
+                                    statusText.innerText = "Serveur de secours 2 OK. Redirection...";
+                                    window.location.href = LIEN_SECOURS_2;
+                                },
+                                // Si tous échouent, retour au principal par défaut
+                                function() {
+                                    console.log("Tous les serveurs semblent indisponibles. Tentative sur le principal...");
+                                    statusText.innerText = "Aucun serveur disponible. Tentative sur le principal...";
+                                    window.location.href = LIEN_PRINCIPAL;
+                                }
+                            );
+                        }
+                    );
                 }
-            }, 3000);
+            );
         }
 
         // Lancer la vérification au chargement
@@ -107,10 +142,12 @@
     <p id="status-text" class="status">Initialisation...</p>
     
     <div style="margin-top: 30px;">
-        <p>Si rien ne se passe :</p>
+        <p>Si rien ne se passe, cliquez sur un lien :</p>
         <a href="https://moonlit-hotteok-34b5d9.netlify.app/">Lien Principal</a>
         <br><br>
-        <a href="https://teslatv01.netlify.app/S">Lien de Secours</a>
+        <a href="https://teslatv01.netlify.app/">Lien de Secours 1</a>
+        <br><br>
+        <a href="https://jade-pothos-995e5e.netlify.app//">Lien de Secours 2</a>
     </div>
 </body>
 </html>
