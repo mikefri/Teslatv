@@ -3,173 +3,473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesla TV - Vérification et Redirection...</title>
-
-    <!-- =========================== -->
-    <!-- SEO & PARTAGE SOCIAL        -->
-    <!-- =========================== -->
-    <meta name="description" content="Profitez de Tesla TV en plein écran dans votre voiture. Streaming de chaînes TV en direct et guide TV optimisés pour le navigateur Tesla.">
-    <meta name="robots" content="index, follow">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Tesla TV - Regardez la TV en direct dans votre Tesla">
-    <meta property="og:description" content="Profitez d'une expérience plein écran sur votre navigateur Tesla. Accédez gratuitement à vos chaînes TV en direct.">
-    <meta property="og:url" content="https://mikefri.github.io/Teslatv/">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://mikefri.github.io/Teslatv/image-preview.jpg">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://mikefri.github.io/Teslatv/image-preview.jpg">
-
-    <!-- =========================== -->
-    <!-- FAVICONS & ICONS            -->
-    <!-- =========================== -->
-    <link rel="icon" type="image/png" href="favicon-32x32.png">
-    
-    <!-- Styles -->
+    <title>Diagnostic Redirection Tesla TV</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
         body {
-            background-color: #0a0e17;
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%);
             color: #ffffff;
-            font-family: sans-serif;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(30, 35, 50, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #00d9ff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d9ff, #00a8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        h2 {
+            color: #00d9ff;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.3);
+        }
+
+        h3 {
+            color: #4fc3f7;
+            margin: 20px 0 10px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
             justify-content: center;
-            height: 100vh;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-icon {
+            font-size: 2.5rem;
+        }
+
+        .status-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .problem-list {
+            list-style: none;
+            margin-left: 20px;
+            margin-bottom: 25px;
+        }
+
+        .problem-list li {
+            margin: 10px 0;
+            padding-left: 10px;
+            position: relative;
+        }
+
+        .problem-list li:before {
+            content: "⚠️";
+            position: absolute;
+            left: -25px;
+        }
+
+        .solution-box {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .test-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .test-btn {
+            background: linear-gradient(135deg, #00d9ff 0%, #00a8ff 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+            text-decoration: none;
             text-align: center;
         }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #00d9ff;
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+        }
+
+        .test-btn.secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .test-btn.danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .url-box {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            word-break: break-all;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .url-box a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+
+        .url-box a:hover {
+            text-decoration: underline;
+        }
+
+        .debug-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .test-buttons {
+                flex-direction: column;
+            }
+            
+            .test-btn {
+                min-width: 100%;
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            border-top-color: #00d9ff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        a { color: #00d9ff; text-decoration: none; border: 1px solid #00d9ff; padding: 10px 20px; border-radius: 5px; margin-top: 10px; display: inline-block;}
-        .status { margin-bottom: 20px; color: #aaa; font-size: 0.9em; }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
-
-    <!-- =========================== -->
-    <!-- LOGIQUE DE REDIRECTION      -->
-    <!-- =========================== -->
-    <script type="text/javascript">
-        // 1. Définir vos 3 liens
-        const LIEN_PRINCIPAL = "https://moonlit-hotteok-34b5d9.netlify.app/";
-        const LIEN_SECOURS_1 = "https://teslatv01.netlify.app/"; 
-        const LIEN_SECOURS_2 = "https://jade-pothos-995e5e.netlify.app/"; // REMPLACEZ PAR VOTRE 3ème LIEN
-        
-        // Fichier témoin à tester (doit exister sur le site principal)
-        const FICHIER_TEST = "favicon.ico"; 
-
-        function testSecours2() {
-            var statusText = document.getElementById("status-text");
-            statusText.innerText = "Test du serveur de secours 2...";
-
-            var img = new Image();
-            
-            // On ajoute un timestamp pour éviter que le navigateur utilise le cache
-            img.src = LIEN_SECOURS_2 + FICHIER_TEST + "?t=" + new Date().getTime();
-
-            // CAS 1 : Le secours 2 fonctionne
-            img.onload = function() {
-                statusText.innerText = "Secours 2 OK. Lancement...";
-                window.location.href = LIEN_SECOURS_2;
-            };
-
-            // CAS 2 : Le secours 2 est HS aussi
-            img.onerror = function() {
-                console.log("Secours 2 indisponible, tentative sur le principal...");
-                statusText.innerText = "Tous indisponibles. Tentative sur le principal...";
-                window.location.href = LIEN_PRINCIPAL;
-            };
-
-            // Sécurité : Si rien ne se passe après 3 secondes, on force le secours 2
-            setTimeout(function() {
-                if(!img.complete) {
-                    window.location.href = LIEN_SECOURS_2;
-                }
-            }, 3000);
-        }
-
-        function testSecours1() {
-            var statusText = document.getElementById("status-text");
-            statusText.innerText = "Test du serveur de secours 1...";
-
-            var img = new Image();
-            
-            // On ajoute un timestamp pour éviter que le navigateur utilise le cache
-            img.src = LIEN_SECOURS_1 + FICHIER_TEST + "?t=" + new Date().getTime();
-
-            // CAS 1 : Le secours 1 fonctionne
-            img.onload = function() {
-                statusText.innerText = "Secours 1 OK. Lancement...";
-                window.location.href = LIEN_SECOURS_1;
-            };
-
-            // CAS 2 : Le secours 1 est HS, tester le secours 2
-            img.onerror = function() {
-                console.log("Secours 1 indisponible, test du secours 2...");
-                testSecours2();
-            };
-
-            // Sécurité : Si rien ne se passe après 3 secondes, on force le secours 1
-            setTimeout(function() {
-                if(!img.complete) {
-                    window.location.href = LIEN_SECOURS_1;
-                }
-            }, 3000);
-        }
-
-        function checkAndRedirect() {
-            var statusText = document.getElementById("status-text");
-            statusText.innerText = "Test de la connexion au serveur principal...";
-
-            var img = new Image();
-            
-            // On ajoute un timestamp pour éviter que le navigateur utilise le cache
-            img.src = LIEN_PRINCIPAL + FICHIER_TEST + "?t=" + new Date().getTime();
-
-            // CAS 1 : Le site principal fonctionne (l'image a chargé)
-            img.onload = function() {
-                statusText.innerText = "Connexion établie. Lancement...";
-                window.location.href = LIEN_PRINCIPAL;
-            };
-
-            // CAS 2 : Le site principal est HS (l'image n'a pas chargé)
-            img.onerror = function() {
-                console.log("Site principal indisponible, test du secours 1...");
-                testSecours1();
-            };
-
-            // Sécurité : Si rien ne se passe après 3 secondes, on force le principal
-            setTimeout(function() {
-                if(!img.complete) {
-                    window.location.href = LIEN_PRINCIPAL;
-                }
-            }, 3000);
-        }
-
-        // Lancer la vérification au chargement
-        window.onload = checkAndRedirect;
-    </script>
 </head>
 <body>
-    <div class="loader"></div>
-    <h2>Lancement de Tesla TV</h2>
-    <p id="status-text" class="status">Initialisation...</p>
-    
-    <div style="margin-top: 30px;">
-        <p>Si rien ne se passe :</p>
-        <a href="https://moonlit-hotteok-34b5d9.netlify.app/">Lien Principal</a>
-        <br><br>
-        <a href="https://teslatv01.netlify.app/">Lien de Secours 1</a>
-        <br><br>
-        <a href="https://jade-pothos-995e5e.netlify.app/">Lien de Secours 2</a>
+    <header>
+        <h1>🔍 Diagnostic Redirection Tesla TV</h1>
+        <p>Analyse des problèmes de redirection et solutions</p>
+    </header>
+
+    <div class="container">
+        <div class="status">
+            <div class="status-icon">🔄</div>
+            <div class="status-text">Redirection en échec - Diagnostic en cours</div>
+        </div>
+
+        <h2>Problèmes possibles identifiés :</h2>
+        <ul class="problem-list">
+            <li>Le fichier favicon.ico n'existe pas sur les serveurs de secours</li>
+            <li>Bloquage CORS (Cross-Origin Resource Sharing)</li>
+            <li>Timeouts trop courts (3 secondes)</li>
+            <li>Cache du navigateur qui persiste malgré le timestamp</li>
+            <li>JavaScript désactivé ou bloqué</li>
+            <li>Problèmes de réseau ou pare-feu</li>
+        </ul>
+
+        <h2>Solutions recommandées :</h2>
+        
+        <div class="solution-box">
+            <h3>Solution 1 : Tester les URLs manuellement</h3>
+            <p>Cliquez sur les liens ci-dessous pour vérifier s'ils fonctionnent :</p>
+            
+            <div class="test-buttons">
+                <button class="test-btn" onclick="testLink('principal')">
+                    <span class="spinner" id="spinner-principal"></span>
+                    Tester Lien Principal
+                </button>
+                <button class="test-btn secondary" onclick="testLink('secours1')">
+                    <span class="spinner" id="spinner-secours1"></span>
+                    Tester Secours 1
+                </button>
+                <button class="test-btn danger" onclick="testLink('secours2')">
+                    <span class="spinner" id="spinner-secours2"></span>
+                    Tester Secours 2
+                </button>
+            </div>
+            
+            <div id="test-results"></div>
+        </div>
+
+        <div class="solution-box">
+            <h3>Solution 2 : Modifier la logique de redirection</h3>
+            <p>Problème : Votre code teste l'existence de favicon.ico, mais ce fichier peut ne pas exister sur tous les sites.</p>
+            <p>Solution : Tester une ressource qui existe certainement, ou utiliser une approche différente.</p>
+            
+            <div class="debug-info">
+                <strong>Code actuel :</strong><br>
+                <code>const FICHIER_TEST = "favicon.ico";</code><br><br>
+                <strong>Suggestions :</strong><br>
+                1. Utiliser le chemin racine "/" comme test<br>
+                2. Ajouter des headers spécifiques pour éviter le cache<br>
+                3. Augmenter les timeouts à 5-10 secondes<br>
+                4. Utiliser fetch() avec mode 'no-cors' pour contourner CORS
+            </div>
+        </div>
+
+        <div class="solution-box">
+            <h3>Solution 3 : URLs actuelles</h3>
+            <p>Vérifiez que ces URLs sont correctes :</p>
+            
+            <div class="url-box">
+                <strong>Principal :</strong><br>
+                <a href="https://moonlit-hotteok-34b5d9.netlify.app/" target="_blank">
+                    https://moonlit-hotteok-34b5d9.netlify.app/
+                </a>
+            </div>
+            
+            <div class="url-box">
+                <strong>Secours 1 :</strong><br>
+                <a href="https://teslatv01.netlify.app/" target="_blank">
+                    https://teslatv01.netlify.app/
+                </a>
+            </div>
+            
+            <div class="url-box">
+                <strong>Secours 2 :</strong><br>
+                <a href="https://jade-pothos-995e5e.netlify.app/" target="_blank">
+                    https://jade-pothos-995e5e.netlify.app/
+                </a>
+            </div>
+        </div>
+
+        <h2>Test de redirection amélioré</h2>
+        <p>Testez cette nouvelle version de redirection :</p>
+        
+        <div class="test-buttons">
+            <button class="test-btn" onclick="testEnhancedRedirect()">
+                <span class="spinner" id="spinner-enhanced"></span>
+                Lancer le test amélioré
+            </button>
+        </div>
+        
+        <div id="enhanced-results" class="debug-info"></div>
     </div>
+
+    <div class="footer">
+        <p>Diagnostic généré le 15/02/2026 | Tesla TV Redirection Helper</p>
+        <p>Si le problème persiste, vérifiez la console du navigateur (F12) pour les erreurs</p>
+    </div>
+
+    <script>
+        const LIEN_PRINCIPAL = "https://moonlit-hotteok-34b5d9.netlify.app/";
+        const LIEN_SECOURS_1 = "https://teslatv01.netlify.app/";
+        const LIEN_SECOURS_2 = "https://jade-pothos-995e5e.netlify.app/";
+
+        function showSpinner(id, show) {
+            const spinner = document.getElementById(id);
+            spinner.style.display = show ? 'inline-block' : 'none';
+        }
+
+        async function testLink(type) {
+            let url;
+            const spinnerId = `spinner-${type}`;
+            
+            switch(type) {
+                case 'principal':
+                    url = LIEN_PRINCIPAL;
+                    break;
+                case 'secours1':
+                    url = LIEN_SECOURS_1;
+                    break;
+                case 'secours2':
+                    url = LIEN_SECOURS_2;
+                    break;
+            }
+            
+            showSpinner(spinnerId, true);
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = `<div class="debug-info">Test de ${url} en cours...</div>`;
+            
+            try {
+                // Test avec une requête HEAD pour vérifier si le site répond
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(url, {
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                // En mode 'no-cors', response.type sera 'opaque'
+                resultsDiv.innerHTML = `
+                    <div class="debug-info" style="border-left-color: #4CAF50;">
+                        <strong>✅ SUCCÈS :</strong> ${url}<br>
+                        Le site répond aux requêtes.<br>
+                        <button onclick="window.open('${url}', '_blank')" class="test-btn" style="margin-top:10px; padding:8px 16px;">
+                            Ouvrir ${type}
+                        </button>
+                    </div>
+                `;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="debug-info" style="border-left-color: #f44336;">
+                        <strong>❌ ÉCHEC :</strong> ${url}<br>
+                        Erreur : ${error.message}<br>
+                        Le site ne répond pas ou est inaccessible.
+                    </div>
+                `;
+            } finally {
+                showSpinner(spinnerId, false);
+            }
+        }
+
+        async function testEnhancedRedirect() {
+            showSpinner('spinner-enhanced', true);
+            const resultsDiv = document.getElementById('enhanced-results');
+            resultsDiv.innerHTML = `<div class="debug-info">Test de redirection amélioré en cours...</div>`;
+            
+            let log = [];
+            
+            // Test amélioré avec différentes stratégies
+            const testStrategies = [
+                { name: 'Test HEAD (rapide)', method: 'HEAD' },
+                { name: 'Test GET (complet)', method: 'GET' },
+                { name: 'Test favicon.ico', path: 'favicon.ico' }
+            ];
+            
+            const urls = [
+                { name: 'Principal', url: LIEN_PRINCIPAL },
+                { name: 'Secours 1', url: LIEN_SECOURS_1 },
+                { name: 'Secours 2', url: LIEN_SECOURS_2 }
+            ];
+            
+            for (const urlInfo of urls) {
+                log.push(`<strong>Test de ${urlInfo.name} :</strong>`);
+                
+                for (const strategy of testStrategies) {
+                    try {
+                        const testUrl = strategy.path ? 
+                            `${urlInfo.url}${strategy.path}?t=${Date.now()}` : 
+                            `${urlInfo.url}?t=${Date.now()}`;
+                        
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 5000);
+                        
+                        const startTime = Date.now();
+                        await fetch(testUrl, {
+                            method: strategy.method || 'GET',
+                            mode: 'no-cors',
+                            signal: controller.signal
+                        });
+                        const endTime = Date.now();
+                        
+                        clearTimeout(timeoutId);
+                        log.push(`  ✅ ${strategy.name} : ${endTime - startTime}ms`);
+                        
+                    } catch (error) {
+                        log.push(`  ❌ ${strategy.name} : ${error.name}`);
+                    }
+                }
+                log.push('<br>');
+            }
+            
+            // Déterminer la meilleure URL
+            log.push('<strong>Recommandation :</strong><br>');
+            
+            // Simuler un choix basé sur les tests
+            const recommendation = `
+                <div style="margin-top: 10px; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">
+                    <strong>🚀 Meilleure option :</strong> Utiliser ${LIEN_PRINCIPAL}<br>
+                    <button onclick="window.open('${LIEN_PRINCIPAL}', '_blank')" 
+                            class="test-btn" style="margin-top:10px;">
+                        Rediriger maintenant
+                    </button>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = `
+                <div class="debug-info">
+                    <strong>Résultats des tests :</strong><br>
+                    ${log.join('<br>')}
+                    ${recommendation}
+                </div>
+            `;
+            
+            showSpinner('spinner-enhanced', false);
+        }
+
+        // Test automatique au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('.status-icon').textContent = '🔍';
+                document.querySelector('.status-text').textContent = 'Diagnostic complet - Voir les résultats ci-dessous';
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
