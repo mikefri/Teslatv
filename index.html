@@ -89,61 +89,12 @@
     </style>
 
     <script>
-const TARGETS = [
-  "https://moonlit-hotteok-34b5d9.netlify.app/",
-  "https://teslatv01.netlify.app/",
-  "https://jade-pothos-995e5e.netlify.app/"
-];
+const TARGET = "https://teslatv01.vercel.app/";
 
-// doit exister (et être une vraie image) sur CHACUN des 3 sites
-const FICHIER_TEST = "/health.png";
-
-function probeImage(url, timeoutMs = 5000) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    let done = false;
-
-    const finish = (ok) => {
-      if (done) return;
-      done = true;
-      clearTimeout(timer);
-      img.onload = img.onerror = null;
-      resolve(ok);
-    };
-
-    const timer = setTimeout(() => finish(false), timeoutMs);
-
-    img.onload = () => finish(true);
-    img.onerror = () => finish(false);
-
-    img.src = url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
-  });
-}
-
-async function pickFirstAvailable() {
+document.addEventListener("DOMContentLoaded", () => {
   const statusText = document.getElementById("status-text");
-
-  for (let i = 0; i < TARGETS.length; i++) {
-    const base = TARGETS[i];
-    statusText.textContent = `Test du serveur ${i + 1}/${TARGETS.length}...`;
-
-    const ok = await probeImage(base.replace(/\/$/, "") + FICHIER_TEST, 6000);
-    if (ok) return base;
-  }
-  return null;
-}
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const statusText = document.getElementById("status-text");
-  const url = await pickFirstAvailable();
-
-  if (url) {
-    statusText.textContent = "Serveur OK. Redirection...";
-    // replace évite de revenir en arrière sur la page de test
-    window.location.replace(url);
-  } else {
-    statusText.textContent = "Aucun serveur ne répond. Utilise les liens manuels ci-dessous.";
-  }
+  statusText.textContent = "Redirection...";
+  window.location.replace(TARGET);
 });
 </script>
 </head>
@@ -155,11 +106,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     <h2>Lancement de Tesla TV</h2>
     <p id="status-text" class="status">Initialisation...</p>
     
-    <div class="buttons-container" style="display: none;">
+    <div class="buttons-container">
         <p class="footer-text" style="margin-top:30px; color:#666; font-size:0.9em;">Si la redirection automatique échoue :</p>
-        
         <a href="https://teslatv01.vercel.app/" class="manual-btn">Serveur Principal</a>
-
     </div>
 
     <div id="error-details" class="error-message">
